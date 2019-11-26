@@ -25,11 +25,6 @@ win32 {
 }
 
 SOURCES += \
-    brush/Brush.cpp \
-    brush/ConstantBrush.cpp \
-    brush/LinearBrush.cpp \
-    brush/QuadraticBrush.cpp \
-    brush/SmudgeBrush.cpp \
     camera/OrbitingCamera.cpp \
     camera/CamtransCamera.cpp \
     camera/QuaternionCamera.cpp \
@@ -69,12 +64,6 @@ SOURCES += \
     shape/coneshape.cpp \
     shape/cylindershape.cpp \
     shape/sphereshape.cpp \
-    filter/Filter.cpp \
-    filter/BlurFilter.cpp \
-    filter/EdgeDetectFilter.cpp \
-    filter/FilterUtils.cpp \
-    filter/ScaleFilter.cpp \
-    filter/SharpenFilter.cpp \
     rayshape/RayCone.cpp \
     rayshape/RayShape.cpp \
     rayshape/RayCube.cpp \
@@ -83,15 +72,9 @@ SOURCES += \
 
 
 HEADERS += \
-    brush/Brush.h \
-    brush/ConstantBrush.h \
-    brush/LinearBrush.h \
-    brush/QuadraticBrush.h \
-    brush/SmudgeBrush.h \
     camera/Camera.h \
     camera/OrbitingCamera.h \
     camera/CamtransCamera.h \
-    camera/QuaternionCamera.h \
     scenegraph/Scene.h \
     scenegraph/OpenGLScene.h \
     scenegraph/ShapesScene.h \
@@ -131,12 +114,6 @@ HEADERS += \
     shape/coneshape.h \
     shape/cylindershape.h \
     shape/sphereshape.h \
-    filter/Filter.h \
-    filter/SharpenFilter.h \
-    filter/BlurFilter.h \
-    filter/ScaleFilter.h \
-    filter/FilterUtils.h \
-    filter/EdgeDetectFilter.h \
     rayshape/RayCone.h \
     rayshape/RayShape.h \
     rayshape/RayCube.h \
@@ -145,8 +122,8 @@ HEADERS += \
 
 
 FORMS += ui/mainwindow.ui
-INCLUDEPATH += glm brush camera lib scenegraph ui glew-1.10.0/include
-DEPENDPATH += glm brush camera lib scenegraph ui glew-1.10.0/include
+INCLUDEPATH += glm camera lib scenegraph ui glew-1.10.0/include
+DEPENDPATH += glm camera lib scenegraph ui glew-1.10.0/include
 DEFINES += _USE_MATH_DEFINES
 DEFINES += TIXML_USE_STL
 DEFINES += GLM_SWIZZLE GLM_FORCE_RADIANS

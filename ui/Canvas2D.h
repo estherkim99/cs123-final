@@ -6,11 +6,9 @@
 #include "SupportCanvas2D.h"
 
 
-class Brush;
 class RayScene;
 class SceneviewScene;
 class Camera;
-class Filter;
 
 /**
  * @class Canvas2D
@@ -39,9 +37,6 @@ public slots:
     // UI will call this from the button on the "Ray" dock
     void cancelRender();
 
-    // UI will call this from the button on the "Filter" dock
-    void filterImage();
-
 protected:
     virtual void paintEvent(QPaintEvent *);  // Overridden from SupportCanvas2D.
     virtual void mouseDown(int x, int y);    // Called when left mouse button is pressed on canvas
@@ -54,12 +49,7 @@ protected:
 
 
 private:
-    // Helper function that instantiates a Brush
-    void newBrush();
-
     //TODO: [BRUSH, INTERSECT, RAY] Put your member variables here.
-    std::unique_ptr<Brush> m_brush;
-    std::unique_ptr<Filter> m_filter;
     std::unique_ptr<RayScene> m_rayScene;
     std::unique_ptr<SceneviewScene> m_sceneviewScene;
 
