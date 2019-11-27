@@ -1,0 +1,41 @@
+************************************************************************
+FEATURE: UI for getting v vector
+
+Use global variables
+Vec4 cueDir;
+Float hitForce;
+bool inAction
+#define TRAVELSTEPS -> should determine how frequently positions of traveling balls are updated
+						larger travel steps = smoother movement, but slower
+
+Button to use the cue stick
+	 if (settings.useCue) {
+		make an arrow appear on screen
+		disable orbiting camera
+		change camera so that it’s looking along the cue
+		in mouseDragged function
+			if (settings.useCue) {
+				cueDir = final - origin
+				hitForce = magnitude(curDir)
+				cueDir = normalize(curDir)
+				inAction = true;
+			}
+			else inAction = false;
+		
+		in  mouseUp function (?? I forgot if mouseDragged include mouseUp)
+			if (inAction) {
+				shoot(cueDir, hitForce); 
+			}
+	}
+
+************************************************************************
+FEATURE: rendering while there’s a movement on the pool table
+
+Shoot function -> makes a change to the pool table 
+	calculate new position for white ball -> shoot ray in that direction? collision detection using AABB 
+	while (curr position < new position) {
+		render in sceneviewscene
+			make change in object position (in data type we are storing obj info in - make change to transformation matrices/translate)
+			render takes in object id (white ball), new position
+			
+	}
