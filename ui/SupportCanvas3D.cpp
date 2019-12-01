@@ -21,8 +21,11 @@ SupportCanvas3D::SupportCanvas3D(QGLFormat format, QWidget *parent) : QGLWidget(
     m_settingsDirty(true),
     m_defaultPerspectiveCamera(new CamtransCamera()),
     m_defaultOrbitingCamera(new OrbitingCamera()),
-    m_currentScene(nullptr)
+    m_currentScene(nullptr),
+    m_time(),
+    m_timer()
 {
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
 }
 
 SupportCanvas3D::~SupportCanvas3D()
@@ -67,6 +70,11 @@ void SupportCanvas3D::initializeGL() {
     setSceneFromSettings();
 
     settingsChanged();
+
+    // Start a timer that will try to get 60 frames per second (the actual
+    // frame rate depends on the operating system and other running programs)
+    m_time.start();
+    m_timer.start(1000 / 60);
 
 }
 
@@ -279,4 +287,17 @@ void SupportCanvas3D::wheelEvent(QWheelEvent *event) {
 
 void SupportCanvas3D::resizeEvent(QResizeEvent *event) {
     emit aspectRatioChanged();
+}
+
+// FINAL PROJECT CODE
+void SupportCanvas3D::tick() {
+    // Get the number of seconds since the last tick (variable update rate)
+    float seconds = m_time.restart() * 0.001f;
+
+    // right now just messing with the camera every second
+    m_defaultPerspectiveCamera->rotateV( m_oldRotV - 1);
+    m_oldRotV = m_oldRotV - 1;
+
+    // Flag this view for repainting (Qt will call paintGL() soon after)
+    update();
 }

@@ -7,6 +7,8 @@
 #include <QGLWidget>
 
 #include "glm/glm.hpp"
+#include <QTime>
+#include <QTimer>
 
 class RGBA;
 class Camera;
@@ -109,6 +111,12 @@ private:
     OpenGLScene *m_currentScene;
     std::unique_ptr<ShapesScene> m_shapesScene;
     std::unique_ptr<SceneviewScene> m_sceneviewScene;
+
+    QTime m_time;
+    QTimer m_timer;
+
+private slots:
+    void tick();
 };
 
 #endif // SUPPORTCANVAS3D_H
