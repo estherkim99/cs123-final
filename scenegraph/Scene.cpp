@@ -5,7 +5,8 @@
 #include "glm/gtx/transform.hpp"
 
 
-Scene::Scene()
+Scene::Scene() :
+    m_id(0)
 {
 }
 
@@ -73,7 +74,7 @@ void Scene::parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 comp
     std::vector<CS123ScenePrimitive *> p = node->primitives;
 
     for (int i = 0; i < p.size(); i++) {
-        sceneToFill->addPrimitive(*p[i], composite, i);
+        sceneToFill->addPrimitive(*p[i], composite);
     }
     std::vector<CS123SceneNode *> c = node->children;
     for (int i = 0; i < c.size(); i++) {
@@ -82,10 +83,10 @@ void Scene::parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 comp
 
 }
 
-void Scene::addPrimitive(const CS123ScenePrimitive &scenePrimitive, const glm::mat4x4 &matrix, int id) {
+void Scene::addPrimitive(const CS123ScenePrimitive &scenePrimitive, const glm::mat4x4 &matrix) {
     SceneObject obj;
     CS123SceneMaterial m;
-    obj.id = id;
+    obj.id = m_id++;
     obj.material = scenePrimitive.material;
     obj.composite = matrix;
     obj.invMat = glm::inverse(matrix);

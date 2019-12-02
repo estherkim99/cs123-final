@@ -26,7 +26,7 @@ public:
 protected:
 
     // Adds a primitive to the scene.
-    virtual void addPrimitive(const CS123ScenePrimitive &scenePrimitive, const glm::mat4x4 &matrix, int id);
+    virtual void addPrimitive(const CS123ScenePrimitive &scenePrimitive, const glm::mat4x4 &matrix);
 
     // Adds a light to the scene.
     virtual void addLight(const CS123SceneLightData &sceneLight);
@@ -40,6 +40,7 @@ protected:
         glm::mat4x4 invMat; // inverse of transformation matrix
         CS123SceneMaterial material;
         PrimitiveType primitive; // object type
+
     };
 
     std::vector<CS123SceneLightData> m_lightData;
@@ -52,6 +53,7 @@ protected:
 
 private:
     void parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 composite);
+    int m_id;
 
 };
 
