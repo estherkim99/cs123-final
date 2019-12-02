@@ -15,6 +15,7 @@ class Camera;
 class OpenGLScene;
 class ShapesScene;
 class SceneviewScene;
+class PoolScene;
 class OrbitingCamera;
 class CamtransCamera;
 class CS123XmlSceneParser;
@@ -111,9 +112,12 @@ private:
     OpenGLScene *m_currentScene;
     std::unique_ptr<ShapesScene> m_shapesScene;
     std::unique_ptr<SceneviewScene> m_sceneviewScene;
+    std::unique_ptr<PoolScene> m_poolScene;
 
     QTime m_time;
     QTimer m_timer;
+
+    bool m_pool;
 
 private slots:
     void tick();
