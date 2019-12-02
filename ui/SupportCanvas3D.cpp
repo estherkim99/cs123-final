@@ -292,12 +292,12 @@ void SupportCanvas3D::resizeEvent(QResizeEvent *event) {
 // FINAL PROJECT CODE
 void SupportCanvas3D::tick() {
     // Get the number of seconds since the last tick (variable update rate)
-//    float seconds = m_time.restart() * 0.001f;
+    float seconds = m_time.restart() * 0.001f;
 
     // right now just messing with the camera every second
-//    m_defaultPerspectiveCamera->rotateV( m_oldRotV - 1);
-//    m_oldRotV = m_oldRotV - 1;
+    m_defaultPerspectiveCamera->rotateV( m_oldRotV - 1);
+    m_oldRotV = m_oldRotV - 1;
 
     // Flag this view for repainting (Qt will call paintGL() soon after)
-//    update();
+    update();
 }
