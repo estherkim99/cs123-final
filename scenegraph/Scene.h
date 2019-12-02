@@ -40,7 +40,6 @@ protected:
         glm::mat4x4 invMat; // inverse of transformation matrix
         CS123SceneMaterial material;
         PrimitiveType primitive; // object type
-
     };
 
     std::vector<CS123SceneLightData> m_lightData;

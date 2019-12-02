@@ -9,6 +9,7 @@
 #include "CamtransCamera.h"
 #include "OrbitingCamera.h"
 #include "SceneviewScene.h"
+#include "PoolScene.h"
 #include "Settings.h"
 #include "ShapesScene.h"
 
@@ -25,6 +26,7 @@ SupportCanvas3D::SupportCanvas3D(QGLFormat format, QWidget *parent) : QGLWidget(
     m_time(),
     m_timer()
 {
+    m_pool = false;
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
 }
 
@@ -111,6 +113,7 @@ void SupportCanvas3D::initializeOpenGLSettings() {
 
 void SupportCanvas3D::initializeScenes() {
     m_sceneviewScene = std::make_unique<SceneviewScene>();
+    m_poolScene = std::make_unique<PoolScene>();
     m_shapesScene = std::make_unique<ShapesScene>(width(), height());
 }
 
@@ -123,6 +126,8 @@ void SupportCanvas3D::paintGL() {
     glViewport(0, 0, width() * ratio, height() * ratio);
     getCamera()->setAspectRatio(static_cast<float>(width()) / static_cast<float>(height()));
     m_currentScene->render(this);
+    //m_poolScene->render(this);
+
 }
 
 void SupportCanvas3D::settingsChanged() {
@@ -148,14 +153,22 @@ void SupportCanvas3D::setSceneFromSettings() {
 }
 
 void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-    m_sceneviewScene = std::make_unique<SceneviewScene>();
-    Scene::parse(m_sceneviewScene.get(), &parser);
+//    m_sceneviewScene = std::make_unique<SceneviewScene>();
+//    Scene::parse(m_sceneviewScene.get(), &parser);
+
+    m_poolScene = std::make_unique<PoolScene>();
+    Scene::parse(m_poolScene.get(), &parser);
+    //PoolScene *res = m_poolScene.get();
     m_settingsDirty = true;
+
 }
 
 void SupportCanvas3D::setSceneToSceneview() {
-    assert(m_sceneviewScene.get());
-    m_currentScene = m_sceneviewScene.get();
+    //assert(m_sceneviewScene.get());
+    //m_currentScene = m_sceneviewScene.get();
+    assert(m_poolScene.get());
+    m_currentScene = m_poolScene.get();
+    m_pool = true;
 }
 
 void SupportCanvas3D::setSceneToShapes() {
@@ -292,12 +305,11 @@ void SupportCanvas3D::resizeEvent(QResizeEvent *event) {
 // FINAL PROJECT CODE
 void SupportCanvas3D::tick() {
     // Get the number of seconds since the last tick (variable update rate)
-//    float seconds = m_time.restart() * 0.001f;
+    float seconds = m_time.restart() * 0.001f;
 
-    // right now just messing with the camera every second
-//    m_defaultPerspectiveCamera->rotateV( m_oldRotV - 1);
-//    m_oldRotV = m_oldRotV - 1;
+    // TODO: add some qualifiers here
+    m_poolScene->updateTranslation();
 
     // Flag this view for repainting (Qt will call paintGL() soon after)
-//    update();
+    update();
 }
