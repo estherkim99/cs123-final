@@ -283,6 +283,51 @@ void MainWindow::fileOpen() {
     }
 }
 
+void MainWindow::fileOpenPool() {
+    // This opens the 3D tab to initialize OGL so parsing
+    // the scene doesn't crash. If you can find a better solution
+    // feel free to change this.
+    activateCanvas3D();
+    //QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
+    QString file = "/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/pool.xml";
+    if (!file.isNull()) {
+        if (file.endsWith(".xml")) {
+            CS123XmlSceneParser parser(file.toLatin1().data());
+            if (parser.parse()) {
+                m_canvas3D->loadSceneviewSceneFromParser(parser);
+                ui->showSceneviewInstead->setChecked(true);
+
+                // Set the camera for the new scene
+                CS123SceneCameraData camera;
+                if (parser.getCameraData(camera)) {
+                    camera.pos[3] = 1;
+                    camera.look[3] = 0;
+                    camera.up[3] = 0;
+
+                    CamtransCamera *cam = m_canvas3D->getCamtransCamera();
+                    cam->orientLook(camera.pos, camera.look, camera.up);
+                    cam->setHeightAngle(camera.heightAngle);
+                }
+
+                if (settings.useOrbitCamera) {
+                    ui->cameraOrbitCheckbox->setChecked(false);
+                }
+
+                activateCanvas3D();
+            } else {
+                QMessageBox::critical(this, "Error", "Could not load scene \"" + file + "\"");
+            }
+        }
+        else {
+            if (!ui->canvas2D->loadImage(file)) {
+                QMessageBox::critical(this, "Error", "Could not load image \"" + file + "\"");
+            } else {
+                activateCanvas2D();
+            }
+        }
+    }
+}
+
 void MainWindow::fileSave() {
     if (settings.currentTab == TAB_2D)
         ui->canvas2D->saveImage();

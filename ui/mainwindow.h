@@ -71,6 +71,7 @@ public slots:
 
     // Displays a dialog box to open a 2D image or 3D scene file.
     void fileOpen();
+    void fileOpenPool();
 
     // Displays a dialog box to save the current 2D image. Can be extended (for extra credit) to
     // save the current 3D scene.
