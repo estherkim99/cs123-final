@@ -73,6 +73,9 @@ void OpenGLShape::setData(std::vector<float>* vertices){
     this->setVertexData(vertices->data(), size, VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, size / dataPerVertex);
     this->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->setAttribute(ShaderAttrib::NORMAL, 3, 12, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    this->setAttribute(ShaderAttrib::TEXCOORD0, 2, 24, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    this->setAttribute(ShaderAttrib::TANGENT, 3, 32, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    this->setAttribute(ShaderAttrib::BINORMAL, 3, 44, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->buildVAO();
 }
 
