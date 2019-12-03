@@ -28,8 +28,8 @@ SceneviewScene::~SceneviewScene()
 }
 
 void SceneviewScene::loadPhongShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/default.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/default.frag");
+    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/pool.vert");
+    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/pool.frag");
     m_phongShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
 }
 
