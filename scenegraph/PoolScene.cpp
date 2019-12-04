@@ -13,14 +13,9 @@
 using namespace CS123::GL;
 
 
-PoolScene::PoolScene()
+PoolScene::PoolScene() : SceneviewScene()
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
-    loadPhongShader();
-    loadWireframeShader();
-    loadNormalsShader();
-    loadNormalsArrowShader();
-    tesselateShapes();
 
     init();
 }
@@ -32,36 +27,23 @@ PoolScene::~PoolScene()
 void PoolScene::init(){
     m_object_rotations.clear();
     m_object_translations.clear();
-    for(int i = 0; i < m_sceneObjects.size(); i++){
-            m_object_translations.push_back(glm::vec3(0.0f));
-            m_object_rotations.push_back(glm::vec3(0.0f));
+    m_ball_translations.clear();
+    m_walls.clear();
+    m_holes.clear();
+    m_balls.clear();
+
+    if(m_sceneObjects.size() == 38){
+        for(int i = 0; i <= 15; i++){
+            m_walls.push_back(m_sceneObjects.at(i));
+        }
+        for(int i = 16; i <= 21; i++){
+            m_holes.push_back(m_sceneObjects.at(i));
+        }
+        for(int i = 22; i <= 37; i++){
+            m_balls.push_back(m_sceneObjects.at(i));
+            m_ball_translations.push_back(glm::vec3(0.0f));
+        }
     }
-}
-
-void PoolScene::loadPhongShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/default.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/default.frag");
-    m_phongShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
-}
-
-void PoolScene::loadWireframeShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/wireframe.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/wireframe.frag");
-    m_wireframeShader = std::make_unique<Shader>(vertexSource, fragmentSource);
-}
-
-void PoolScene::loadNormalsShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/normals.vert");
-    std::string geometrySource = ResourceLoader::loadResourceFileToString(":/shaders/normals.gsh");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/normals.frag");
-    m_normalsShader = std::make_unique<Shader>(vertexSource, geometrySource, fragmentSource);
-}
-
-void PoolScene::loadNormalsArrowShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.vert");
-    std::string geometrySource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.gsh");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.frag");
-    m_normalsArrowShader = std::make_unique<Shader>(vertexSource, geometrySource, fragmentSource);
 }
 
 void PoolScene::render(SupportCanvas3D *context) {
@@ -102,89 +84,76 @@ void PoolScene::render(SupportCanvas3D *context) {
     }
 }
 
-void PoolScene::setSceneUniforms(SupportCanvas3D *context) {
-    Camera *camera = context->getCamera();
-    m_phongShader->setUniform("useLighting", settings.useLighting);
-    m_phongShader->setUniform("useArrowOffsets", false);
-    m_phongShader->setUniform("p" , camera->getProjectionMatrix());
-    m_phongShader->setUniform("v", camera->getViewMatrix());
-}
-
-void PoolScene::setMatrixUniforms(Shader *shader, SupportCanvas3D *context) {
-    shader->setUniform("p", context->getCamera()->getProjectionMatrix());
-    shader->setUniform("v", context->getCamera()->getViewMatrix());
-}
-
-void PoolScene::setLights()
-{
-    for (CS123SceneLightData light : m_lightData) {
-        m_phongShader->setLight(light);
-    }
-}
-
 void PoolScene::renderGeometry() {
-    if(m_object_translations.size() == 0){
+    if(m_balls.size() == 0){
         init();
     }
 
-    for (int i = 0; i < m_sceneObjects.size(); i++) {
-        SceneObject o = m_sceneObjects[i];
-        o.material.cAmbient *= m_ka;
-        o.material.cDiffuse *= m_kd;
-        glm::mat4 transform = glm::translate(m_object_translations.at(i)) * o.composite;
-        m_phongShader->applyMaterial(o.material);
-        m_phongShader->setUniform("m", transform);
-        if (settings.drawNormals) {
-            m_normalsShader->setUniform("m", transform);
-            m_normalsArrowShader->setUniform("m", transform);
+    if(m_sceneObjects.size() == 38){
+        for(int i = 0; i <= 15; i++){
+            SceneObject o = m_walls.at(i);
+            glm::mat4 transform =  o.composite;
+            drawObject(o,transform);
         }
-        if (settings.drawWireframe) {
-            m_wireframeShader->setUniform("m", transform);
+        for(int i = 16; i <= 21; i++){
+            SceneObject o = m_holes.at(i-16);
+            glm::mat4 transform =  o.composite;
+            drawObject(o,transform);
         }
-
-        // draw shapes
-        switch (o.primitive) {
-        case PrimitiveType::PRIMITIVE_CUBE :
-            m_cube->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_CYLINDER:
-            m_cylinder->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_CONE:
-            m_cone->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_SPHERE:
-            m_sphere->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_MESH:
-            break;
-        case PrimitiveType::PRIMITIVE_TORUS :
-            break;
+        for(int i = 22; i <= 37; i++){
+            SceneObject o = m_balls.at(i-22);
+            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
+            drawObject(o,transform);
         }
     }
 
 }
 
-void PoolScene::tesselateShapes(){
-    m_cube = std::make_unique<CubeShape>();
-    m_cone = std::make_unique<ConeShape>();
-    m_cylinder = std::make_unique<CylinderShape>();
-    m_sphere = std::make_unique<SphereShape>();
-    m_cube->initializeShape(3, 3);
-    m_cone->initializeShape(30, 30);
-    m_cylinder->initializeShape(30, 30);
-    m_sphere->initializeShape(30, 30);
+void PoolScene::drawObject(SceneObject o, glm::mat4 transform){
+    o.material.cAmbient *= m_ka;
+    o.material.cDiffuse *= m_kd;
+    m_phongShader->applyMaterial(o.material);
+    m_phongShader->setUniform("m", transform);
+    if (settings.drawNormals) {
+        m_normalsShader->setUniform("m", transform);
+        m_normalsArrowShader->setUniform("m", transform);
+    }
+    if (settings.drawWireframe) {
+        m_wireframeShader->setUniform("m", transform);
+    }
+
+    // draw shapes
+    switch (o.primitive) {
+    case PrimitiveType::PRIMITIVE_CUBE :
+        m_cube->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_CYLINDER:
+        m_cylinder->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_CONE:
+        m_cone->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_SPHERE:
+        m_sphere->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_MESH:
+        break;
+    case PrimitiveType::PRIMITIVE_TORUS :
+        break;
+    }
 }
 
-void PoolScene::settingsChanged() {
+void PoolScene::updateBallPosition(int ballNum, glm::vec3 translate){
+    assert(0 <= ballNum && ballNum <= 17);
+    m_ball_rotations.at(ballNum) += translate;
 }
 
 // This is just a filler method right now. We can change it to alter the
 // objects in any way we need
 void PoolScene::updateTranslation() {
-    for(int i = 0; i < m_object_translations.size(); i++){
+    for(int i = 0; i < m_ball_translations.size(); i++){
         glm::vec3 translate = glm::vec3(0.01f,0.f,0.f);
-        m_object_translations[i] += translate;
+        m_ball_translations[i] += translate;
     }
 }
 
