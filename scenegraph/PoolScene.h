@@ -25,9 +25,10 @@ public:
     virtual ~PoolScene();
     virtual void render(SupportCanvas3D *context) override;
 
-    void updateTranslation();
     void init();
-    void updateBallPosition(int ballNum, glm::vec3 translate);
+    void updateTranslation(float secondsPassed);
+    void checkIntersections();
+    void addVelocity(int ballNum, glm::vec3 vel);
 
 protected:
     void renderGeometry();
@@ -41,6 +42,7 @@ protected:
     std::vector<SceneObject> m_holes;
 
     std::vector<glm::vec3> m_ball_translations;
+    std::vector<glm::vec3> m_ball_velocities;
     std::vector<glm::vec3> m_ball_rotations;
 };
 

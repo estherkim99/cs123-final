@@ -27,7 +27,10 @@ PoolScene::~PoolScene()
 void PoolScene::init(){
     m_object_rotations.clear();
     m_object_translations.clear();
+
     m_ball_translations.clear();
+    m_ball_velocities.clear();
+
     m_walls.clear();
     m_holes.clear();
     m_balls.clear();
@@ -42,7 +45,9 @@ void PoolScene::init(){
         for(int i = 22; i <= 37; i++){
             m_balls.push_back(m_sceneObjects.at(i));
             m_ball_translations.push_back(glm::vec3(0.0f));
+            m_ball_velocities.push_back(glm::vec3(0.0f));
         }
+        m_ball_velocities[0] = glm::vec3(0.2f,0.f,0.4f);
     }
 }
 
@@ -143,17 +148,55 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform){
     }
 }
 
-void PoolScene::updateBallPosition(int ballNum, glm::vec3 translate){
-    assert(0 <= ballNum && ballNum <= 17);
-    m_ball_rotations.at(ballNum) += translate;
+void PoolScene::addVelocity(int ballNum, glm::vec3 vel){
+    assert(m_ball_translations.size() == 16);
+    m_ball_translations.at(ballNum) += vel;
 }
 
-// This is just a filler method right now. We can change it to alter the
-// objects in any way we need
-void PoolScene::updateTranslation() {
+void PoolScene::checkIntersections(){
+    // may need to hard code initial positions of each ball D:
     for(int i = 0; i < m_ball_translations.size(); i++){
-        glm::vec3 translate = glm::vec3(0.01f,0.f,0.f);
-        m_ball_translations[i] += translate;
+        // TODO: if the velocity is 0, dont need to check anything
+
+        // check intersection with walls
+        for(int j = 0; i < m_walls.size(); j++){
+            // TODO: if there is intersection, update the velocities properly
+        }
+
+        // check intersection with holes
+        for(int j = 0; i < m_holes.size(); j++){
+            // TODO: if there is intersection, update the velocities properly
+        }
+
+        // check intersection with other balls
+        for(int j = i+1; i < m_ball_translations.size(); j++){
+            // TODO: if there is intersection, update the velocities properly
+        }
+    }
+}
+
+void PoolScene::updateTranslation(float secondsPassed) {
+    float a = .05; // m/s^2
+
+    if(m_ball_translations.size() == 16){
+        for(int i = 0; i < m_ball_velocities.size(); i++){
+            if(glm::length(m_ball_velocities[i]) < 0.0001f){
+                continue;
+            }
+            glm::vec3 inv_norm = -glm::normalize(m_ball_velocities[i]);
+            glm::vec3 new_vel = m_ball_velocities[i] + secondsPassed*a*inv_norm;
+            if(signbit(new_vel.x) != signbit(m_ball_velocities[i].x)){
+                new_vel.x = 0.f;
+            }
+            if(signbit(new_vel.z) != signbit(m_ball_velocities[i].z)){
+                new_vel.z = 0.f;
+            }
+            m_ball_velocities[i] = new_vel;
+        }
+
+        for(int i = 0; i < m_ball_translations.size(); i++){
+            m_ball_translations[i] += secondsPassed*m_ball_velocities[i];
+        }
     }
 }
 
