@@ -58,6 +58,9 @@ public:
     // This function will be called by the UI when the settings have changed.
     virtual void settingsChanged();
 
+    void shoot(glm::vec3 vel);
+    void orientCue();
+
 public slots:
     // These will be called by the corresponding UI buttons on the Camtrans dock
     void resetUpVector();

@@ -312,3 +312,32 @@ void SupportCanvas3D::tick() {
     // Flag this view for repainting (Qt will call paintGL() soon after)
     update();
 }
+
+
+void SupportCanvas3D::shoot(glm::vec3 vel){
+    if(m_pool) {
+        m_poolScene->addVelocity(0, vel);
+    }
+}
+
+void SupportCanvas3D::orientCue(){
+    if (m_pool) {
+        m_defaultPerspectiveCamera->translate(
+                glm::vec4(
+                    settings.cameraPosX - m_oldPosX,
+                    settings.cameraPosY - m_oldPosY,
+                    settings.cameraPosZ - m_oldPosZ,
+                    0));
+
+        m_oldPosX = settings.cameraPosX;
+        m_oldPosY = settings.cameraPosY;
+        m_oldPosZ = settings.cameraPosZ;
+
+        // eye, look, up
+        m_defaultPerspectiveCamera->orientLook(
+                    glm::vec4(0.f, 2.f, 0.f, 1.f),
+                    glm::vec4(0.f, -1.f, 0.f, 0.f),
+                    glm::vec4(0.f, 0.f, 1.f, 0.f));
+        update();
+    }
+}
