@@ -7,7 +7,8 @@
 #include "SupportCanvas3D.h"
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
-
+#include "gl/textures/Texture2D.h"
+#include "gl/textures/TextureParametersBuilder.h"
 
 
 using namespace CS123::GL;
@@ -16,7 +17,6 @@ using namespace CS123::GL;
 PoolScene::PoolScene() : SceneviewScene()
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
-
     init();
 }
 
@@ -85,11 +85,11 @@ void PoolScene::render(SupportCanvas3D *context) {
 }
 
 void PoolScene::renderGeometry() {
-    if(m_balls.size() == 0){
+    if (m_balls.size() == 0){
         init();
     }
 
-    if(m_sceneObjects.size() == 38){
+    if (m_sceneObjects.size() == 38){ // make this more extensible?
         for(int i = 0; i <= 15; i++){
             SceneObject o = m_walls.at(i);
             glm::mat4 transform =  o.composite;
@@ -106,7 +106,6 @@ void PoolScene::renderGeometry() {
             drawObject(o,transform);
         }
     }
-
 }
 
 void PoolScene::drawObject(SceneObject o, glm::mat4 transform){

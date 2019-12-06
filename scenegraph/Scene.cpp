@@ -105,3 +105,14 @@ void Scene::setGlobal(const CS123SceneGlobalData &global) {
     m_kt = global.kt;
 }
 
+void Scene::loadTextures(){
+    m_textures.resize(m_sceneObjects.size());
+    for (SceneObject x : m_sceneObjects) {
+        if (x.material.textureMap.isUsed) {
+            QString fname = QString::fromStdString(x.material.textureMap.filename);
+            QImage texture(fname);
+            m_textures.at(x.id) = texture;
+        }
+    }
+}
+

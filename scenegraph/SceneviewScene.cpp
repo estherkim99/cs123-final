@@ -7,8 +7,8 @@
 #include "SupportCanvas3D.h"
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
-
-
+#include "gl/textures/TextureParametersBuilder.h"
+#include "gl/textures/Texture2D.h"
 
 using namespace CS123::GL;
 

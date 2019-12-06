@@ -22,23 +22,13 @@ void RayScene::initializeShapes(){
     m_raySphere = std::make_shared<RaySphere>();
 }
 
-void RayScene::loadTextures(){
-    if (settings.useTextureMapping) {
-        m_textures.resize(m_sceneObjects.size());
-        for (SceneObject x : m_sceneObjects) {
-            if (x.material.textureMap.isUsed) {
-                QString fname = QString::fromStdString(x.material.textureMap.filename);
-                QImage texture(fname);
-                m_textures.at(x.id) = texture;
-            }
-        }
-    }
-}
-
 void RayScene::rayTrace(Camera *camera, Canvas2D *canvas){
 
     updateFilmToWorldMatrix(camera); // load information from camera
-    loadTextures();
+
+    if (settings.useTextureMapping) {
+        loadTextures();
+    }
 
     int width = canvas->width();
     int height = canvas->height();

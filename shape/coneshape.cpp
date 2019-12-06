@@ -81,3 +81,4 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
         index++;
     }
 }
+

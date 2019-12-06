@@ -5,7 +5,6 @@ QT += opengl xml
 TARGET = CS123
 TEMPLATE = app
 
-QMAKE_LFLAGS += -no-pie
 QMAKE_CXXFLAGS += -std=c++14
 CONFIG += c++14
 

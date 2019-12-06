@@ -11,6 +11,8 @@ public:
     CubeShape();
     ~CubeShape();
 
+    static glm::vec2 getUV(glm::vec4 p, glm::vec4 n);
+
 private:
     virtual void makeSides(std::vector<float>* vertices, int p1, int p2);
     void firstSide(std::vector<float>* side, int p1, float length, int dataNum);

@@ -177,7 +177,6 @@ void ShapesScene::renderGeometry() {
         m_sphere->draw();
         break;
     }
-
 }
 
 void ShapesScene::renderShapes() {

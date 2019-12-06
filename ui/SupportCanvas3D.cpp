@@ -151,21 +151,26 @@ void SupportCanvas3D::setSceneFromSettings() {
     m_settingsDirty = false;
 }
 
+// TODO: make functions below more extensible (i.e., should work for pool scenes and reg. scenes)
 void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-//    m_sceneviewScene = std::make_unique<SceneviewScene>();
-//    Scene::parse(m_sceneviewScene.get(), &parser);
-    m_poolScene = std::make_unique<PoolScene>();
-    Scene::parse(m_poolScene.get(), &parser);
-    m_settingsDirty = true;
+    m_sceneviewScene = std::make_unique<SceneviewScene>();
+    Scene::parse(m_sceneviewScene.get(), &parser);
 
+// TODO: add back in once texture mapping is fixed
+//    m_poolScene = std::make_unique<PoolScene>();
+//    Scene::parse(m_poolScene.get(), &parser);
+    m_settingsDirty = true;
 }
 
+// called in setSceneFromSettings
 void SupportCanvas3D::setSceneToSceneview() {
-    //assert(m_sceneviewScene.get());
-    //m_currentScene = m_sceneviewScene.get();
-    assert(m_poolScene.get());
-    m_currentScene = m_poolScene.get();
-    m_pool = true;
+    assert(m_sceneviewScene.get());
+    m_currentScene = m_sceneviewScene.get();
+
+// TODO: add back in once texture mapping is fixed
+//    assert(m_poolScene.get());
+//    m_currentScene = m_poolScene.get();
+//    m_pool = true;
 }
 
 void SupportCanvas3D::setSceneToShapes() {
