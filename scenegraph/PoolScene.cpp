@@ -200,3 +200,10 @@ void PoolScene::updateTranslation(float secondsPassed) {
     }
 }
 
+glm::vec3 PoolScene::getBallPosition(int ballnum){
+    SceneObject *cue = &m_balls.at(ballnum);
+
+    glm::vec3 initial_position = glm::vec3(cue->composite[0][3], cue->composite[1][3], cue->composite[2][3]);
+    return m_ball_translations.at(ballnum) + initial_position;
+}
+
