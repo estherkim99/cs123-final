@@ -47,7 +47,7 @@ void PoolScene::init(){
             m_ball_translations.push_back(glm::vec3(0.0f));
             m_ball_velocities.push_back(glm::vec3(0.0f));
         }
-        m_ball_velocities[0] = glm::vec3(0.2f,0.f,0.4f);
+//        m_ball_velocities[0] = glm::vec3(0.2f,0.f,0.4f);
     }
 }
 
@@ -150,7 +150,7 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform){
 
 void PoolScene::addVelocity(int ballNum, glm::vec3 vel){
     assert(m_ball_translations.size() == 16);
-    m_ball_translations.at(ballNum) += vel;
+    m_ball_velocities.at(ballNum) += vel;
 }
 
 void PoolScene::checkIntersections(){
