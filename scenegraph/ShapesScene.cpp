@@ -10,10 +10,6 @@
 
 using namespace CS123::GL;
 #include "gl/shaders/CS123Shader.h"
-#include "shape/cubeshape.h"
-#include "shape/cylindershape.h"
-#include "shape/coneshape.h"
-#include "shape/sphereshape.h"
 #include "gl/shaders/Shader.h"
 #include "gl/shaders/ShaderAttribLocations.h"
 #include "glm/gtx/transform.hpp"
@@ -24,10 +20,10 @@ using namespace CS123::GL;
 ShapesScene::ShapesScene(int width, int height) :
     m_width(width),
     m_height(height),
-    m_cube(std::make_unique<CubeShape>()),
-    m_cylinder(std::make_unique<CylinderShape>()),
-    m_cone(std::make_unique<ConeShape>()),
-    m_sphere(std::make_unique<SphereShape>())
+    m_cube(std::make_unique<Cube>()),
+    m_cylinder(std::make_unique<Cylinder>()),
+    m_cone(std::make_unique<Cone>()),
+    m_sphere(std::make_unique<Sphere>())
 {
     initializeSceneMaterial();
     initializeSceneLight();
@@ -165,16 +161,16 @@ void ShapesScene::renderGeometry() {
     // TODO: [SHAPES] Render the shape. Lab 1 seems like it'll come in handy...
     switch (settings.shapeType) {
     case SHAPE_CUBE:
-        m_cube->draw();
+        m_cube->drawShape();
         break;
     case SHAPE_CYLINDER:
-        m_cylinder->draw();
+        m_cylinder->drawShape();
         break;
     case SHAPE_CONE:
-        m_cone->draw();
+        m_cone->drawShape();
         break;
     case SHAPE_SPHERE:
-        m_sphere->draw();
+        m_sphere->drawShape();
         break;
     }
 
@@ -184,10 +180,10 @@ void ShapesScene::renderShapes() {
     int p1 = settings.shapeParameter1;
     int p2 = settings.shapeParameter2;
     // initialize shapes
-    m_cube->initializeShape(p1, 0);
-    m_cylinder->initializeShape(p1, p2);
-    m_cone->initializeShape(p1, p2);
-    m_sphere->initializeShape(p1, p2);
+    m_cube->createVertices(p1, p2);
+    m_cylinder->createVertices(p1, p2);
+    m_cone->createVertices(p1, p2);
+    m_sphere->createVertices(p1, p2);
 }
 
 void ShapesScene::clearLights() {

@@ -7,11 +7,9 @@
 #include "SupportCanvas3D.h"
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
-
-
+#include "gl/textures/Texture2D.h"
 
 using namespace CS123::GL;
-
 
 SceneviewScene::SceneviewScene()
 {
@@ -125,20 +123,21 @@ void SceneviewScene::renderGeometry() {
         if (settings.drawWireframe) {
             m_wireframeShader->setUniform("m", o.composite);
         }
+        applyTextureIfUsed(o);
 
         // draw shapes
         switch (o.primitive) {
         case PrimitiveType::PRIMITIVE_CUBE :
-            m_cube->draw();
+            m_cube->drawShape();
             break;
         case PrimitiveType::PRIMITIVE_CYLINDER:
-            m_cylinder->draw();
+            m_cylinder->drawShape();
             break;
         case PrimitiveType::PRIMITIVE_CONE:
-            m_cone->draw();
+            m_cone->drawShape();
             break;
         case PrimitiveType::PRIMITIVE_SPHERE:
-            m_sphere->draw();
+            m_sphere->drawShape();
             break;
         case PrimitiveType::PRIMITIVE_MESH:
             break;
@@ -146,18 +145,45 @@ void SceneviewScene::renderGeometry() {
             break;
         }
     }
+}
 
+void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
+    CS123SceneFileMap map = obj.material.textureMap;
+    if (!map.isUsed) {
+        m_phongShader->setUniform("useTexture", 0);
+        return;
+    }
+    m_phongShader->setUniform("useTexture", 1);
+    m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
+
+    QImage image = m_textures.at(obj.id);
+    m_phongShader->setUniform("width", image.width());
+    m_phongShader->setUniform("height", image.height());
+    QImage fImage = QGLWidget::convertToGLFormat(image);
+
+    Texture2D texture = Texture2D(fImage.bits(), fImage.width(), fImage.height());
+
+    GLuint texturaID[1];
+    glGenTextures(1, texturaID);
+    glBindTexture(GL_TEXTURE_2D, texturaID[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, fImage.width(), fImage.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, fImage.bits());
+
+    GLint baseImageLoc = glGetUniformLocation(1, "tex"); // 1 should be m_programID; not sure how to access this here
+    glUniform1i(baseImageLoc, 0);
+    glActiveTexture(GL_TEXTURE0 + 0);
+    glBindTexture(GL_TEXTURE_2D, texturaID[0]);
 }
 
 void SceneviewScene::tesselateShapes(){
-    m_cube = std::make_unique<CubeShape>();
-    m_cone = std::make_unique<ConeShape>();
-    m_cylinder = std::make_unique<CylinderShape>();
-    m_sphere = std::make_unique<SphereShape>();
-    m_cube->initializeShape(3, 3);
-    m_cone->initializeShape(30, 30);
-    m_cylinder->initializeShape(30, 30);
-    m_sphere->initializeShape(30, 30);
+    m_cube = std::make_unique<Cube>();
+    m_cube->createVertices(settings.shapeParameter1, settings.shapeParameter2);
+    m_cone = std::make_unique<Cone>();
+    m_cone->createVertices(settings.shapeParameter1, settings.shapeParameter2);
+    m_cylinder = std::make_unique<Cylinder>();
+    m_cylinder->createVertices(settings.shapeParameter1, settings.shapeParameter2);
+    m_sphere = std::make_unique<Sphere>();
+    m_sphere->createVertices(settings.shapeParameter1, settings.shapeParameter2);
 }
 
 void SceneviewScene::settingsChanged() {

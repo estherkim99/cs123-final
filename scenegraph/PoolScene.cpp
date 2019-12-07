@@ -7,8 +7,10 @@
 #include "SupportCanvas3D.h"
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
-
-
+#include <glm.hpp>
+#include "CS123SceneData.h"
+#include <list>
+#include "SupportCanvas2D.h"
 
 using namespace CS123::GL;
 
@@ -107,11 +109,10 @@ void PoolScene::renderGeometry() {
         }
         for(int i = 22; i <= 37; i++){
             SceneObject o = m_balls.at(i-22);
-            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
-            drawObject(o,transform);
+//            glm::mat4x4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
+//            drawObject(o,transform);
         }
     }
-
 }
 
 void PoolScene::drawObject(SceneObject o, glm::mat4 transform){
@@ -130,16 +131,16 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform){
     // draw shapes
     switch (o.primitive) {
     case PrimitiveType::PRIMITIVE_CUBE :
-        m_cube->draw();
+        m_cube->drawShape();
         break;
     case PrimitiveType::PRIMITIVE_CYLINDER:
-        m_cylinder->draw();
+        m_cylinder->drawShape();
         break;
     case PrimitiveType::PRIMITIVE_CONE:
-        m_cone->draw();
+        m_cone->drawShape();
         break;
     case PrimitiveType::PRIMITIVE_SPHERE:
-        m_sphere->draw();
+        m_sphere->drawShape();
         break;
     case PrimitiveType::PRIMITIVE_MESH:
         break;

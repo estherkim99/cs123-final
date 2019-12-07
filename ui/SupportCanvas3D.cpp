@@ -152,20 +152,20 @@ void SupportCanvas3D::setSceneFromSettings() {
 }
 
 void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-//    m_sceneviewScene = std::make_unique<SceneviewScene>();
-//    Scene::parse(m_sceneviewScene.get(), &parser);
-    m_poolScene = std::make_unique<PoolScene>();
-    Scene::parse(m_poolScene.get(), &parser);
+    m_sceneviewScene = std::make_unique<SceneviewScene>();
+    Scene::parse(m_sceneviewScene.get(), &parser);
+//    m_poolScene = std::make_unique<PoolScene>();
+//    Scene::parse(m_poolScene.get(), &parser);
     m_settingsDirty = true;
 
 }
 
 void SupportCanvas3D::setSceneToSceneview() {
-    //assert(m_sceneviewScene.get());
-    //m_currentScene = m_sceneviewScene.get();
-    assert(m_poolScene.get());
-    m_currentScene = m_poolScene.get();
-    m_pool = true;
+    assert(m_sceneviewScene.get());
+    m_currentScene = m_sceneviewScene.get();
+//    assert(m_poolScene.get());
+//    m_currentScene = m_poolScene.get();
+//    m_pool = true;
 }
 
 void SupportCanvas3D::setSceneToShapes() {

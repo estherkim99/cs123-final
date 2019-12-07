@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "CS123ISceneParser.h"
-
+#include "Settings.h"
 #include "glm/gtx/transform.hpp"
 
 
@@ -81,6 +81,7 @@ void Scene::parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 comp
         sceneToFill->parseNode(sceneToFill, c[i], composite);
     }
 
+    sceneToFill->loadTextures();
 }
 
 void Scene::addPrimitive(const CS123ScenePrimitive &scenePrimitive, const glm::mat4x4 &matrix) {
@@ -105,3 +106,15 @@ void Scene::setGlobal(const CS123SceneGlobalData &global) {
     m_kt = global.kt;
 }
 
+void Scene::loadTextures() {
+    if (settings.useTextureMapping) {
+        m_textures.resize(m_sceneObjects.size());
+        for (SceneObject x : m_sceneObjects) {
+            if (x.material.textureMap.isUsed) {
+                QString fname = QString::fromStdString(x.material.textureMap.filename);
+                QImage texture(fname);
+                m_textures.at(x.id) = texture;
+            }
+        }
+    }
+}

@@ -2,15 +2,14 @@
 #define SHAPESSCENE_H
 
 #include "OpenGLScene.h"
-
 #include <memory>
-
 #include <GL/glew.h>
-
 #include "gl/datatype/FBO.h"
 #include "Settings.h"
-#include "shape/openglshape.h"
-
+#include "shape/Cube.h"
+#include "shape/Cylinder.h"
+#include "shape/Cone.h"
+#include "shape/Sphere.h"
 
 namespace CS123 { namespace GL {
 
@@ -95,10 +94,10 @@ private:
     /** Vertex array objects for each of the shapes in the project. */
 
     void renderShapes();
-    std::unique_ptr<OpenGLShape> m_cube;
-    std::unique_ptr<OpenGLShape> m_cylinder;
-    std::unique_ptr<OpenGLShape> m_cone;
-    std::unique_ptr<OpenGLShape> m_sphere;
+    std::unique_ptr<Cube> m_cube;
+    std::unique_ptr<Cylinder> m_cylinder;
+    std::unique_ptr<Cone> m_cone;
+    std::unique_ptr<Sphere> m_sphere;
 
 //    std::unique_ptr<OpenGLShape> m_torus;
 

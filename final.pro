@@ -5,7 +5,6 @@ QT += opengl xml
 TARGET = CS123
 TEMPLATE = app
 
-QMAKE_LFLAGS += -no-pie
 QMAKE_CXXFLAGS += -std=c++14
 CONFIG += c++14
 
@@ -59,17 +58,20 @@ SOURCES += \
     main.cpp \
     glew-1.10.0/src/glew.c \
     lib/RGBA.cpp \
-    shape/openglshape.cpp \
-    shape/cubeshape.cpp \
-    shape/coneshape.cpp \
-    shape/cylindershape.cpp \
-    shape/sphereshape.cpp \
     rayshape/RayCone.cpp \
     rayshape/RayShape.cpp \
     rayshape/RayCube.cpp \
     rayshape/RaySphere.cpp \
     rayshape/RayCylinder.cpp \
-    scenegraph/PoolScene.cpp
+    scenegraph/PoolScene.cpp \
+    utils/TextureUtils.cpp \
+    shape/Cap.cpp \
+    shape/Cone.cpp \
+    shape/Cube.cpp \
+    shape/Cylinder.cpp \
+    shape/Shape.cpp \
+    shape/Sphere.cpp \
+    lib/openglshape.cpp
 
 
 HEADERS += \
@@ -120,7 +122,16 @@ HEADERS += \
     rayshape/RayCube.h \
     rayshape/RaySphere.h \
     rayshape/RayCylinder.h \
-    scenegraph/PoolScene.h
+    scenegraph/PoolScene.h \
+    utils/TextureUtils.h \
+    scenegraph/ListNode.h \
+    shape/Cap.h \
+    shape/Cone.h \
+    shape/Cube.h \
+    shape/Cylinder.h \
+    shape/Shape.h \
+    shape/Sphere.h \
+    lib/openglshape.h
 
 
 FORMS += ui/mainwindow.ui

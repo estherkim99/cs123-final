@@ -2,18 +2,13 @@
 #define SCENEVIEWSCENE_H
 
 #include "OpenGLScene.h"
-
 #include <memory>
-
-#include "shape/openglshape.h"
-#include "shape/cubeshape.h"
-#include "shape/cylindershape.h"
-#include "shape/coneshape.h"
-#include "shape/sphereshape.h"
-
+#include "shape/Cube.h"
+#include "shape/Cylinder.h"
+#include "shape/Cone.h"
+#include "shape/Sphere.h"
 
 namespace CS123 { namespace GL {
-
     class Shader;
     class CS123Shader;
     class Texture2D;
@@ -57,6 +52,7 @@ protected:
     void setMatrixUniforms(CS123::GL::Shader *shader, SupportCanvas3D *context);
     void setLights();
     void renderGeometry();
+    void applyTextureIfUsed(SceneObject obj);
 
     std::unique_ptr<CS123::GL::CS123Shader> m_phongShader;
     std::unique_ptr<CS123::GL::Shader> m_wireframeShader;
@@ -64,10 +60,10 @@ protected:
     std::unique_ptr<CS123::GL::Shader> m_normalsArrowShader;
 
     void tesselateShapes();
-    std::unique_ptr<CubeShape> m_cube;
-    std::unique_ptr<ConeShape> m_cone;
-    std::unique_ptr<CylinderShape> m_cylinder;
-    std::unique_ptr<SphereShape> m_sphere;
+    std::unique_ptr<Cube> m_cube;
+    std::unique_ptr<Cone> m_cone;
+    std::unique_ptr<Cylinder> m_cylinder;
+    std::unique_ptr<Sphere> m_sphere;
 
 };
 

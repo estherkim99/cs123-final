@@ -2,14 +2,12 @@
 #define RAYSCENE_H
 
 #include "Scene.h"
-
 #include <vector>
 #include "Canvas2D.h"
 #include "rayshape/RayCube.h"
 #include "rayshape/RayCone.h"
 #include "rayshape/RayCylinder.h"
 #include "rayshape/RaySphere.h"
-
 
 class Canvas2D;
 
@@ -64,7 +62,6 @@ private:
 
     glm::vec3 getReflections(CS123SceneMaterial *material, glm::vec4 n, glm::vec4 d, glm::vec4 p);
     bool shadowed(glm::vec4 lightdir, glm::vec4 p);
-    void loadTextures();
 
     // member variables
     std::shared_ptr<RayShape> m_rayshape;
@@ -76,7 +73,6 @@ private:
     glm::mat4x4 m_filmToWorld;
     glm::vec4 m_eye;
     int m_depth;
-    std::vector<QImage> m_textures;
     bool m_shadow;
 };
 
