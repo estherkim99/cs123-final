@@ -3,7 +3,11 @@
 #include "CS123ISceneParser.h"
 #include "Settings.h"
 #include "glm/gtx/transform.hpp"
-
+#include "Settings.h"
+#include "SupportCanvas3D.h"
+#include "ResourceLoader.h"
+#include "gl/shaders/CS123Shader.h"
+#include "gl/textures/Texture2D.h"
 
 Scene::Scene() :
     m_id(0)
@@ -113,7 +117,9 @@ void Scene::loadTextures() {
             if (x.material.textureMap.isUsed) {
                 QString fname = QString::fromStdString(x.material.textureMap.filename);
                 QImage texture(fname);
-                m_textures.at(x.id) = texture;
+                QImage convertedImage = QGLWidget::convertToGLFormat(texture);
+                // m_textures.at(x.id) = texture;
+                m_textures.at(x.id) = convertedImage;
             }
         }
     }

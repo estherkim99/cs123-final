@@ -109,7 +109,7 @@ void PoolScene::renderGeometry() {
         }
         for(int i = 22; i <= 37; i++){
             SceneObject o = m_balls.at(i-22);
-//            glm::mat4x4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
+//            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
 //            drawObject(o,transform);
         }
     }

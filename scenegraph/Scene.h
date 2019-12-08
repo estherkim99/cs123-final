@@ -3,6 +3,7 @@
 
 #include "CS123SceneData.h"
 #include "Canvas2D.h"
+#include "gl/textures/Texture2D.h"
 
 class Camera;
 class CS123ISceneParser;
@@ -49,11 +50,11 @@ protected:
     std::vector<CS123SceneLightData> m_lightData;
     std::vector<SceneObject> m_sceneObjects;
     std::vector<QImage> m_textures;
+
     float m_ka;
     float m_kd;
     float m_ks;
     float m_kt;
-
 
 private:
     void parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 composite);

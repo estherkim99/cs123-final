@@ -2,12 +2,10 @@
 #include "GL/glew.h"
 #include <QGLWidget>
 #include "Camera.h"
-
 #include "Settings.h"
 #include "SupportCanvas3D.h"
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
-#include "gl/textures/Texture2D.h"
 
 using namespace CS123::GL;
 
@@ -153,23 +151,20 @@ void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
         m_phongShader->setUniform("useTexture", 0);
         return;
     }
-    m_phongShader->setUniform("useTexture", 1);
-    m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
 
     QImage image = m_textures.at(obj.id);
+    m_phongShader->setUniform("useTexture", 1);
+    m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
     m_phongShader->setUniform("width", image.width());
     m_phongShader->setUniform("height", image.height());
-    QImage fImage = QGLWidget::convertToGLFormat(image);
-
-    Texture2D texture = Texture2D(fImage.bits(), fImage.width(), fImage.height());
 
     GLuint texturaID[1];
     glGenTextures(1, texturaID);
     glBindTexture(GL_TEXTURE_2D, texturaID[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, fImage.width(), fImage.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, fImage.bits());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
 
-    GLint baseImageLoc = glGetUniformLocation(1, "tex"); // 1 should be m_programID; not sure how to access this here
+    GLint baseImageLoc = glGetUniformLocation(1, "tex"); // 1 corresponds to m_programID
     glUniform1i(baseImageLoc, 0);
     glActiveTexture(GL_TEXTURE0 + 0);
     glBindTexture(GL_TEXTURE_2D, texturaID[0]);
