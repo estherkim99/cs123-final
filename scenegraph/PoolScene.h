@@ -33,6 +33,7 @@ public:
 protected:
     void renderGeometry();
     void drawObject(SceneObject o, glm::mat4 transform);
+    glm::vec3 getBallPosition(int ballnum);
 
     std::vector<glm::vec3> m_object_translations;
     std::vector<glm::vec3> m_object_rotations;

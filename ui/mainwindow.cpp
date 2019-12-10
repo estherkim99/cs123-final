@@ -6,6 +6,7 @@
 #include "scenegraph/RayScene.h"
 #include "scenegraph/ShapesScene.h"
 #include "scenegraph/SceneviewScene.h"
+#include "scenegraph/PoolScene.h"
 #include "camera/CamtransCamera.h"
 #include "CS123XmlSceneParser.h"
 #include <math.h>
@@ -62,6 +63,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Hide the "stop rendering" button until we need it
     ui->rayStopRenderingButton->setHidden(true);
+
+    // Hide shoot/exit shoot mode button until we need it
+    ui->shootButton->setHidden(true);
+    ui->exitShootMode->setHidden(true);
 
 
     // Reset the contents of both canvas widgets (make a new 500x500 image for the 2D one)
@@ -384,6 +389,9 @@ void MainWindow::setAllEnabled(bool enabled) {
     widgets += ui->rayFeatures;
     widgets += ui->rayLighting;
     widgets += ui->rayRenderButton;
+    widgets += ui->setShootMode;
+    widgets += ui->exitShootMode;
+    widgets += ui->shootButton;
 
     QList<QAction *> actions;
     actions += ui->actionNew;
@@ -467,4 +475,36 @@ void MainWindow::updateCameraHeightAngle() {
 
 void MainWindow::setCameraAxonometric() {
     m_canvas3D->setCameraAxonometric();
+}
+
+void MainWindow::setShootMode() {
+    // Make sure OpenGL gets a chance to update the OrbitCamera, which can only be done when
+    // that tab is active (because it needs the OpenGL context for its matrix transforms)
+    ui->tabWidget->setCurrentIndex(TAB_3D);
+    m_canvas3D->update();
+    QApplication::processEvents();
+
+    // Swap buttons
+    ui->setShootMode->setHidden(true);
+    ui->shootButton->setHidden(false);
+    ui->exitShootMode->setHidden(false);
+
+    // change camera settings
+    m_canvas3D->orientCue();
+
+    update();
+}
+void MainWindow::shoot(){
+    m_canvas3D->shoot(glm::vec3(0, 0, 0.10));
+    exitShootMode();
+}
+void MainWindow::exitShootMode() {
+    // Swap buttons
+    ui->setShootMode->setHidden(false);
+    ui->shootButton->setHidden(true);
+    ui->exitShootMode->setHidden(true);
+
+    // change camera settings
+
+    update();
 }
