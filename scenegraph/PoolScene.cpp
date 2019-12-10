@@ -153,7 +153,7 @@ void PoolScene::addVelocity(int ballNum, glm::vec3 vel){
     m_ball_velocities.at(ballNum) += vel;
 }
 
-void PoolScene::checkIntersections(){
+void PoolScene::collisionDetection(){
     // may need to hard code initial positions of each ball D:
     for(int i = 0; i < m_ball_translations.size(); i++){
         // TODO: if the velocity is 0, dont need to check anything
@@ -207,3 +207,16 @@ glm::vec3 PoolScene::getBallPosition(int ballnum){
     return m_ball_translations.at(ballnum) + initial_position;
 }
 
+bool checkBallCollision(glm::vec3 pos1, glm::vec3 pos2){
+    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.y - pos2.y, 2)
+                           + std::pow(pos1.y - pos2.y, 2));
+    float DIAMETER = 0.05715f;
+    return dist < DIAMETER;
+}
+
+bool checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2){
+    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.y - pos2.y, 2)
+                           + std::pow(pos1.y - pos2.y, 2));
+    float DIAMETER = 0.028575f+.065f;
+    return dist < DIAMETER;
+}

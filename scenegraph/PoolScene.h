@@ -27,7 +27,7 @@ public:
 
     void init();
     void updateTranslation(float secondsPassed);
-    void checkIntersections();
+    void collisionDetection();
     void addVelocity(int ballNum, glm::vec3 vel);
 
 protected:
