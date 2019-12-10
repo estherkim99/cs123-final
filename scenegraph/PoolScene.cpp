@@ -148,6 +148,11 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform){
     }
 }
 
+void PoolScene::tick(float secondsPassed){
+    collisionDetection();
+    updateTranslation(secondsPassed);
+}
+
 void PoolScene::addVelocity(int ballNum, glm::vec3 vel){
     assert(m_ball_translations.size() == 16);
     m_ball_velocities.at(ballNum) += vel;
@@ -156,21 +161,24 @@ void PoolScene::addVelocity(int ballNum, glm::vec3 vel){
 void PoolScene::collisionDetection(){
     // may need to hard code initial positions of each ball D:
     for(int i = 0; i < m_ball_translations.size(); i++){
-        // TODO: if the velocity is 0, dont need to check anything
-
-        // check intersection with walls
-        for(int j = 0; i < m_walls.size(); j++){
-            // TODO: if there is intersection, update the velocities properly
+        if(glm::length(m_ball_velocities[i]) < 0.0001f){
+            continue;
         }
+
 
         // check intersection with holes
-        for(int j = 0; i < m_holes.size(); j++){
+        for(int j = 0; j < m_holes.size(); j++){
             // TODO: if there is intersection, update the velocities properly
         }
 
+        // check intersection with walls
+        checkWallCollision(getBallPosition(i), i);
+
         // check intersection with other balls
-        for(int j = i+1; i < m_ball_translations.size(); j++){
-            // TODO: if there is intersection, update the velocities properly
+        for(int j = i+1; j < m_ball_translations.size(); j++){
+            if(checkBallCollision(getBallPosition(i),getBallPosition(j))){
+                updateVelocities(i,j);
+            }
         }
     }
 }
@@ -203,20 +211,47 @@ void PoolScene::updateTranslation(float secondsPassed) {
 glm::vec3 PoolScene::getBallPosition(int ballnum){
     SceneObject *cue = &m_balls.at(ballnum);
 
-    glm::vec3 initial_position = glm::vec3(cue->composite[0][3], cue->composite[1][3], cue->composite[2][3]);
+    glm::vec3 initial_position = glm::vec3(cue->composite[3][0], cue->composite[3][1], cue->composite[3][2]);
     return m_ball_translations.at(ballnum) + initial_position;
 }
 
-bool checkBallCollision(glm::vec3 pos1, glm::vec3 pos2){
-    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.y - pos2.y, 2)
-                           + std::pow(pos1.y - pos2.y, 2));
-    float DIAMETER = 0.05715f;
+void PoolScene::updateVelocities(int b1, int b2){
+    glm::vec3 v1 = m_ball_velocities[b1];
+    glm::vec3 v2 = m_ball_velocities[b2];
+
+    glm::vec3 p1 = getBallPosition(b1);
+    glm::vec3 p2 = getBallPosition(b2);
+
+    // currently assuming cue and number balls have same mass
+    // 2 particles colliding equation:
+    // https://en.wikipedia.org/wiki/Elastic_collision
+    glm::vec3 new_v1 = v1 - glm::dot(v1-v2,p1-p2)*(p1-p2)/glm::pow(glm::length(p1-p2),2.f);
+    glm::vec3 new_v2 = v2 - glm::dot(v2-v1,p2-p1)*(p2-p1)/glm::pow(glm::length(p2-p1),2.f);
+
+    m_ball_velocities[b1] = new_v1;
+    m_ball_velocities[b2] = new_v2;
+}
+
+bool PoolScene::checkBallCollision(glm::vec3 pos1, glm::vec3 pos2){
+    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.z - pos2.z, 2));
+    float DIAMETER = 0.05715f - 0.0001f;
     return dist < DIAMETER;
 }
 
-bool checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2){
-    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.y - pos2.y, 2)
-                           + std::pow(pos1.y - pos2.y, 2));
+bool PoolScene::checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2){
+    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.z - pos2.z, 2));
     float DIAMETER = 0.028575f+.065f;
     return dist < DIAMETER;
+}
+
+void PoolScene::checkWallCollision(glm::vec3 pos, int ballnum){
+    // lining location - cube radius * z scale - radius of ball
+    float z_border = 1.1515f - 0.5f * 0.063f - 0.028575f;
+    float x_border = 0.5915f - 0.5f * 0.063f - 0.028575f;
+    if(pos.z >= z_border || pos.z <= -z_border){
+        m_ball_velocities[ballnum].z *= -1.f;
+    }
+    else if(pos.x >= x_border || pos.x <= -x_border){
+        m_ball_velocities[ballnum].x *= -1.f;
+    }
 }

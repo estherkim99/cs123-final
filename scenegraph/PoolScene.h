@@ -26,14 +26,19 @@ public:
     virtual void render(SupportCanvas3D *context) override;
 
     void init();
-    void updateTranslation(float secondsPassed);
     void collisionDetection();
     void addVelocity(int ballNum, glm::vec3 vel);
+    void tick(float secondsPassed);
 
 protected:
+    void updateTranslation(float secondsPassed);
     void renderGeometry();
     void drawObject(SceneObject o, glm::mat4 transform);
+    void updateVelocities(int b1, int b2);
     glm::vec3 getBallPosition(int ballnum);
+    bool checkBallCollision(glm::vec3 pos1, glm::vec3 pos2);
+    bool checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2);
+    void checkWallCollision(glm::vec3 pos, int ballnum);
 
     std::vector<glm::vec3> m_object_translations;
     std::vector<glm::vec3> m_object_rotations;
