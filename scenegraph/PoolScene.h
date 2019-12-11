@@ -33,7 +33,7 @@ public:
 protected:
     void updateTranslation(float secondsPassed);
     void renderGeometry();
-    void drawObject(SceneObject o, glm::mat4 transform);
+    void drawObject(SceneObject o, glm::mat4 transform, int i);
     void updateVelocities(int b1, int b2);
     glm::vec3 getBallPosition(int ballnum);
     bool checkBallCollision(glm::vec3 pos1, glm::vec3 pos2);
