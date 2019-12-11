@@ -184,33 +184,37 @@ void PoolScene::collisionDetection(){
 }
 
 void PoolScene::updateTranslation(float secondsPassed) {
+    //collisionDetection();
     float a = .05; // m/s^2
-
+    //collisionDetection();
     if(m_ball_translations.size() == 16){
-        for(int i = 0; i < m_ball_velocities.size(); i++){
-            if(glm::length(m_ball_velocities[i]) < 0.0001f){
-                continue;
-            }
-            glm::vec3 inv_norm = -glm::normalize(m_ball_velocities[i]);
-            glm::vec3 new_vel = m_ball_velocities[i] + secondsPassed*a*inv_norm;
-            if(signbit(new_vel.x) != signbit(m_ball_velocities[i].x)){
-                new_vel.x = 0.f;
-            }
-            if(signbit(new_vel.z) != signbit(m_ball_velocities[i].z)){
-                new_vel.z = 0.f;
-            }
-            m_ball_velocities[i] = new_vel;
-        }
 
-        for(int i = 0; i < m_ball_translations.size(); i++){
-            m_ball_translations[i] += secondsPassed*m_ball_velocities[i];
-        }
+            for(int i = 0; i < m_ball_velocities.size(); i++){
+
+                if(glm::length(m_ball_velocities[i]) < 0.0001f){
+                    continue;
+                }
+                glm::vec3 inv_norm = -glm::normalize(m_ball_velocities[i]);
+                glm::vec3 new_vel = m_ball_velocities[i] + secondsPassed*a*inv_norm;
+                if(signbit(new_vel.x) != signbit(m_ball_velocities[i].x)){
+                    new_vel.x = 0.f;
+                }
+                if(signbit(new_vel.z) != signbit(m_ball_velocities[i].z)){
+                    new_vel.z = 0.f;
+                }
+                m_ball_velocities[i] = new_vel;
+            }
+
+            for(int i = 0; i < m_ball_translations.size(); i++){
+                m_ball_translations[i] += secondsPassed*m_ball_velocities[i];
+            }
+
     }
 }
 
 glm::vec3 PoolScene::getBallPosition(int ballnum){
     SceneObject *cue = &m_balls.at(ballnum);
-
+    // TODO: we can just precompute these
     glm::vec3 initial_position = glm::vec3(cue->composite[3][0], cue->composite[3][1], cue->composite[3][2]);
     return m_ball_translations.at(ballnum) + initial_position;
 }
@@ -225,8 +229,29 @@ void PoolScene::updateVelocities(int b1, int b2){
     // currently assuming cue and number balls have same mass
     // 2 particles colliding equation:
     // https://en.wikipedia.org/wiki/Elastic_collision
-    glm::vec3 new_v1 = v1 - glm::dot(v1-v2,p1-p2)*(p1-p2)/glm::pow(glm::length(p1-p2),2.f);
-    glm::vec3 new_v2 = v2 - glm::dot(v2-v1,p2-p1)*(p2-p1)/glm::pow(glm::length(p2-p1),2.f);
+
+// // regular method
+//    glm::vec3 new_v1 = v1 - glm::dot(v1-v2,p1-p2)*(p1-p2)/glm::pow(glm::length(p1-p2),2.f);
+//    glm::vec3 new_v2 = v2 - glm::dot(v2-v1,p2-p1)*(p2-p1)/glm::pow(glm::length(p2-p1),2.f);
+
+//    float dist = glm::distance(p1,p2);
+//    glm::vec3 diff = glm::normalize(p1 - p2);
+//    if(dist < 0.05715f){
+//        float move = ((0.05715f - dist) / 2.f);
+//        m_ball_translations[b1] -= diff*move;
+//        m_ball_translations[b2] += diff*move;
+//        p1 -= diff*move;
+//        p2 += diff*move;
+//    }
+//    p1 = getBallPosition(b1);
+//    p2 = getBallPosition(b2);
+//        glm::vec3 new_v1 = v1 - glm::dot(v1-v2,p1-p2)*(p1-p2)/glm::pow(glm::length(p1-p2),2.f);
+//        glm::vec3 new_v2 = v2 - glm::dot(v2-v1,p2-p1)*(p2-p1)/glm::pow(glm::length(p2-p1),2.f);
+
+    // assume balls are only touching at a point
+    glm::vec3 diff = glm::normalize(p1 - p2)*.05715f;
+    glm::vec3 new_v1 = v1 - glm::dot(v1-v2,diff)*(diff)/glm::pow(.05715f,2.f);
+    glm::vec3 new_v2 = v2 - glm::dot(v2-v1,-diff)*(-diff)/glm::pow(.05715f,2.f);
 
     m_ball_velocities[b1] = new_v1;
     m_ball_velocities[b2] = new_v2;
@@ -234,8 +259,11 @@ void PoolScene::updateVelocities(int b1, int b2){
 
 bool PoolScene::checkBallCollision(glm::vec3 pos1, glm::vec3 pos2){
     float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.z - pos2.z, 2));
-    float DIAMETER = 0.05715f - 0.0001f;
+    float DIAMETER = 0.05715f+0.00005f;
     return dist < DIAMETER;
+
+//    float DIAMETER = 0.05715f;
+//    return fabs(dist - DIAMETER) < 0.001f;
 }
 
 bool PoolScene::checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2){
