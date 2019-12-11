@@ -492,11 +492,13 @@ void MainWindow::setShootMode() {
     // change camera settings
     m_canvas3D->orientCue();
 
-    update();
+    // change settings
+    settings.useCue = true;
+
 }
 void MainWindow::shoot(){
-    m_canvas3D->shoot(glm::vec3(0, 0, 0.10));
-    exitShootMode();
+    m_canvas3D->shoot(.3f);
+    ui->shootButton->setHidden(true);
 }
 void MainWindow::exitShootMode() {
     // Swap buttons
@@ -505,6 +507,8 @@ void MainWindow::exitShootMode() {
     ui->exitShootMode->setHidden(true);
 
     // change camera settings
+    m_canvas3D->resetCamera();
 
-    update();
+    // change settings
+    settings.useCue = false;
 }

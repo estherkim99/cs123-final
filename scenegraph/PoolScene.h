@@ -29,11 +29,11 @@ public:
     void updateTranslation(float secondsPassed);
     void checkIntersections();
     void addVelocity(int ballNum, glm::vec3 vel);
+    glm::vec3 getBallPosition(int ballnum);
 
 protected:
     void renderGeometry();
     void drawObject(SceneObject o, glm::mat4 transform);
-    glm::vec3 getBallPosition(int ballnum);
 
     std::vector<glm::vec3> m_object_translations;
     std::vector<glm::vec3> m_object_rotations;

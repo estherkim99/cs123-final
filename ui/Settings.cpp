@@ -66,6 +66,9 @@ void Settings::loadSettingsOrDefaults() {
     cameraRotU = 0;
     cameraRotV = 0;
     cameraRotN = 0;
+
+    // FINAL
+    useCue = false;
 }
 
 void Settings::saveSettings() {
