@@ -22,10 +22,10 @@ void CubeShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
 
     firstSide(vertices, p1, 1.f, dataNum); // front
 
-    for (int i = 1; i < 4; i++) {
+    for (int i = 1; i < 4; i = i + 2) {
         rotateSurface(vertices, glm::vec3{0, 1.f, 0}, i * glm::pi<float>()/2, dataNum); // sides
     }
-    for (int i = 1; i < 4; i = i + 1) {
+    for (int i = 1; i < 4; i++) {
         rotateSurface(vertices, glm::vec3{1, 0, 0}, i * glm::pi<float>()/2, dataNum); // sides
     }
 }
