@@ -11,15 +11,19 @@
 #include "shape/coneshape.h"
 #include "shape/sphereshape.h"
 
+namespace CS123
+{
+namespace GL
+{
 
-namespace CS123 { namespace GL {
+class Shader;
+class CS123Shader;
+class Texture2D;
+} // namespace GL
+} // namespace CS123
 
-    class Shader;
-    class CS123Shader;
-    class Texture2D;
-}}
-
-class PoolScene : public SceneviewScene {
+class PoolScene : public SceneviewScene
+{
 public:
     PoolScene();
     virtual ~PoolScene();
@@ -29,6 +33,7 @@ public:
     void collisionDetection();
     void addVelocity(int ballNum, glm::vec3 vel);
     void tick(float secondsPassed);
+    glm::vec3 getBallPosition(int ballnum);
 
 protected:
     void updateTranslation(float secondsPassed);
@@ -54,6 +59,5 @@ protected:
     std::vector<float> m_ball_rotations;
     std::vector<bool> m_ball_done;
 };
-
 
 #endif // POOLSCENE_H
