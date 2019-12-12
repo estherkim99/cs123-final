@@ -50,8 +50,9 @@ void PoolScene::init(){
             m_ball_translations.push_back(glm::vec3(0.0f));
             m_ball_velocities.push_back(glm::vec3(0.0f));
             m_ball_done.push_back(false);
+
+            m_ball_rotations.push_back(0.0f);
         }
-//        m_ball_velocities[0] = glm::vec3(0.2f,0.f,0.4f);
     }
 }
 
@@ -113,8 +114,16 @@ void PoolScene::renderGeometry() {
             if(m_ball_done.at(i-22)){
                 continue;
             }
-            SceneObject o = m_balls.at(i-22);
-            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
+            SceneObject o = m_balls.at(i-22); 
+
+            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22))
+                    * o.composite;
+
+            if(glm::length(m_ball_velocities.at(i-22)) > 0.0001f){
+                glm::vec3 rot_axis = glm::cross(glm::normalize(m_ball_velocities.at(i-22)),glm::vec3(0.f,1.f,0.f));
+                transform = transform * glm::rotate(m_ball_rotations.at(i-22),rot_axis);
+            }
+
             drawObject(o,transform, i-22);
         }
     }
@@ -229,6 +238,17 @@ void PoolScene::updateTranslation(float secondsPassed) {
                 m_ball_translations[i] += secondsPassed*m_ball_velocities[i];
             }
 
+    }
+}
+
+void PoolScene::updateRotation(float secondsPassed){
+    if(m_ball_rotations.size() == 16){
+            for(int i = 0; i < m_ball_rotations.size(); i++){
+                m_ball_rotations[i] += secondsPassed * glm::length(m_ball_velocities[i]) / 0.05715f;
+                if(m_ball_rotations[i] > 2*M_PI){
+                    m_ball_rotations[i] = m_ball_rotations[i] - (2*M_PI);
+                }
+            }
     }
 }
 

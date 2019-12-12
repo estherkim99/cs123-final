@@ -32,6 +32,8 @@ public:
 
 protected:
     void updateTranslation(float secondsPassed);
+    void updateRotation(float secondsPassed);
+
     void renderGeometry();
     void drawObject(SceneObject o, glm::mat4 transform, int i);
     void updateVelocities(int b1, int b2);
@@ -49,7 +51,7 @@ protected:
 
     std::vector<glm::vec3> m_ball_translations;
     std::vector<glm::vec3> m_ball_velocities;
-    std::vector<glm::vec3> m_ball_rotations;
+    std::vector<float> m_ball_rotations;
     std::vector<bool> m_ball_done;
 };
 
