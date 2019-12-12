@@ -306,7 +306,7 @@ void SupportCanvas3D::tick() {
 
     // TODO: add some qualifiers here
     if(m_pool){
-        m_poolScene->updateTranslation(seconds);
+        m_poolScene->tick(seconds);
     }
 
     // Flag this view for repainting (Qt will call paintGL() soon after)

@@ -495,7 +495,7 @@ void MainWindow::setShootMode() {
     update();
 }
 void MainWindow::shoot(){
-    m_canvas3D->shoot(glm::vec3(0, 0, 0.10));
+    m_canvas3D->shoot(glm::vec3(0, 0, 0.70));
     exitShootMode();
 }
 void MainWindow::exitShootMode() {
