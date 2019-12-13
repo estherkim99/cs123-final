@@ -2,6 +2,8 @@
 #define SCENE_H
 
 #include "CS123SceneData.h"
+#include "Canvas2D.h"
+#include "gl/textures/Texture2D.h"
 
 class Camera;
 class CS123ISceneParser;
@@ -23,6 +25,14 @@ public:
 
     static void parse(Scene *sceneToFill, CS123ISceneParser *parser);
 
+    struct SceneObject {
+        int id;
+        glm::mat4x4 composite; // transformation matrix
+        glm::mat4x4 invMat; // inverse of transformation matrix
+        CS123SceneMaterial material;
+        PrimitiveType primitive; // object type
+    };
+
 protected:
 
     // Adds a primitive to the scene.
@@ -34,16 +44,12 @@ protected:
     // Sets the global data for the scene.
     virtual void setGlobal(const CS123SceneGlobalData &global);
 
-    struct SceneObject {
-        int id;
-        glm::mat4x4 composite; // transformation matrix
-        glm::mat4x4 invMat; // inverse of transformation matrix
-        CS123SceneMaterial material;
-        PrimitiveType primitive; // object type
-    };
+    // Loads textures for the scene.
+     void loadTextureImages();
 
     std::vector<CS123SceneLightData> m_lightData;
     std::vector<SceneObject> m_sceneObjects;
+    std::vector<QImage> m_textures;
     float m_ka;
     float m_kd;
     float m_ks;

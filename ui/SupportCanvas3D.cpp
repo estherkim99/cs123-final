@@ -18,13 +18,13 @@
 #include "CS123XmlSceneParser.h"
 
 SupportCanvas3D::SupportCanvas3D(QGLFormat format, QWidget *parent) : QGLWidget(format, parent),
-    m_isDragging(false),
-    m_settingsDirty(true),
-    m_defaultPerspectiveCamera(new CamtransCamera()),
-    m_defaultOrbitingCamera(new OrbitingCamera()),
-    m_currentScene(nullptr),
-    m_time(),
-    m_timer()
+                                                                      m_isDragging(false),
+                                                                      m_settingsDirty(true),
+                                                                      m_defaultPerspectiveCamera(new CamtransCamera()),
+                                                                      m_defaultOrbitingCamera(new OrbitingCamera()),
+                                                                      m_currentScene(nullptr),
+                                                                      m_time(),
+                                                                      m_timer()
 {
     m_pool = false;
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(tick()));
@@ -34,29 +34,33 @@ SupportCanvas3D::~SupportCanvas3D()
 {
 }
 
-Camera *SupportCanvas3D::getCamera() {
-    switch(settings.getCameraMode()) {
-        case CAMERAMODE_CAMTRANS:
-            return m_defaultPerspectiveCamera.get();
+Camera *SupportCanvas3D::getCamera()
+{
+    switch (settings.getCameraMode())
+    {
+    case CAMERAMODE_CAMTRANS:
+        return m_defaultPerspectiveCamera.get();
 
-        case CAMERAMODE_ORBIT:
-            return m_defaultOrbitingCamera.get();
+    case CAMERAMODE_ORBIT:
+        return m_defaultOrbitingCamera.get();
 
-        default:
-            return nullptr;
+    default:
+        return nullptr;
     }
 }
 
-OrbitingCamera *SupportCanvas3D::getOrbitingCamera() {
+OrbitingCamera *SupportCanvas3D::getOrbitingCamera()
+{
     return m_defaultOrbitingCamera.get();
 }
 
-
-CamtransCamera *SupportCanvas3D::getCamtransCamera() {
+CamtransCamera *SupportCanvas3D::getCamtransCamera()
+{
     return m_defaultPerspectiveCamera.get();
 }
 
-void SupportCanvas3D::initializeGL() {
+void SupportCanvas3D::initializeGL()
+{
     // Track the camera settings so we can generate deltas
     m_oldPosX = settings.cameraPosX;
     m_oldPosY = settings.cameraPosY;
@@ -77,20 +81,22 @@ void SupportCanvas3D::initializeGL() {
     // frame rate depends on the operating system and other running programs)
     m_time.start();
     m_timer.start(1000 / 60);
-
 }
 
-void SupportCanvas3D::initializeGlew() {
+void SupportCanvas3D::initializeGlew()
+{
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     glGetError(); // Clear errors after call to glewInit
-    if (GLEW_OK != err) {
-      // Problem: glewInit failed, something is seriously wrong.
-      fprintf(stderr, "Error initializing glew: %s\n", glewGetErrorString(err));
+    if (GLEW_OK != err)
+    {
+        // Problem: glewInit failed, something is seriously wrong.
+        fprintf(stderr, "Error initializing glew: %s\n", glewGetErrorString(err));
     }
 }
 
-void SupportCanvas3D::initializeOpenGLSettings() {
+void SupportCanvas3D::initializeOpenGLSettings()
+{
     // Enable depth testing, so that objects are occluded based on depth instead of drawing order.
     glEnable(GL_DEPTH_TEST);
 
@@ -111,14 +117,17 @@ void SupportCanvas3D::initializeOpenGLSettings() {
     getOrbitingCamera()->updateMatrices();
 }
 
-void SupportCanvas3D::initializeScenes() {
+void SupportCanvas3D::initializeScenes()
+{
     m_sceneviewScene = std::make_unique<SceneviewScene>();
     m_poolScene = std::make_unique<PoolScene>();
     m_shapesScene = std::make_unique<ShapesScene>(width(), height());
 }
 
-void SupportCanvas3D::paintGL() {
-    if (m_settingsDirty) {
+void SupportCanvas3D::paintGL()
+{
+    if (m_settingsDirty)
+    {
         setSceneFromSettings();
     }
 
@@ -127,12 +136,13 @@ void SupportCanvas3D::paintGL() {
     getCamera()->setAspectRatio(static_cast<float>(width()) / static_cast<float>(height()));
     m_currentScene->render(this);
     //m_poolScene->render(this);
-
 }
 
-void SupportCanvas3D::settingsChanged() {
+void SupportCanvas3D::settingsChanged()
+{
     m_settingsDirty = true;
-    if (m_currentScene != nullptr) {
+    if (m_currentScene != nullptr)
+    {
         // Just calling this function so that the scene is always updated.
         setSceneFromSettings();
         m_currentScene->settingsChanged();
@@ -140,43 +150,43 @@ void SupportCanvas3D::settingsChanged() {
     update(); /* repaint the scene */
 }
 
-void SupportCanvas3D::setSceneFromSettings() {
-    switch(settings.getSceneMode()) {
-        case SCENEMODE_SHAPES:
-            setSceneToShapes();
-            break;
-        case SCENEMODE_SCENEVIEW:
-            setSceneToSceneview();
-            break;
+void SupportCanvas3D::setSceneFromSettings()
+{
+    switch (settings.getSceneMode())
+    {
+    case SCENEMODE_SHAPES:
+        setSceneToShapes();
+        break;
+    case SCENEMODE_SCENEVIEW:
+        setSceneToSceneview();
+        break;
     }
     m_settingsDirty = false;
 }
 
-void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-//    m_sceneviewScene = std::make_unique<SceneviewScene>();
-//    Scene::parse(m_sceneviewScene.get(), &parser);
-
+void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser)
+{
     m_poolScene = std::make_unique<PoolScene>();
     Scene::parse(m_poolScene.get(), &parser);
     //PoolScene *res = m_poolScene.get();
     m_settingsDirty = true;
-
 }
 
-void SupportCanvas3D::setSceneToSceneview() {
-    //assert(m_sceneviewScene.get());
-    //m_currentScene = m_sceneviewScene.get();
+void SupportCanvas3D::setSceneToSceneview()
+{
     assert(m_poolScene.get());
     m_currentScene = m_poolScene.get();
     m_pool = true;
 }
 
-void SupportCanvas3D::setSceneToShapes() {
+void SupportCanvas3D::setSceneToShapes()
+{
     assert(m_shapesScene.get());
     m_currentScene = m_shapesScene.get();
 }
 
-void SupportCanvas3D::copyPixels(int width, int height, RGBA *data) {
+void SupportCanvas3D::copyPixels(int width, int height, RGBA *data)
+{
     glReadPixels(0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, data);
     std::cout << "copied " << width << "x" << height << std::endl;
 
@@ -187,123 +197,142 @@ void SupportCanvas3D::copyPixels(int width, int height, RGBA *data) {
             std::swap(data[x + y * width], data[x + (height - y - 1) * width]);
 }
 
-void SupportCanvas3D::resetUpVector() {
+void SupportCanvas3D::resetUpVector()
+{
     // Reset the up vector to the y axis
     glm::vec4 up = glm::vec4(0.f, 1.f, 0.f, 0.f);
-    if (fabs(glm::length(m_defaultPerspectiveCamera->getUp() - up)) > 0.0001f) {
+    if (fabs(glm::length(m_defaultPerspectiveCamera->getUp() - up)) > 0.0001f)
+    {
         m_defaultPerspectiveCamera->orientLook(
-                    m_defaultPerspectiveCamera->getPosition(),
-                    m_defaultPerspectiveCamera->getLook(),
-                    up);
+            m_defaultPerspectiveCamera->getPosition(),
+            m_defaultPerspectiveCamera->getLook(),
+            up);
         update();
     }
 }
 
-
-void SupportCanvas3D::setCameraAxisX() {
+void SupportCanvas3D::setCameraAxisX()
+{
     m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(2.f, 0.f, 0.f, 1.f),
-                glm::vec4(-1.f, 0.f, 0.f, 0.f),
-                glm::vec4(0.f, 1.f, 0.f, 0.f));
+        glm::vec4(2.f, 0.f, 0.f, 1.f),
+        glm::vec4(-1.f, 0.f, 0.f, 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f));
     update();
 }
 
-void SupportCanvas3D::setCameraAxisY() {
+void SupportCanvas3D::setCameraAxisY()
+{
     m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(0.f, 2.f, 0.f, 1.f),
-                glm::vec4(0.f, -1.f, 0.f, 0.f),
-                glm::vec4(0.f, 0.f, 1.f, 0.f));
+        glm::vec4(0.f, 2.f, 0.f, 1.f),
+        glm::vec4(0.f, -1.f, 0.f, 0.f),
+        glm::vec4(0.f, 0.f, 1.f, 0.f));
     update();
 }
 
-void SupportCanvas3D::setCameraAxisZ() {
+void SupportCanvas3D::setCameraAxisZ()
+{
     m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(0.f, 0.f, 2.f, 1.f),
-                glm::vec4(0.f, 0.f, -1.f, 0.f),
-                glm::vec4(0.f, 1.f, 0.f, 0.f));
+        glm::vec4(0.f, 0.f, 2.f, 1.f),
+        glm::vec4(0.f, 0.f, -1.f, 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f));
     update();
 }
 
-void SupportCanvas3D::setCameraAxonometric() {
+void SupportCanvas3D::setCameraAxonometric()
+{
     m_defaultPerspectiveCamera->orientLook(
-                glm::vec4(2.f, 2.f, 2.f, 1.f),
-                glm::vec4(-1.f, -1.f, -1.f, 0.f),
-                glm::vec4(0.f, 1.f, 0.f, 0.f));
+        glm::vec4(2.f, 2.f, 2.f, 1.f),
+        glm::vec4(-1.f, -1.f, -1.f, 0.f),
+        glm::vec4(0.f, 1.f, 0.f, 0.f));
     update();
 }
 
-void SupportCanvas3D::updateCameraHeightAngle() {
+void SupportCanvas3D::updateCameraHeightAngle()
+{
     // The height angle is half the overall field of view of the camera
     m_defaultPerspectiveCamera->setHeightAngle(settings.cameraFov);
 }
 
-void SupportCanvas3D::updateCameraTranslation() {
+void SupportCanvas3D::updateCameraTranslation()
+{
     m_defaultPerspectiveCamera->translate(
-            glm::vec4(
-                settings.cameraPosX - m_oldPosX,
-                settings.cameraPosY - m_oldPosY,
-                settings.cameraPosZ - m_oldPosZ,
-                0));
+        glm::vec4(
+            settings.cameraPosX - m_oldPosX,
+            settings.cameraPosY - m_oldPosY,
+            settings.cameraPosZ - m_oldPosZ,
+            0));
 
     m_oldPosX = settings.cameraPosX;
     m_oldPosY = settings.cameraPosY;
     m_oldPosZ = settings.cameraPosZ;
 }
 
-void SupportCanvas3D::updateCameraRotationU() {
+void SupportCanvas3D::updateCameraRotationU()
+{
     m_defaultPerspectiveCamera->rotateU(settings.cameraRotU - m_oldRotU);
     m_oldRotU = settings.cameraRotU;
 }
 
-void SupportCanvas3D::updateCameraRotationV() {
+void SupportCanvas3D::updateCameraRotationV()
+{
     m_defaultPerspectiveCamera->rotateV(settings.cameraRotV - m_oldRotV);
     m_oldRotV = settings.cameraRotV;
 }
 
-void SupportCanvas3D::updateCameraRotationN() {
+void SupportCanvas3D::updateCameraRotationN()
+{
     m_defaultPerspectiveCamera->rotateW(settings.cameraRotN - m_oldRotN);
     m_oldRotN = settings.cameraRotN;
 }
 
-void SupportCanvas3D::updateCameraClip() {
+void SupportCanvas3D::updateCameraClip()
+{
     m_defaultPerspectiveCamera->setClip(settings.cameraNear, settings.cameraFar);
 }
 
-
-void SupportCanvas3D::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::RightButton) {
+void SupportCanvas3D::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::RightButton)
+    {
         getCamera()->mouseDown(event->x(), event->y());
         m_isDragging = true;
         update();
     }
 }
 
-void SupportCanvas3D::mouseMoveEvent(QMouseEvent *event) {
-    if (m_isDragging) {
+void SupportCanvas3D::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_isDragging)
+    {
         getCamera()->mouseDragged(event->x(), event->y());
         update();
     }
 }
 
-void SupportCanvas3D::mouseReleaseEvent(QMouseEvent *event) {
-    if (m_isDragging && event->button() == Qt::RightButton) {
+void SupportCanvas3D::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (m_isDragging && event->button() == Qt::RightButton)
+    {
         getCamera()->mouseUp(event->x(), event->y());
         m_isDragging = false;
         update();
     }
 }
 
-void SupportCanvas3D::wheelEvent(QWheelEvent *event) {
+void SupportCanvas3D::wheelEvent(QWheelEvent *event)
+{
     getCamera()->mouseScrolled(event->delta());
     update();
 }
 
-void SupportCanvas3D::resizeEvent(QResizeEvent *event) {
+void SupportCanvas3D::resizeEvent(QResizeEvent *event)
+{
     emit aspectRatioChanged();
 }
 
 // FINAL PROJECT CODE
-void SupportCanvas3D::tick() {
+void SupportCanvas3D::tick()
+{
     // Get the number of seconds since the last tick (variable update rate)
     float seconds = m_time.restart() * 0.001f;
 
