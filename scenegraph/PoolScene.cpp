@@ -53,9 +53,11 @@ void PoolScene::init(){
             m_balls.push_back(m_sceneObjects.at(i));
             m_ball_translations.push_back(glm::vec3(0.0f));
             m_ball_velocities.push_back(glm::vec3(0.0f));
+            m_ball_dir.push_back(glm::vec3(0.f,0.f,1.f));
             m_ball_done.push_back(false);
+
+            m_ball_rotations.push_back(glm::mat4(1.f));
         }
-//        m_ball_velocities[0] = glm::vec3(0.2f,0.f,0.4f);
     }
 }
 
@@ -120,7 +122,12 @@ void PoolScene::renderGeometry() {
                 continue;
             }
             SceneObject o = m_balls.at(i-22);
-            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
+
+            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22))
+                    * o.composite;
+
+            transform = transform * m_ball_rotations.at(i-22);
+
             drawObject(o,transform, i-22);
         }
     }
@@ -167,6 +174,7 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
 
 void PoolScene::tick(float secondsPassed){
     collisionDetection();
+    updateRotation(secondsPassed);
     updateTranslation(secondsPassed);
 }
 
@@ -239,6 +247,21 @@ void PoolScene::updateTranslation(float secondsPassed) {
     }
 }
 
+void PoolScene::updateRotation(float secondsPassed){
+    if(m_ball_rotations.size() == 16){
+            for(int i = 0; i < m_ball_rotations.size(); i++){
+
+                if(glm::length(m_ball_velocities.at(i)) < 0.0001f){
+                    continue;
+                }
+
+                glm::vec3 rot_axis = glm::cross(glm::normalize(m_ball_velocities.at(i)),glm::vec3(0.f,1.f,0.f));
+                float rot_added = secondsPassed * glm::length(m_ball_velocities[i]) / 0.05715f;
+                m_ball_rotations[i] =  glm::rotate(-rot_added,rot_axis) * m_ball_rotations[i];
+            }
+    }
+}
+
 glm::vec3 PoolScene::getBallPosition(int ballnum){
     SceneObject *cue = &m_balls.at(ballnum);
     // TODO: we can just precompute these
@@ -271,6 +294,9 @@ void PoolScene::updateVelocities(int b1, int b2){
 
     m_ball_velocities[b1] = new_v1;
     m_ball_velocities[b2] = new_v2;
+
+    m_ball_dir[b1] = glm::normalize(new_v1);
+    m_ball_dir[b2] = glm::normalize(new_v2);
 }
 
 bool PoolScene::checkBallCollision(glm::vec3 pos1, glm::vec3 pos2){
@@ -292,8 +318,10 @@ void PoolScene::checkWallCollision(glm::vec3 pos, int ballnum){
     float x_border = 0.5915f - 0.5f * 0.063f - 0.028575f;
     if(pos.z >= z_border || pos.z <= -z_border){
         m_ball_velocities[ballnum].z *= -1.f;
+        m_ball_dir[ballnum] = glm::normalize(m_ball_velocities[ballnum]);
     }
     else if(pos.x >= x_border || pos.x <= -x_border){
         m_ball_velocities[ballnum].x *= -1.f;
+        m_ball_dir[ballnum] = glm::normalize(m_ball_velocities[ballnum]);
     }
 }

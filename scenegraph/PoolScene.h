@@ -42,10 +42,11 @@ public:
 
 protected:
     void updateTranslation(float secondsPassed);
+    void updateRotation(float secondsPassed);
+
     void renderGeometry();
     void drawObject(SceneObject o, glm::mat4 transform, int i);
     void updateVelocities(int b1, int b2);
-//    glm::vec3 getBallPosition(int ballnum);
     bool checkBallCollision(glm::vec3 pos1, glm::vec3 pos2);
     bool checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2);
     void checkWallCollision(glm::vec3 pos, int ballnum);
@@ -59,7 +60,10 @@ protected:
 
     std::vector<glm::vec3> m_ball_translations;
     std::vector<glm::vec3> m_ball_velocities;
-    std::vector<glm::vec3> m_ball_rotations;
+    std::vector<glm::vec3> m_ball_dir;
+
+    std::vector<glm::mat4> m_ball_rotations;
+
     std::vector<bool> m_ball_done;
 
 };
