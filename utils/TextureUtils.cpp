@@ -127,7 +127,7 @@ glm::vec2 TextureUtils::sphereToUV(glm::vec4 point) {
         u = 1.f - (theta / (2*M_PI));
     }
 
-    float v = asin(-point.y/0.5f) / M_PI + 0.5f;
+    float v = asin(point.y/0.5f) / M_PI + 0.5f;
     return glm::vec2(u, v);
 }
 

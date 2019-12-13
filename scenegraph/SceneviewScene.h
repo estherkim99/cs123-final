@@ -7,6 +7,7 @@
 #include "shape/Cylinder.h"
 #include "shape/Cone.h"
 #include "shape/Sphere.h"
+#include <map>
 
 namespace CS123 { namespace GL {
     class Shader;
@@ -52,6 +53,7 @@ protected:
     void setMatrixUniforms(CS123::GL::Shader *shader, SupportCanvas3D *context);
     void setLights();
     void renderGeometry();
+    void loadTextures();
     void applyTextureIfUsed(SceneObject obj);
 
     std::unique_ptr<CS123::GL::CS123Shader> m_phongShader;
@@ -65,6 +67,8 @@ protected:
     std::unique_ptr<Cylinder> m_cylinder;
     std::unique_ptr<Sphere> m_sphere;
 
+    std::map<std::string, CS123::GL::Texture2D> m_textures;
+    bool m_mustLoadTextures;
 };
 
 #endif // SCENEVIEWSCENE_H

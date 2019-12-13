@@ -37,7 +37,7 @@ protected:
     virtual void setGlobal(const CS123SceneGlobalData &global);
 
     // Loads textures for the scene.
-    void loadTextures();
+    void loadTextureImages();
 
     struct SceneObject {
         int id;

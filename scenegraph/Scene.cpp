@@ -54,6 +54,7 @@ void Scene::parse(Scene *sceneToFill, CS123ISceneParser *parser) {
     CS123SceneNode *node = parser->getRootNode();
     glm::mat4 composite = glm::mat4();
     sceneToFill->parseNode(sceneToFill, node, composite);
+    sceneToFill->loadTextureImages();
 }
 
 void Scene::parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 composite) {
@@ -84,8 +85,6 @@ void Scene::parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 comp
     for (int i = 0; i < c.size(); i++) {
         sceneToFill->parseNode(sceneToFill, c[i], composite);
     }
-
-    sceneToFill->loadTextures();
 }
 
 void Scene::addPrimitive(const CS123ScenePrimitive &scenePrimitive, const glm::mat4x4 &matrix) {
@@ -110,7 +109,7 @@ void Scene::setGlobal(const CS123SceneGlobalData &global) {
     m_kt = global.kt;
 }
 
-void Scene::loadTextures() {
+void Scene::loadTextureImages() {
     if (settings.useTextureMapping) {
         m_textures.resize(m_sceneObjects.size());
         for (SceneObject x : m_sceneObjects) {

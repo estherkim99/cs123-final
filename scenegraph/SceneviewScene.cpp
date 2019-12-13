@@ -6,10 +6,15 @@
 #include "SupportCanvas3D.h"
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
+#include <utility>
+#include <gl/textures/Texture2D.h>
+#include "gl/textures/TextureParameters.h"
+#include "gl/textures/TextureParametersBuilder.h"
 
 using namespace CS123::GL;
 
-SceneviewScene::SceneviewScene()
+SceneviewScene::SceneviewScene() :
+    m_mustLoadTextures(true)
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
     loadPhongShader();
@@ -53,6 +58,8 @@ void SceneviewScene::render(SupportCanvas3D *context) {
     setClearColor();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    if (m_mustLoadTextures) loadTextures();
+
     m_phongShader->bind();
     setSceneUniforms(context);
     setLights();
@@ -60,7 +67,6 @@ void SceneviewScene::render(SupportCanvas3D *context) {
     renderGeometry();
     glBindTexture(GL_TEXTURE_2D, 0);
     m_phongShader->unbind();
-
 
     if (settings.drawWireframe) {
         m_wireframeShader->bind();
@@ -145,29 +151,36 @@ void SceneviewScene::renderGeometry() {
     }
 }
 
+void SceneviewScene::loadTextures() {
+    for (SceneObject obj : m_sceneObjects){
+            CS123SceneFileMap textureMap = obj.material.textureMap;
+            if (textureMap.isUsed){
+                QImage image =  QImage(QString::fromStdString(textureMap.filename));
+                QImage formattedImage = QGLWidget::convertToGLFormat(image);
+                Texture2D texture(formattedImage.bits(), formattedImage.width(), formattedImage.height());
+                // format texture with correct params
+                TextureParametersBuilder builder;
+                builder.setFilter(TextureParameters::FILTER_METHOD::LINEAR);
+                builder.setWrap(TextureParameters::WRAP_METHOD::REPEAT);
+                TextureParameters params = builder.build();
+                params.applyTo(texture);
+                // add (filename, texture) pair to hashmap
+                m_textures.insert(std::make_pair(textureMap.filename, std::move(texture)));
+            }
+        }
+
+        m_mustLoadTextures = false;
+}
+
 void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
     CS123SceneFileMap map = obj.material.textureMap;
     if (!map.isUsed) {
         m_phongShader->setUniform("useTexture", 0);
         return;
     }
-
-    QImage image = m_textures.at(obj.id);
     m_phongShader->setUniform("useTexture", 1);
     m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
-    m_phongShader->setUniform("width", image.width());
-    m_phongShader->setUniform("height", image.height());
-
-    GLuint texturaID[1];
-    glGenTextures(1, texturaID);
-    glBindTexture(GL_TEXTURE_2D, texturaID[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
-
-    GLint baseImageLoc = glGetUniformLocation(1, "tex"); // 1 corresponds to m_programID
-    glUniform1i(baseImageLoc, 0);
-    glActiveTexture(GL_TEXTURE0 + 0);
-    glBindTexture(GL_TEXTURE_2D, texturaID[0]);
+    m_phongShader->setTexture("tex", m_textures.at(map.filename));
 }
 
 void SceneviewScene::tesselateShapes(){
@@ -183,4 +196,3 @@ void SceneviewScene::tesselateShapes(){
 
 void SceneviewScene::settingsChanged() {
 }
-
