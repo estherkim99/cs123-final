@@ -17,6 +17,7 @@ class VAO;
 
 using namespace CS123::GL;
 
+#define DATAPERVERTEX 14
 
 class OpenGLShape
 {
@@ -45,6 +46,9 @@ public:
     /** Rotates a surface described by vertex coordinates and normals about input dir axis, by input angle. */
     void rotateSurface(std::vector<float>* target, glm::vec3 dir, float angle, int dataNum);
 
+    void computeTangentsAndBinormals(std::vector<float> *vertices);
+    void computeUV(std::vector<float> *vertices);
+
  private:
     /** Set vertex data, by calling setVertexData for vertex coordinates and normals */
     void setData(std::vector<float>* vertices);
@@ -59,8 +63,6 @@ public:
     std::vector<VBOAttribMarker> m_markers;     /// list of VBOAttribMarkers that describe how the data is laid out.
     std::unique_ptr<CS123::GL::VAO> m_VAO;      /// a wrapper for the vertex array object (VAO)
     virtual glm::vec2 getUVfromPosition(glm::vec4 point) = 0;
-
-    void setTexcoords(std::vector<float>* vertices);
 
 };
 

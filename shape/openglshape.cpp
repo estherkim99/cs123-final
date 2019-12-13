@@ -61,17 +61,20 @@ void OpenGLShape::draw() {
 void OpenGLShape::initializeShape(int p1, int p2) {
     std::vector<float> vertices{};
     makeSides(&vertices, p1, p2);
-    setTexcoords(&vertices);
+    computeUV(&vertices);
+    computeTangentsAndBinormals(&vertices);
     setData(&vertices);
+
 }
 
 void OpenGLShape::setData(std::vector<float>* vertices){
-    int dataPerVertex = 8;
     int size = static_cast<int>(vertices->size());
-    this->setVertexData(vertices->data(), size, VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, size / dataPerVertex);
+    this->setVertexData(vertices->data(), size, VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, size / DATAPERVERTEX);
     this->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->setAttribute(ShaderAttrib::NORMAL, 3, 12, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->setAttribute(ShaderAttrib::TEXCOORD0, 2, 24, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    this->setAttribute(ShaderAttrib::TANGENT, 3, 32, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    this->setAttribute(ShaderAttrib::BINORMAL, 3, 44, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->buildVAO();
 }
 
@@ -87,23 +90,51 @@ void OpenGLShape::rotateSurface(std::vector<float>* target, glm::vec3 dir, float
         side.at(i++) = norm.x;
         side.at(i++) = norm.y;
         side.at(i++) = norm.z;
-        // texcoords
-        glm::vec2 uv = getUVfromPosition(pos);
-        side.at(i++) = uv.x;
-        side.at(i++) = uv.y;
+        // texcoords, tangent, binormal
+        for (int j = 0; j < 8; j++) {
+            side.at(i++) = 0;
+        }
     }
     target->insert(target->end(), side.begin(), side.end());
 }
 
-void OpenGLShape::setTexcoords(std::vector<float>* vertices) {
-//    int vertexNum = vertices->size() / 8;
-//    for (int i = 0; i < vertexNum; i++) {
-//        if (i + 8 < vertices->size()){
-//        glm::vec4 pos = glm::vec4(vertices->at(i), vertices->at(i+1), vertices->at(i+3), 1.f);
-//        glm::vec2 uv = glm::vec2(0);
-////        glm::vec2 uv = getUVfromPosition(pos);
-//        vertices->at(i + 7) = uv.x;
-//        vertices->at(i + 8) = uv.y;
-//        }
-//    }
+void OpenGLShape::computeUV(std::vector<float> *vertices){
+    for (int i = 0; i < vertices->size() - DATAPERVERTEX; i += DATAPERVERTEX) {
+        glm::vec4 pos = glm::vec4(vertices->at(i), vertices->at(i+1), vertices->at(i+2), 1.f);
+        glm::vec2 uv = getUVfromPosition(pos);
+        vertices->at(i+6) = uv.x;
+        vertices->at(i+7) = uv.y;
+    }
+}
+
+
+void OpenGLShape::computeTangentsAndBinormals(std::vector<float> *vertices){
+    for (int i = 0; i < vertices->size() - 3 * DATAPERVERTEX; i+=3 * DATAPERVERTEX) {
+        glm::vec3 v0 = glm::vec3(vertices->at(i), vertices->at(i+1), vertices->at(i+2));
+        glm::vec3 v1 = glm::vec3(vertices->at(i+14), vertices->at(i+15), vertices->at(i+16));
+        glm::vec3 v2 = glm::vec3(vertices->at(i+28), vertices->at(i+29), vertices->at(i+30));
+
+        glm::vec2 uv0 = glm::vec2(vertices->at(i+6), vertices->at(i+7));
+        glm::vec2 uv1 = glm::vec2(vertices->at(i+20), vertices->at(i+21));
+        glm::vec2 uv2 = glm::vec2(vertices->at(i+34), vertices->at(i+35));
+
+        glm::vec3 deltaPos1 = v1-v0;
+        glm::vec3 deltaPos2 = v2-v0;
+
+        glm::vec2 deltaUV1 = uv1-uv0;
+        glm::vec2 deltaUV2 = uv2-uv0;
+
+        float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+        glm::vec3 tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
+        glm::vec3 bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x)*r;
+        for (int j = 0; j < 3; j++) {
+            vertices->at(i+8 + j * DATAPERVERTEX) = tangent.x;
+            vertices->at(i+9 + j * DATAPERVERTEX) = tangent.y;
+            vertices->at(i+10 + j * DATAPERVERTEX) = tangent.z;
+            vertices->at(i+11 + j * DATAPERVERTEX) = bitangent.x;
+            vertices->at(i+12 + j * DATAPERVERTEX) = bitangent.y;
+            vertices->at(i+13 + j * DATAPERVERTEX) = bitangent.z;
+        }
+    }
+
 }

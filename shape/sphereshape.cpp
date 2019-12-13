@@ -9,7 +9,7 @@ SphereShape::SphereShape()
 SphereShape::~SphereShape() {
 }
 
-#define DATAPERVERTEX 8
+//#define DATAPERVERTEX 8
 
 void SphereShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
     if (p1 == 1) {
@@ -33,7 +33,6 @@ void SphereShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
 void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float length, int dataNum) {
     float theta = glm::pi<float>() / p1;
     int index = 0;
-    glm::vec2 uv;
     side->resize(dataNum);
     for (int i = 0; i < p1; i++) {
         for (int j = 0; j < 2; j++) {
@@ -46,10 +45,10 @@ void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float leng
             side->at(index++) = norm.x;
             side->at(index++) = norm.y;
             side->at(index++) = norm.z;
-            // texcoord
-            uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-            side->at(index++) = uv.x;
-            side->at(index++) = uv.y;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
+            }
             if (j == 0) {
                 for (int k = 0; k < DATAPERVERTEX; k++) {
                     side->at(index) = side->at(index - DATAPERVERTEX);
@@ -64,10 +63,10 @@ void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float leng
             side->at(index++) = norm.x;
             side->at(index++) = norm.y;
             side->at(index++) = norm.z;
-            // texcoord
-            uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-            side->at(index++) = uv.x;
-            side->at(index++) = uv.y;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
+            }
         }
         for (int k = 0; k < DATAPERVERTEX; k++) {
             side->at(index) = side->at(index - DATAPERVERTEX);

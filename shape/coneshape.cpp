@@ -7,8 +7,6 @@ ConeShape::~ConeShape() {
 
 }
 
-#define DATAPERVERTEX 8
-
 void ConeShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
     int vertexNum = 4 * p1 + 8;
     int dataNum = DATAPERVERTEX*vertexNum;
@@ -31,7 +29,6 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
     //bottom
     int index = 0;
     glm::vec4 pos;
-    glm::vec2 uv;
     for (int i = 0; i < p1 + 1; i++) {
         pos = glm::vec4(length/2/p1 * i, -0.5f, length / (2 * tanf(glm::pi<float>()/p2)) / p1 * i, 1.f);
         side->at(index++) = pos.x;
@@ -40,10 +37,11 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
         side->at(index++) = 0;
         side->at(index++) = -1;
         side->at(index++) = 0;
-        //texcoord
-        uv = getUVfromPosition(pos);
-        side->at(index++) = uv.x;
-        side->at(index++) = uv.y;
+        // texcoord, tangent, binormal
+        for (int j = 0; j < 8; j++) {
+            side->at(index++) = 0;
+        }
+
         if (i == 0) {
             for (int k = 0; k < DATAPERVERTEX; k++) {
                 side->at(index) = side->at(index - DATAPERVERTEX);
@@ -51,13 +49,14 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
             }
         }
         side->at(index++) = -length/2/p1 * i;
-        for (int k = 0; k < DATAPERVERTEX - 3; k++) {
+        for (int k = 0; k < DATAPERVERTEX - 9; k++) {
             side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
-        uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-        side->at(index++) = uv.x;
-        side->at(index++) = uv.y;
+        // texcoord, tangent, binormal
+        for (int j = 0; j < 8; j++) {
+            side->at(index++) = 0;
+        }
     }
     for (int k = 0; k < DATAPERVERTEX; k++) {
         side->at(index) = side->at(index - DATAPERVERTEX);
@@ -70,11 +69,10 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
     side->at(index++) = 0;
     side->at(index++) = 1/sqrtf(5);
     side->at(index++) = 2/sqrtf(5);
-    //texcoord
-    uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-    side->at(index++) = uv.x;
-    side->at(index++) = uv.y;
-
+    // texcoord, tangent, binormal
+    for (int j = 0; j < 8; j++) {
+        side->at(index++) = 0;
+    }
     for (int k = 0; k < DATAPERVERTEX; k++) {
         side->at(index) = side->at(index - DATAPERVERTEX);
         index++;
@@ -89,10 +87,10 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
             side->at(index++) = norm.x * sqrtf(2/sqrtf(5));;
             side->at(index++) = 1/sqrtf(5);
             side->at(index++) = norm.z * sqrtf(2/sqrtf(5));;
-            //texcoord
-            uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-            side->at(index++) = uv.x;
-            side->at(index++) = uv.y;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
+            }
         }
     }
     for (int k = 0; k < DATAPERVERTEX * 2; k++) {

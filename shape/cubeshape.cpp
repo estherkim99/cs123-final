@@ -15,8 +15,6 @@ CubeShape::CubeShape()
 CubeShape::~CubeShape() {
 }
 
-#define DATAPERVERTEX 8
-
 void CubeShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
     int vertexNum = 2 * p1 * (p1 + 2);
     int dataNum = DATAPERVERTEX*vertexNum;
@@ -33,7 +31,6 @@ void CubeShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
 
 void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int dataNum) {
     side->resize(dataNum);
-    glm::vec2 uv;
     int index = 0;
     for (int i = 0; i < p1; i++) {
         for (int j = 0; j < p1 + 1; j++) {
@@ -43,10 +40,10 @@ void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int da
             side->at(index++) = 0;
             side->at(index++) = 0;
             side->at(index++) = 1;
-            //texcoord
-            uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-            side->at(index++) = uv.x;
-            side->at(index++) = uv.y;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
+            }
             if (j == 0) {
                 for (int k = 0; k < DATAPERVERTEX; k++) {
                     side->at(index) = side->at(index - DATAPERVERTEX);
@@ -59,10 +56,10 @@ void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int da
             side->at(index++) = 0;
             side->at(index++) = 0;
             side->at(index++) = 1;
-            //texcoord
-            uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-            side->at(index++) = uv.x;
-            side->at(index++) = uv.y;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
+            }
         }
         for (int k = 0; k < DATAPERVERTEX; k++) {
             side->at(index) = side->at(index - DATAPERVERTEX);

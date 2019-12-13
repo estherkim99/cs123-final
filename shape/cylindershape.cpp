@@ -4,8 +4,6 @@
 
 using namespace CS123::GL;
 
-#define DATAPERVERTEX 8
-
 CylinderShape::CylinderShape() : OpenGLShape ()
 {
 
@@ -32,7 +30,6 @@ void CylinderShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
 
 void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float length, int dataNum) {
     side->resize(dataNum);
-    glm::vec2 uv;
     //top
     int index = 0;
     for (int i = 0; i < p1 + 1; i++) {
@@ -42,10 +39,10 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
         side->at(index++) = 0;
         side->at(index++) = 1;
         side->at(index++) = 0;
-        // texcoord
-        uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-        side->at(index++) = uv.x;
-        side->at(index++) = uv.y;
+        // texcoord, tangent, binormal
+        for (int j = 0; j < 8; j++) {
+            side->at(index++) = 0;
+        }
         if (i == 0) {
             for (int k = 0; k < DATAPERVERTEX; k++) {
                 side->at(index) = side->at(index - DATAPERVERTEX);
@@ -53,13 +50,14 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             }
         }
         side->at(index++) = length/2/p1 * i;
-        for (int k = 0; k < DATAPERVERTEX - 3; k++) {
+        for (int k = 0; k < DATAPERVERTEX - 9; k++) {
             side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
-        uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-        side->at(index++) = uv.x;
-        side->at(index++) = uv.y;
+        // texcoord, tangent, binormal
+        for (int j = 0; j < 8; j++) {
+            side->at(index++) = 0;
+        }
     }
     for (int k = 0; k < DATAPERVERTEX; k++) {
         side->at(index) = side->at(index - DATAPERVERTEX);
@@ -76,10 +74,10 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             side->at(index++) = norm.x;
             side->at(index++) = 0;
             side->at(index++) = norm.z;
-            // texcoord
-            uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-            side->at(index++) = uv.x;
-            side->at(index++) = uv.y;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
+            }
             if (j == 0) {
                 for (int k = 0; k < DATAPERVERTEX; k++) {
                     side->at(index) = side->at(index - DATAPERVERTEX);
@@ -88,9 +86,13 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             }
             side->at(index++) = length * (0.5f - j);
             side->at(index++) = 0.5 - 1.f * (i + 1)/p1;
-            for (int k = 0; k < DATAPERVERTEX - 2; k++) {
+            for (int k = 0; k < DATAPERVERTEX - 10; k++) {
                 side->at(index) = side->at(index - DATAPERVERTEX);
                 index++;
+            }
+            // texcoord, tangent, binormal
+            for (int j = 0; j < 8; j++) {
+                side->at(index++) = 0;
             }
         }
         for (int k = 0; k < DATAPERVERTEX; k++) {
@@ -100,19 +102,17 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
     }
 
     // bottom
-    for (int k = 0; k < DATAPERVERTEX * (2 * p1 + 4); k = k + 2) {
+    for (int k = 0; k < DATAPERVERTEX * (2 * p1 + 4); k = k + 8) {
         side->at(index++) = -side->at(k++);
         side->at(index++) = -side->at(k++);
         side->at(index++) = side->at(k++);
         side->at(index++) = -side->at(k++);
         side->at(index++) = -side->at(k++);
         side->at(index++) = side->at(k++);
-        // texcoords
-        uv = getUVfromPosition(glm::vec4(side->at(index - 6), side->at(index - 5), side->at(index - 4), 1.f));
-        side->at(index++) = uv.x;
-        side->at(index++) = uv.y;
-//        side->at(index++) = side->at(k++);
-//        side->at(index++) = side->at(k++);
+        // texcoord, tangent, binormal
+        for (int j = 0; j < 8; j++) {
+            side->at(index++) = 0;
+        }
     }
 }
 
