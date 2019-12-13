@@ -157,6 +157,8 @@ DIST          = shaders/normals/normals.vert \
 		shaders/normals/normalsArrow.gsh \
 		shaders/normals/normalsArrow.frag \
 		shaders/normals/normalsArrow.vert \
+		shaders/pool/pool.frag \
+		shaders/pool/pool.vert \
 		/Applications/Qt/5.7/clang_64/mkspecs/features/spec_pre.prf \
 		/Applications/Qt/5.7/clang_64/mkspecs/qdevice.pri \
 		/Applications/Qt/5.7/clang_64/mkspecs/features/device_config.prf \
@@ -817,6 +819,7 @@ qrc_resources.cpp: resources.qrc \
 		shaders/wireframe/wireframe.frag \
 		shaders/normals/normals.frag \
 		shaders/shader.frag \
+		shaders/pool/pool.vert \
 		shaders/fullscreenquad/fullscreenquad.vert \
 		shaders/normals/normalsArrow.frag \
 		shaders/wireframe/wireframe.vert \
@@ -824,6 +827,7 @@ qrc_resources.cpp: resources.qrc \
 		shaders/normals/normals.vert \
 		shaders/normals/normalsArrow.gsh \
 		shaders/shader.vert \
+		shaders/pool/pool.frag \
 		shaders/normals/normalsArrow.vert
 	/Applications/Qt/5.7/clang_64/bin/rcc -name resources resources.qrc -o qrc_resources.cpp
 
@@ -2079,6 +2083,10 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		ui_mainwindow.h \
+		ui/Canvas2D.h \
+		ui/SupportCanvas2D.h \
+		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		ui/Databinding.h \
 		/Applications/Qt/5.7/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Applications/Qt/5.7/clang_64/lib/QtCore.framework/Headers/qobject.h \
@@ -2192,10 +2200,6 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		/Applications/Qt/5.7/clang_64/lib/QtXml.framework/Headers/qtxmlversion.h \
 		scenegraph/RayScene.h \
 		scenegraph/Scene.h \
-		ui/Canvas2D.h \
-		ui/SupportCanvas2D.h \
-		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		gl/textures/Texture2D.h \
 		gl/textures/Texture.h \
 		rayshape/RayCube.h \
