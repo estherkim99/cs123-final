@@ -129,9 +129,9 @@ void PoolScene::renderGeometry() {
 
 void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
     o.material.cAmbient *= m_ka;
-    if(m_ball_velocities.size() == 16 && i != -1 ){
-        o.material.cDiffuse = glm::vec4(glm::abs(m_ball_velocities.at(i)),0.f);
-    }
+//    if(m_ball_velocities.size() == 16 && i != -1 ){
+//        o.material.cDiffuse = glm::vec4(glm::abs(m_ball_velocities.at(i)),0.f);
+//    }
     o.material.cDiffuse *= m_kd;
     m_phongShader->applyMaterial(o.material);
     m_phongShader->setUniform("m", transform);
