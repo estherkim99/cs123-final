@@ -70,8 +70,7 @@ SOURCES += \
     rayshape/RaySphere.cpp \
     rayshape/RayCylinder.cpp \
     scenegraph/PoolScene.cpp \
-    camera/CueCamera.cpp \
-    gl/textures/TextureUtils.cpp
+    camera/CueCamera.cpp
 
 
 HEADERS += \
@@ -123,8 +122,7 @@ HEADERS += \
     rayshape/RaySphere.h \
     rayshape/RayCylinder.h \
     scenegraph/PoolScene.h \
-    camera/CueCamera.h \
-    gl/textures/TextureUtils.h
+    camera/CueCamera.h
 
 
 FORMS += ui/mainwindow.ui
