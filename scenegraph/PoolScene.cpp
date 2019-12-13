@@ -10,14 +10,18 @@
 
 #include<set> // for set operations
 
+#include <utility>
+#include <gl/textures/Texture2D.h>
+#include "gl/textures/TextureParameters.h"
+#include "gl/textures/TextureParametersBuilder.h"
 
 
 using namespace CS123::GL;
 
 
-PoolScene::PoolScene() : SceneviewScene()
+PoolScene::PoolScene() :
+    SceneviewScene()
 {
-    // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
 
     init();
 }
@@ -58,6 +62,8 @@ void PoolScene::init(){
 void PoolScene::render(SupportCanvas3D *context) {
     setClearColor();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (m_mustLoadTextures) loadTextures();
 
     m_phongShader->bind();
     setSceneUniforms(context);
@@ -136,6 +142,7 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
     if (settings.drawWireframe) {
         m_wireframeShader->setUniform("m", transform);
     }
+    applyTextureIfUsed(o);
 
     // draw shapes
     switch (o.primitive) {

@@ -11,6 +11,11 @@
 #include "shape/coneshape.h"
 #include "shape/sphereshape.h"
 
+#include <glm.hpp>
+#include "CS123SceneData.h"
+#include <list>
+#include "SupportCanvas2D.h"
+
 namespace CS123
 {
 namespace GL
@@ -56,6 +61,7 @@ protected:
     std::vector<glm::vec3> m_ball_velocities;
     std::vector<glm::vec3> m_ball_rotations;
     std::vector<bool> m_ball_done;
+
 };
 
 #endif // POOLSCENE_H

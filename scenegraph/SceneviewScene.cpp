@@ -191,7 +191,7 @@ void SceneviewScene::loadTextures() {
              }
          }
 
-         m_mustLoadTextures = false;
+          m_mustLoadTextures = false;
  }
 
  void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
