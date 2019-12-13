@@ -103,9 +103,6 @@ struct Settings {
 
     int currentTab;
 
-    // FINAL
-    bool useCue;
-
 };
 
 // The global Settings object, will be initialized by MainWindow
