@@ -69,7 +69,8 @@ SOURCES += \
     rayshape/RayCube.cpp \
     rayshape/RaySphere.cpp \
     rayshape/RayCylinder.cpp \
-    scenegraph/PoolScene.cpp
+    scenegraph/PoolScene.cpp \
+    camera/CueCamera.cpp
 
 
 HEADERS += \
@@ -120,7 +121,8 @@ HEADERS += \
     rayshape/RayCube.h \
     rayshape/RaySphere.h \
     rayshape/RayCylinder.h \
-    scenegraph/PoolScene.h
+    scenegraph/PoolScene.h \
+    camera/CueCamera.h
 
 
 FORMS += ui/mainwindow.ui

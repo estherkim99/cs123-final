@@ -92,7 +92,8 @@ SOURCES       = camera/OrbitingCamera.cpp \
 		rayshape/RayCube.cpp \
 		rayshape/RaySphere.cpp \
 		rayshape/RayCylinder.cpp \
-		scenegraph/PoolScene.cpp qrc_resources.cpp \
+		scenegraph/PoolScene.cpp \
+		camera/CueCamera.cpp qrc_resources.cpp \
 		moc_Canvas2D.cpp \
 		moc_SupportCanvas2D.cpp \
 		moc_SupportCanvas3D.cpp \
@@ -143,6 +144,7 @@ OBJECTS       = OrbitingCamera.o \
 		RaySphere.o \
 		RayCylinder.o \
 		PoolScene.o \
+		CueCamera.o \
 		qrc_resources.o \
 		moc_Canvas2D.o \
 		moc_SupportCanvas2D.o \
@@ -360,7 +362,8 @@ DIST          = shaders/normals/normals.vert \
 		rayshape/RayCube.h \
 		rayshape/RaySphere.h \
 		rayshape/RayCylinder.h \
-		scenegraph/PoolScene.h camera/OrbitingCamera.cpp \
+		scenegraph/PoolScene.h \
+		camera/CueCamera.h camera/OrbitingCamera.cpp \
 		camera/CamtransCamera.cpp \
 		camera/QuaternionCamera.cpp \
 		scenegraph/Scene.cpp \
@@ -404,7 +407,8 @@ DIST          = shaders/normals/normals.vert \
 		rayshape/RayCube.cpp \
 		rayshape/RaySphere.cpp \
 		rayshape/RayCylinder.cpp \
-		scenegraph/PoolScene.cpp
+		scenegraph/PoolScene.cpp \
+		camera/CueCamera.cpp
 QMAKE_TARGET  = CS123
 DESTDIR       = 
 TARGET        = CS123.app/Contents/MacOS/CS123
@@ -778,8 +782,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
-	$(COPY_FILE) --parents camera/Camera.h camera/OrbitingCamera.h camera/CamtransCamera.h scenegraph/Scene.h scenegraph/OpenGLScene.h scenegraph/ShapesScene.h scenegraph/SceneviewScene.h scenegraph/RayScene.h ui/Canvas2D.h ui/SupportCanvas2D.h ui/SupportCanvas3D.h ui/Settings.h ui/mainwindow.h ui/Databinding.h ui_mainwindow.h gl/shaders/Shader.h gl/GLDebug.h gl/shaders/ShaderAttribLocations.h gl/datatype/VBOAttribMarker.h gl/datatype/VBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/FBO.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h gl/textures/RenderBuffer.h gl/textures/DepthBuffer.h gl/shaders/CS123Shader.h gl/util/FullScreenQuad.h lib/CS123XmlSceneParser.h lib/CS123SceneData.h lib/CS123ISceneParser.h lib/ResourceLoader.h glew-1.10.0/include/GL/glew.h lib/RGBA.h shape/openglshape.h shape/cubeshape.h shape/coneshape.h shape/cylindershape.h shape/sphereshape.h rayshape/RayCone.h rayshape/RayShape.h rayshape/RayCube.h rayshape/RaySphere.h rayshape/RayCylinder.h scenegraph/PoolScene.h $(DISTDIR)/
-	$(COPY_FILE) --parents camera/OrbitingCamera.cpp camera/CamtransCamera.cpp camera/QuaternionCamera.cpp scenegraph/Scene.cpp scenegraph/OpenGLScene.cpp scenegraph/ShapesScene.cpp scenegraph/SceneviewScene.cpp scenegraph/RayScene.cpp ui/Canvas2D.cpp ui/SupportCanvas2D.cpp ui/SupportCanvas3D.cpp ui/Settings.cpp ui/mainwindow.cpp ui/Databinding.cpp lib/CS123XmlSceneParser.cpp lib/ResourceLoader.cpp gl/shaders/Shader.cpp gl/GLDebug.cpp gl/datatype/VBOAttribMarker.cpp gl/datatype/VBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/FBO.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp gl/textures/RenderBuffer.cpp gl/textures/DepthBuffer.cpp gl/shaders/CS123Shader.cpp gl/util/FullScreenQuad.cpp main.cpp glew-1.10.0/src/glew.c lib/RGBA.cpp shape/openglshape.cpp shape/cubeshape.cpp shape/coneshape.cpp shape/cylindershape.cpp shape/sphereshape.cpp rayshape/RayCone.cpp rayshape/RayShape.cpp rayshape/RayCube.cpp rayshape/RaySphere.cpp rayshape/RayCylinder.cpp scenegraph/PoolScene.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents camera/Camera.h camera/OrbitingCamera.h camera/CamtransCamera.h scenegraph/Scene.h scenegraph/OpenGLScene.h scenegraph/ShapesScene.h scenegraph/SceneviewScene.h scenegraph/RayScene.h ui/Canvas2D.h ui/SupportCanvas2D.h ui/SupportCanvas3D.h ui/Settings.h ui/mainwindow.h ui/Databinding.h ui_mainwindow.h gl/shaders/Shader.h gl/GLDebug.h gl/shaders/ShaderAttribLocations.h gl/datatype/VBOAttribMarker.h gl/datatype/VBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/FBO.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h gl/textures/RenderBuffer.h gl/textures/DepthBuffer.h gl/shaders/CS123Shader.h gl/util/FullScreenQuad.h lib/CS123XmlSceneParser.h lib/CS123SceneData.h lib/CS123ISceneParser.h lib/ResourceLoader.h glew-1.10.0/include/GL/glew.h lib/RGBA.h shape/openglshape.h shape/cubeshape.h shape/coneshape.h shape/cylindershape.h shape/sphereshape.h rayshape/RayCone.h rayshape/RayShape.h rayshape/RayCube.h rayshape/RaySphere.h rayshape/RayCylinder.h scenegraph/PoolScene.h camera/CueCamera.h $(DISTDIR)/
+	$(COPY_FILE) --parents camera/OrbitingCamera.cpp camera/CamtransCamera.cpp camera/QuaternionCamera.cpp scenegraph/Scene.cpp scenegraph/OpenGLScene.cpp scenegraph/ShapesScene.cpp scenegraph/SceneviewScene.cpp scenegraph/RayScene.cpp ui/Canvas2D.cpp ui/SupportCanvas2D.cpp ui/SupportCanvas3D.cpp ui/Settings.cpp ui/mainwindow.cpp ui/Databinding.cpp lib/CS123XmlSceneParser.cpp lib/ResourceLoader.cpp gl/shaders/Shader.cpp gl/GLDebug.cpp gl/datatype/VBOAttribMarker.cpp gl/datatype/VBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/FBO.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp gl/textures/RenderBuffer.cpp gl/textures/DepthBuffer.cpp gl/shaders/CS123Shader.cpp gl/util/FullScreenQuad.cpp main.cpp glew-1.10.0/src/glew.c lib/RGBA.cpp shape/openglshape.cpp shape/cubeshape.cpp shape/coneshape.cpp shape/cylindershape.cpp shape/sphereshape.cpp rayshape/RayCone.cpp rayshape/RayShape.cpp rayshape/RayCube.cpp rayshape/RaySphere.cpp rayshape/RayCylinder.cpp scenegraph/PoolScene.cpp camera/CueCamera.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
 
 
@@ -1987,6 +1991,7 @@ SupportCanvas3D.o: ui/SupportCanvas3D.cpp ui/SupportCanvas3D.h \
 		shape/cylindershape.h \
 		shape/coneshape.h \
 		shape/sphereshape.h \
+		scenegraph/PoolScene.h \
 		ui/Settings.h \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtCore.framework/Headers/qobject.h \
@@ -2161,6 +2166,7 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		shape/cylindershape.h \
 		shape/coneshape.h \
 		shape/sphereshape.h \
+		scenegraph/PoolScene.h \
 		camera/CamtransCamera.h \
 		camera/Camera.h \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
@@ -3425,7 +3431,7 @@ RayCylinder.o: rayshape/RayCylinder.cpp rayshape/RayCylinder.h \
 		glm/gtx/transform.inl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o RayCylinder.o rayshape/RayCylinder.cpp
 
-PoolScene.o: scenegraph/PoolScene.cpp scenegraph/SceneviewScene.h \
+PoolScene.o: scenegraph/PoolScene.cpp scenegraph/PoolScene.h \
 		scenegraph/OpenGLScene.h \
 		scenegraph/Scene.h \
 		lib/CS123SceneData.h \
@@ -3505,6 +3511,7 @@ PoolScene.o: scenegraph/PoolScene.cpp scenegraph/SceneviewScene.h \
 		glm/integer.hpp \
 		glm/detail/func_integer.hpp \
 		glm/detail/func_integer.inl \
+		scenegraph/SceneviewScene.h \
 		shape/openglshape.h \
 		glew-1.10.0/include/GL/glew.h \
 		gl/datatype/VBO.h \
@@ -3535,6 +3542,9 @@ PoolScene.o: scenegraph/PoolScene.cpp scenegraph/SceneviewScene.h \
 		gl/shaders/CS123Shader.h \
 		gl/shaders/Shader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PoolScene.o scenegraph/PoolScene.cpp
+
+CueCamera.o: camera/CueCamera.cpp camera/CueCamera.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CueCamera.o camera/CueCamera.cpp
 
 qrc_resources.o: qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_resources.o qrc_resources.cpp

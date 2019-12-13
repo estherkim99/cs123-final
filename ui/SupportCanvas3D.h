@@ -58,6 +58,10 @@ public:
     // This function will be called by the UI when the settings have changed.
     virtual void settingsChanged();
 
+    void shoot(float vel);
+    void orientCue();
+    void resetCamera();
+
 public slots:
     // These will be called by the corresponding UI buttons on the Camtrans dock
     void resetUpVector();
@@ -92,6 +96,7 @@ protected:
     float m_oldPosX, m_oldPosY, m_oldPosZ;
     float m_oldRotU, m_oldRotV, m_oldRotN;
 
+
 private:
 
     void initializeGlew();
@@ -118,6 +123,7 @@ private:
     QTimer m_timer;
 
     bool m_pool;
+    glm::vec4 m_oldEye, m_oldLook, m_oldUp;
 
 private slots:
     void tick();

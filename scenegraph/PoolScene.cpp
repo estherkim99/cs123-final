@@ -8,19 +8,16 @@
 #include "ResourceLoader.h"
 #include "gl/shaders/CS123Shader.h"
 
+#include<set> // for set operations
+
 
 
 using namespace CS123::GL;
 
 
-PoolScene::PoolScene()
+PoolScene::PoolScene() : SceneviewScene()
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
-    loadPhongShader();
-    loadWireframeShader();
-    loadNormalsShader();
-    loadNormalsArrowShader();
-    tesselateShapes();
 
     init();
 }
@@ -32,36 +29,30 @@ PoolScene::~PoolScene()
 void PoolScene::init(){
     m_object_rotations.clear();
     m_object_translations.clear();
-    for(int i = 0; i < m_sceneObjects.size(); i++){
-            m_object_translations.push_back(glm::vec3(0.0f));
-            m_object_rotations.push_back(glm::vec3(0.0f));
+
+    m_ball_translations.clear();
+    m_ball_velocities.clear();
+    m_ball_done.clear();
+
+    m_walls.clear();
+    m_holes.clear();
+    m_balls.clear();
+
+    if(m_sceneObjects.size() == 38){
+        for(int i = 0; i <= 15; i++){
+            m_walls.push_back(m_sceneObjects.at(i));
+        }
+        for(int i = 16; i <= 21; i++){
+            m_holes.push_back(m_sceneObjects.at(i));
+        }
+        for(int i = 22; i <= 37; i++){
+            m_balls.push_back(m_sceneObjects.at(i));
+            m_ball_translations.push_back(glm::vec3(0.0f));
+            m_ball_velocities.push_back(glm::vec3(0.0f));
+            m_ball_done.push_back(false);
+        }
+//        m_ball_velocities[0] = glm::vec3(0.2f,0.f,0.4f);
     }
-}
-
-void PoolScene::loadPhongShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/default.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/default.frag");
-    m_phongShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
-}
-
-void PoolScene::loadWireframeShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/wireframe.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/wireframe.frag");
-    m_wireframeShader = std::make_unique<Shader>(vertexSource, fragmentSource);
-}
-
-void PoolScene::loadNormalsShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/normals.vert");
-    std::string geometrySource = ResourceLoader::loadResourceFileToString(":/shaders/normals.gsh");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/normals.frag");
-    m_normalsShader = std::make_unique<Shader>(vertexSource, geometrySource, fragmentSource);
-}
-
-void PoolScene::loadNormalsArrowShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.vert");
-    std::string geometrySource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.gsh");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.frag");
-    m_normalsArrowShader = std::make_unique<Shader>(vertexSource, geometrySource, fragmentSource);
 }
 
 void PoolScene::render(SupportCanvas3D *context) {
@@ -102,89 +93,200 @@ void PoolScene::render(SupportCanvas3D *context) {
     }
 }
 
-void PoolScene::setSceneUniforms(SupportCanvas3D *context) {
-    Camera *camera = context->getCamera();
-    m_phongShader->setUniform("useLighting", settings.useLighting);
-    m_phongShader->setUniform("useArrowOffsets", false);
-    m_phongShader->setUniform("p" , camera->getProjectionMatrix());
-    m_phongShader->setUniform("v", camera->getViewMatrix());
-}
-
-void PoolScene::setMatrixUniforms(Shader *shader, SupportCanvas3D *context) {
-    shader->setUniform("p", context->getCamera()->getProjectionMatrix());
-    shader->setUniform("v", context->getCamera()->getViewMatrix());
-}
-
-void PoolScene::setLights()
-{
-    for (CS123SceneLightData light : m_lightData) {
-        m_phongShader->setLight(light);
-    }
-}
-
 void PoolScene::renderGeometry() {
-    if(m_object_translations.size() == 0){
+    if(m_balls.size() == 0){
         init();
     }
 
-    for (int i = 0; i < m_sceneObjects.size(); i++) {
-        SceneObject o = m_sceneObjects[i];
-        o.material.cAmbient *= m_ka;
-        o.material.cDiffuse *= m_kd;
-        glm::mat4 transform = glm::translate(m_object_translations.at(i)) * o.composite;
-        m_phongShader->applyMaterial(o.material);
-        m_phongShader->setUniform("m", transform);
-        if (settings.drawNormals) {
-            m_normalsShader->setUniform("m", transform);
-            m_normalsArrowShader->setUniform("m", transform);
+    if(m_sceneObjects.size() == 38){
+        for(int i = 0; i <= 15; i++){
+            SceneObject o = m_walls.at(i);
+            glm::mat4 transform =  o.composite;
+            drawObject(o,transform, -1);
         }
-        if (settings.drawWireframe) {
-            m_wireframeShader->setUniform("m", transform);
+        for(int i = 16; i <= 21; i++){
+            SceneObject o = m_holes.at(i-16);
+            glm::mat4 transform =  o.composite;
+            drawObject(o,transform, -1);
         }
-
-        // draw shapes
-        switch (o.primitive) {
-        case PrimitiveType::PRIMITIVE_CUBE :
-            m_cube->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_CYLINDER:
-            m_cylinder->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_CONE:
-            m_cone->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_SPHERE:
-            m_sphere->draw();
-            break;
-        case PrimitiveType::PRIMITIVE_MESH:
-            break;
-        case PrimitiveType::PRIMITIVE_TORUS :
-            break;
+        for(int i = 22; i <= 37; i++){
+            if(m_ball_done.at(i-22)){
+                continue;
+            }
+            SceneObject o = m_balls.at(i-22);
+            glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
+            drawObject(o,transform, i-22);
         }
     }
 
 }
 
-void PoolScene::tesselateShapes(){
-    m_cube = std::make_unique<CubeShape>();
-    m_cone = std::make_unique<ConeShape>();
-    m_cylinder = std::make_unique<CylinderShape>();
-    m_sphere = std::make_unique<SphereShape>();
-    m_cube->initializeShape(3, 3);
-    m_cone->initializeShape(30, 30);
-    m_cylinder->initializeShape(30, 30);
-    m_sphere->initializeShape(30, 30);
-}
+void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
+    o.material.cAmbient *= m_ka;
+    if(m_ball_velocities.size() == 16 && i != -1 ){
+        o.material.cDiffuse = glm::vec4(glm::abs(m_ball_velocities.at(i)),0.f);
+    }
+    o.material.cDiffuse *= m_kd;
+    m_phongShader->applyMaterial(o.material);
+    m_phongShader->setUniform("m", transform);
+    if (settings.drawNormals) {
+        m_normalsShader->setUniform("m", transform);
+        m_normalsArrowShader->setUniform("m", transform);
+    }
+    if (settings.drawWireframe) {
+        m_wireframeShader->setUniform("m", transform);
+    }
 
-void PoolScene::settingsChanged() {
-}
-
-// This is just a filler method right now. We can change it to alter the
-// objects in any way we need
-void PoolScene::updateTranslation() {
-    for(int i = 0; i < m_object_translations.size(); i++){
-        glm::vec3 translate = glm::vec3(0.01f,0.f,0.f);
-        m_object_translations[i] += translate;
+    // draw shapes
+    switch (o.primitive) {
+    case PrimitiveType::PRIMITIVE_CUBE :
+        m_cube->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_CYLINDER:
+        m_cylinder->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_CONE:
+        m_cone->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_SPHERE:
+        m_sphere->draw();
+        break;
+    case PrimitiveType::PRIMITIVE_MESH:
+        break;
+    case PrimitiveType::PRIMITIVE_TORUS :
+        break;
     }
 }
 
+void PoolScene::tick(float secondsPassed){
+    collisionDetection();
+    updateTranslation(secondsPassed);
+}
+
+void PoolScene::addVelocity(int ballNum, glm::vec3 vel){
+    assert(m_ball_translations.size() == 16);
+    m_ball_velocities.at(ballNum) += vel;
+}
+
+void PoolScene::collisionDetection(){
+    std::vector<glm::vec3> pockets = {glm::vec3(-0.560315,0,1.120315),glm::vec3(0.560315,0,1.120315),
+                                     glm::vec3(-0.560315,0,0),glm::vec3(0.560315,0,0),
+                                     glm::vec3(-0.560315,0,-1.120315),glm::vec3(0.560315,0,-1.120315)};
+
+    std::set<int> seen;
+    for(int i = 0; i < m_ball_velocities.size(); i++){
+        if(glm::length(m_ball_velocities[i]) < 0.0001f){
+            continue;
+        }
+
+        // check intersection with holes
+        for(int j = 0; j < pockets.size(); j++){
+            if(checkHoleCollision(pockets.at(j),getBallPosition(i))){
+                m_ball_done.at(i) = true;
+                m_ball_translations.at(i) = glm::vec3(5.f + i, 0.f, 0.f);
+                m_ball_velocities.at(i) = glm::vec3(0.f, 0.f, 0.f);
+            }
+        }
+
+        // check intersection with walls
+        checkWallCollision(getBallPosition(i), i);
+
+        // check intersection with other balls
+        for(int j = 0; j < m_ball_velocities.size(); j++){
+            int x = i < j? i : j;
+            int y = i < j? j: i;
+            if(i==j || seen.find(16*x+y) != seen.end()) continue;
+            if(checkBallCollision(getBallPosition(x),getBallPosition(y))){
+                updateVelocities(x,y);
+                seen.insert(16*x+y);
+            }
+        }
+    }
+
+}
+
+void PoolScene::updateTranslation(float secondsPassed) {
+    float a = .05; // m/s^2
+    if(m_ball_translations.size() == 16){
+
+            for(int i = 0; i < m_ball_velocities.size(); i++){
+
+                if(glm::length(m_ball_velocities[i]) < 0.0001f){
+                    continue;
+                }
+                glm::vec3 inv_norm = -glm::normalize(m_ball_velocities[i]);
+                glm::vec3 new_vel = m_ball_velocities[i] + secondsPassed*a*inv_norm;
+//                if(signbit(new_vel.x) != signbit(m_ball_velocities[i].x)){
+//                    new_vel.x = 0.f;
+//                }
+//                if(signbit(new_vel.z) != signbit(m_ball_velocities[i].z)){
+//                    new_vel.z = 0.f;
+//                }
+                m_ball_velocities[i] = new_vel;
+            }
+
+            for(int i = 0; i < m_ball_translations.size(); i++){
+                m_ball_translations[i] += secondsPassed*m_ball_velocities[i];
+            }
+
+    }
+}
+
+glm::vec3 PoolScene::getBallPosition(int ballnum){
+    SceneObject *cue = &m_balls.at(ballnum);
+    // TODO: we can just precompute these
+    glm::vec3 initial_position = glm::vec3(cue->composite[3][0], cue->composite[3][1], cue->composite[3][2]);
+    return m_ball_translations.at(ballnum) + initial_position;
+}
+
+void PoolScene::updateVelocities(int b1, int b2){
+    glm::vec3 v1 = m_ball_velocities[b1];
+    glm::vec3 v2 = m_ball_velocities[b2];
+
+    glm::vec3 p1 = getBallPosition(b1);
+    glm::vec3 p2 = getBallPosition(b2);
+
+    // currently assuming cue and number balls have same mass
+    // 2 particles colliding equation:
+    // https://en.wikipedia.org/wiki/Elastic_collision
+
+    float dist = glm::distance(p1,p2);
+    glm::vec3 diff = glm::normalize(p1 - p2);
+    if(dist < 0.05715f){
+        float move = ((0.05715f - dist) / 2.f);
+        m_ball_translations[b1] += diff*move;
+        m_ball_translations[b2] -= diff*move;
+    }
+    p1 = getBallPosition(b1);
+    p2 = getBallPosition(b2);
+    glm::vec3 new_v1 = v1 - glm::dot(v1-v2,p1-p2)*(p1-p2)/glm::pow(glm::length(p1-p2),2.f);
+    glm::vec3 new_v2 = v2 - glm::dot(v2-v1,p2-p1)*(p2-p1)/glm::pow(glm::length(p2-p1),2.f);
+
+    m_ball_velocities[b1] = new_v1;
+    m_ball_velocities[b2] = new_v2;
+}
+
+bool PoolScene::checkBallCollision(glm::vec3 pos1, glm::vec3 pos2){
+    float dist = glm::distance(pos1,pos2);
+    float DIAMETER = 0.05715f+0.00005f;
+    return dist < DIAMETER;
+}
+
+bool PoolScene::checkHoleCollision(glm::vec3 pos1, glm::vec3 pos2){
+    float dist = std::sqrt(std::pow(pos1.x - pos2.x, 2) + std::pow(pos1.z - pos2.z, 2));
+    //float DIAMETER = 0.028575f+.065f;
+    float DIAMETER = .065f;
+    return dist < DIAMETER;
+}
+
+void PoolScene::checkWallCollision(glm::vec3 pos, int ballnum){
+    // lining location - cube radius * z scale - radius of ball
+    float z_border = 1.1515f - 0.5f * 0.063f - 0.028575f;
+    float x_border = 0.5915f - 0.5f * 0.063f - 0.028575f;
+    if(pos.z >= z_border || pos.z <= -z_border){
+        m_ball_velocities[ballnum].z *= -1.f;
+    }
+    else if(pos.x >= x_border || pos.x <= -x_border){
+        m_ball_velocities[ballnum].x *= -1.f;
+    }
+}
