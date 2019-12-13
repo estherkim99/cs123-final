@@ -548,7 +548,7 @@ void MainWindow::setShootMode()
 }
 void MainWindow::shoot()
 {
-    m_canvas3D->shoot(.3f);
+    m_canvas3D->shoot(.7f);
     ui->shootButton->setHidden(true);
 }
 void MainWindow::exitShootMode()
