@@ -58,6 +58,9 @@ public:
     int m_numVertices;                          /// number of vertices to be rendered
     std::vector<VBOAttribMarker> m_markers;     /// list of VBOAttribMarkers that describe how the data is laid out.
     std::unique_ptr<CS123::GL::VAO> m_VAO;      /// a wrapper for the vertex array object (VAO)
+    virtual glm::vec2 getUVfromPosition(glm::vec4 point) = 0;
+
+    void setTexcoords(std::vector<float>* vertices);
 
 };
 

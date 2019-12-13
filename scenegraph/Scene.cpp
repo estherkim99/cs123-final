@@ -4,6 +4,12 @@
 
 #include "glm/gtx/transform.hpp"
 
+#include "Settings.h"
+#include "SupportCanvas3D.h"
+#include "ResourceLoader.h"
+#include "gl/shaders/CS123Shader.h"
+#include "gl/textures/Texture2D.h"
+
 
 Scene::Scene() :
     m_id(0)
@@ -50,6 +56,7 @@ void Scene::parse(Scene *sceneToFill, CS123ISceneParser *parser) {
     CS123SceneNode *node = parser->getRootNode();
     glm::mat4 composite = glm::mat4();
     sceneToFill->parseNode(sceneToFill, node, composite);
+    sceneToFill->loadTextureImages();
 }
 
 void Scene::parseNode(Scene *sceneToFill, CS123SceneNode *node, glm::mat4x4 composite) {
@@ -105,3 +112,17 @@ void Scene::setGlobal(const CS123SceneGlobalData &global) {
     m_kt = global.kt;
 }
 
+void Scene::loadTextureImages() {
+     if (settings.useTextureMapping) {
+         m_textures.resize(m_sceneObjects.size());
+         for (SceneObject x : m_sceneObjects) {
+             if (x.material.textureMap.isUsed) {
+                 QString fname = QString::fromStdString(x.material.textureMap.filename);
+                 QImage texture(fname);
+                 QImage convertedImage = QGLWidget::convertToGLFormat(texture);
+                 // m_textures.at(x.id) = texture;
+                 m_textures.at(x.id) = convertedImage;
+             }
+         }
+     }
+ }

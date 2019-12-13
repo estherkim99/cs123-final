@@ -61,33 +61,49 @@ void OpenGLShape::draw() {
 void OpenGLShape::initializeShape(int p1, int p2) {
     std::vector<float> vertices{};
     makeSides(&vertices, p1, p2);
+    setTexcoords(&vertices);
     setData(&vertices);
 }
 
-//void OpenGLShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
-//}
-
 void OpenGLShape::setData(std::vector<float>* vertices){
-    int dataPerVertex = 6;
+    int dataPerVertex = 8;
     int size = static_cast<int>(vertices->size());
     this->setVertexData(vertices->data(), size, VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, size / dataPerVertex);
     this->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->setAttribute(ShaderAttrib::NORMAL, 3, 12, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    this->setAttribute(ShaderAttrib::TEXCOORD0, 2, 24, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->buildVAO();
 }
 
 void OpenGLShape::rotateSurface(std::vector<float>* target, glm::vec3 dir, float angle, int dataNum) {
     std::vector<float> side{};
     side.resize(dataNum);
-    for (int i = 0; i < dataNum; i++) {
-        glm::vec4 coord = glm::rotate(angle, dir) * (glm::vec4(target->at(i), target->at(i + 1), target->at(i + 2), 1.0));
-        side.at(i++) = coord.x;
-        side.at(i++) = coord.y;
-        side.at(i++) = coord.z;
+    for (int i = 0; i < dataNum; i) {
+        glm::vec4 pos = glm::rotate(angle, dir) * (glm::vec4(target->at(i), target->at(i + 1), target->at(i + 2), 1.0));
+        side.at(i++) = pos.x;
+        side.at(i++) = pos.y;
+        side.at(i++) = pos.z;
         glm::vec4 norm = glm::rotate(angle, dir) * glm::vec4(target->at(i), target->at(i + 1), target->at(i + 2), 0.0);
         side.at(i++) = norm.x;
         side.at(i++) = norm.y;
-        side.at(i) = norm.z;
+        side.at(i++) = norm.z;
+        // texcoords
+        glm::vec2 uv = getUVfromPosition(pos);
+        side.at(i++) = uv.x;
+        side.at(i++) = uv.y;
     }
     target->insert(target->end(), side.begin(), side.end());
+}
+
+void OpenGLShape::setTexcoords(std::vector<float>* vertices) {
+//    int vertexNum = vertices->size() / 8;
+//    for (int i = 0; i < vertexNum; i++) {
+//        if (i + 8 < vertices->size()){
+//        glm::vec4 pos = glm::vec4(vertices->at(i), vertices->at(i+1), vertices->at(i+3), 1.f);
+//        glm::vec2 uv = glm::vec2(0);
+////        glm::vec2 uv = getUVfromPosition(pos);
+//        vertices->at(i + 7) = uv.x;
+//        vertices->at(i + 8) = uv.y;
+//        }
+//    }
 }
