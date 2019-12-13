@@ -60,7 +60,10 @@ protected:
 
     std::vector<glm::vec3> m_ball_translations;
     std::vector<glm::vec3> m_ball_velocities;
-    std::vector<float> m_ball_rotations;
+    std::vector<glm::vec3> m_ball_dir;
+
+    std::vector<glm::mat4> m_ball_rotations;
+
     std::vector<bool> m_ball_done;
 
 };
