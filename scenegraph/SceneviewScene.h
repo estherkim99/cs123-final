@@ -11,6 +11,10 @@
 #include "shape/coneshape.h"
 #include "shape/sphereshape.h"
 
+#include <utility>
+#include <gl/textures/Texture2D.h>
+#include "gl/textures/TextureParameters.h"
+#include "gl/textures/TextureParametersBuilder.h"
 
 namespace CS123 { namespace GL {
 
@@ -57,6 +61,8 @@ protected:
     void setMatrixUniforms(CS123::GL::Shader *shader, SupportCanvas3D *context);
     void setLights();
     void renderGeometry();
+    void loadTextures();
+    void applyTextureIfUsed(SceneObject obj);
 
     std::unique_ptr<CS123::GL::CS123Shader> m_phongShader;
     std::unique_ptr<CS123::GL::Shader> m_wireframeShader;
@@ -68,6 +74,10 @@ protected:
     std::unique_ptr<ConeShape> m_cone;
     std::unique_ptr<CylinderShape> m_cylinder;
     std::unique_ptr<SphereShape> m_sphere;
+
+    std::map<std::string, CS123::GL::Texture2D> m_textures;
+    bool m_mustLoadTextures;
+
 
 };
 
