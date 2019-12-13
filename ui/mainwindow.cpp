@@ -6,15 +6,15 @@
 #include "scenegraph/RayScene.h"
 #include "scenegraph/ShapesScene.h"
 #include "scenegraph/SceneviewScene.h"
+#include "scenegraph/PoolScene.h"
 #include "camera/CamtransCamera.h"
 #include "CS123XmlSceneParser.h"
 #include <math.h>
 #include <QFileDialog>
 #include <QMessageBox>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+                                          ui(new Ui::MainWindow)
 {
     // Make sure the settings are loaded before the UI
     settings.loadSettingsOrDefaults();
@@ -42,15 +42,15 @@ MainWindow::MainWindow(QWidget *parent) :
     // objects to simplify the code.  Each binding object connects to its UI elements and keeps
     // the UI and its setting in sync.
 
-    QList<QAction*> actions;
+    QList<QAction *> actions;
 
-#define SETUP_ACTION(dock, key) \
+#define SETUP_ACTION(dock, key)                      \
     actions.push_back(ui->dock->toggleViewAction()); \
     actions.back()->setShortcut(QKeySequence(key));
 
-    SETUP_ACTION(shapesDock,    "CTRL+3");
-    SETUP_ACTION(camtransDock,  "CTRL+4");
-    SETUP_ACTION(rayDock,       "CTRL+5");
+    SETUP_ACTION(shapesDock, "CTRL+3");
+    SETUP_ACTION(camtransDock, "CTRL+4");
+    SETUP_ACTION(rayDock, "CTRL+5");
 
     ui->menuToolbars->addActions(actions);
 #undef SETUP_ACTION
@@ -63,12 +63,15 @@ MainWindow::MainWindow(QWidget *parent) :
     // Hide the "stop rendering" button until we need it
     ui->rayStopRenderingButton->setHidden(true);
 
+    // Hide shoot/exit shoot mode button until we need it
+    ui->shootButton->setHidden(true);
+    ui->exitShootMode->setHidden(true);
 
     // Reset the contents of both canvas widgets (make a new 500x500 image for the 2D one)
     fileNew();
 
     // Make certain radio buttons switch to the 2D canvas when clicked.
-    QList<QRadioButton*> a;
+    QList<QRadioButton *> a;
     foreach (QRadioButton *rb, a)
         connect(rb, SIGNAL(clicked()), this, SLOT(activateCanvas2D()));
 
@@ -87,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent) :
     show();
     ui->tabWidget->setCurrentWidget(widget);
     show();
-
 }
 
 MainWindow::~MainWindow()
@@ -99,28 +101,30 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::dataBind() {
-#define BIND(b) { \
-    DataBinding *_b = (b); \
-    m_bindings.push_back(_b); \
-    assert(connect(_b, SIGNAL(dataChanged()), this, SLOT(settingsChanged()))); \
-}
+void MainWindow::dataBind()
+{
+#define BIND(b)                                                                    \
+    {                                                                              \
+        DataBinding *_b = (b);                                                     \
+        m_bindings.push_back(_b);                                                  \
+        assert(connect(_b, SIGNAL(dataChanged()), this, SLOT(settingsChanged()))); \
+    }
     QButtonGroup *shapesButtonGroup = new QButtonGroup;
     m_buttonGroups.push_back(shapesButtonGroup);
 
     // Shapes dock
     BIND(BoolBinding::bindCheckbox(ui->showSceneviewInstead, settings.useSceneviewScene))
     BIND(ChoiceBinding::bindRadioButtons(
-            shapesButtonGroup,
-            NUM_SHAPE_TYPES,
-            settings.shapeType,
-            ui->shapeTypeCube,
-            ui->shapeTypeCone,
-            ui->shapeTypeSphere,
-            ui->shapeTypeCylinder,
-            ui->shapeTypeTorus,
-            ui->shapeTypeSpecial1,
-            ui->shapeTypeSpecial2))
+        shapesButtonGroup,
+        NUM_SHAPE_TYPES,
+        settings.shapeType,
+        ui->shapeTypeCube,
+        ui->shapeTypeCone,
+        ui->shapeTypeSphere,
+        ui->shapeTypeCylinder,
+        ui->shapeTypeTorus,
+        ui->shapeTypeSpecial1,
+        ui->shapeTypeSpecial2))
     BIND(IntBinding::bindSliderAndTextbox(
         ui->shapeParameterSlider1, ui->shapeParameterTextbox1, settings.shapeParameter1, 1.f, 100.f))
     BIND(IntBinding::bindSliderAndTextbox(
@@ -136,29 +140,29 @@ void MainWindow::dataBind() {
     BIND(FloatBinding::bindDial(ui->transX, settings.cameraPosX, -2, 2, true))
     BIND(FloatBinding::bindDial(ui->transY, settings.cameraPosY, -2, 2, true))
     BIND(FloatBinding::bindDial(ui->transZ, settings.cameraPosZ, -2, 2, true))
-    BIND(FloatBinding::bindDial(ui->rotU,   settings.cameraRotU, -20, 20, true))
-    BIND(FloatBinding::bindDial(ui->rotV,   settings.cameraRotV, -20, 20, true))
-    BIND(FloatBinding::bindDial(ui->rotW,   settings.cameraRotN, -180, 180, false))
+    BIND(FloatBinding::bindDial(ui->rotU, settings.cameraRotU, -20, 20, true))
+    BIND(FloatBinding::bindDial(ui->rotV, settings.cameraRotV, -20, 20, true))
+    BIND(FloatBinding::bindDial(ui->rotW, settings.cameraRotN, -180, 180, false))
     BIND(FloatBinding::bindSliderAndTextbox(
-              ui->cameraFovSlider, ui->cameraFovTextbox, settings.cameraFov, 1, 179))
+        ui->cameraFovSlider, ui->cameraFovTextbox, settings.cameraFov, 1, 179))
     BIND(FloatBinding::bindSliderAndTextbox(
-              ui->cameraNearSlider, ui->cameraNearTextbox, settings.cameraNear, 0.1, 50))
+        ui->cameraNearSlider, ui->cameraNearTextbox, settings.cameraNear, 0.1, 50))
     BIND(FloatBinding::bindSliderAndTextbox(
-              ui->cameraFarSlider, ui->cameraFarTextbox, settings.cameraFar, 0.1, 50))
+        ui->cameraFarSlider, ui->cameraFarTextbox, settings.cameraFar, 0.1, 50))
 
     // Ray dock
-    BIND(BoolBinding::bindCheckbox(ui->raySuperSamping,          settings.useSuperSampling))
-    BIND(IntBinding::bindTextbox(ui->raySuperSamplesTextbox,   settings.numSuperSamples))
-    BIND(BoolBinding::bindCheckbox(ui->rayAntiAliasing,          settings.useAntiAliasing))
-    BIND(BoolBinding::bindCheckbox(ui->rayShadows,               settings.useShadows))
-    BIND(BoolBinding::bindCheckbox(ui->rayTextureMapping,        settings.useTextureMapping))
-    BIND(BoolBinding::bindCheckbox(ui->rayReflection,            settings.useReflection))
-    BIND(BoolBinding::bindCheckbox(ui->rayRefraction,            settings.useRefraction))
-    BIND(BoolBinding::bindCheckbox(ui->rayPointLights,           settings.usePointLights))
-    BIND(BoolBinding::bindCheckbox(ui->rayDirectionalLights,     settings.useDirectionalLights))
-    BIND(BoolBinding::bindCheckbox(ui->raySpotLights,            settings.useSpotLights))
-    BIND(BoolBinding::bindCheckbox(ui->rayMultiThreading,        settings.useMultiThreading))
-    BIND(BoolBinding::bindCheckbox(ui->rayUseKDTree,             settings.useKDTree))
+    BIND(BoolBinding::bindCheckbox(ui->raySuperSamping, settings.useSuperSampling))
+    BIND(IntBinding::bindTextbox(ui->raySuperSamplesTextbox, settings.numSuperSamples))
+    BIND(BoolBinding::bindCheckbox(ui->rayAntiAliasing, settings.useAntiAliasing))
+    BIND(BoolBinding::bindCheckbox(ui->rayShadows, settings.useShadows))
+    BIND(BoolBinding::bindCheckbox(ui->rayTextureMapping, settings.useTextureMapping))
+    BIND(BoolBinding::bindCheckbox(ui->rayReflection, settings.useReflection))
+    BIND(BoolBinding::bindCheckbox(ui->rayRefraction, settings.useRefraction))
+    BIND(BoolBinding::bindCheckbox(ui->rayPointLights, settings.usePointLights))
+    BIND(BoolBinding::bindCheckbox(ui->rayDirectionalLights, settings.useDirectionalLights))
+    BIND(BoolBinding::bindCheckbox(ui->raySpotLights, settings.useSpotLights))
+    BIND(BoolBinding::bindCheckbox(ui->rayMultiThreading, settings.useMultiThreading))
+    BIND(BoolBinding::bindCheckbox(ui->rayUseKDTree, settings.useKDTree))
 
     BIND(ChoiceBinding::bindTabs(ui->tabWidget, settings.currentTab))
 
@@ -168,19 +172,22 @@ void MainWindow::dataBind() {
     connect(m_canvas3D, SIGNAL(aspectRatioChanged()), this, SLOT(updateAspectRatio()));
 }
 
-void MainWindow::changeEvent(QEvent *e) {
+void MainWindow::changeEvent(QEvent *e)
+{
     QMainWindow::changeEvent(e); // allow the superclass to handle this for the most part...
 
-    switch (e->type()) {
-        case QEvent::LanguageChange:
-            ui->retranslateUi(this);
-            break;
-        default:
-            break;
+    switch (e->type())
+    {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
     }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
+void MainWindow::closeEvent(QCloseEvent *event)
+{
     // Save the settings before we quit
     settings.saveSettings();
     QSettings qtSettings("CS123", "CS123");
@@ -193,7 +200,8 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     QMainWindow::closeEvent(event);
 }
 
-void MainWindow::updateAspectRatio() {
+void MainWindow::updateAspectRatio()
+{
     // Update the aspect ratio text so the aspect ratio will be correct even if the
     // 3D canvas isn't visible (the 3D canvas isn't resized when it isn't visible)
     QSize activeTabSize = ui->tabWidget->currentWidget()->size();
@@ -201,13 +209,14 @@ void MainWindow::updateAspectRatio() {
     ui->cameraAspectRatio->setText(QString("Aspect ratio: %1").arg(aspectRatio));
 }
 
-
-void MainWindow::settingsChanged() {
+void MainWindow::settingsChanged()
+{
     ui->canvas2D->settingsChanged();
     m_canvas3D->settingsChanged();
 }
 
-void MainWindow::setAllRayFeatures(bool checked) {
+void MainWindow::setAllRayFeatures(bool checked)
+{
     ui->raySuperSamping->setChecked(checked);
     ui->rayAntiAliasing->setChecked(checked);
     ui->rayShadows->setChecked(checked);
@@ -222,7 +231,8 @@ void MainWindow::setAllRayFeatures(bool checked) {
     //ui->raySpotLights->setChecked(checked);
 }
 
-void MainWindow::fileCopy3Dto2D() {
+void MainWindow::fileCopy3Dto2D()
+{
     // Make sure OpenGL gets a chance to redraw
     ui->tabWidget->setCurrentIndex(TAB_3D);
     m_canvas3D->update();
@@ -235,26 +245,32 @@ void MainWindow::fileCopy3Dto2D() {
     ui->tabWidget->setCurrentIndex(TAB_2D);
 }
 
-void MainWindow::fileNew() {
+void MainWindow::fileNew()
+{
     ui->canvas2D->newImage();
 }
 
-void MainWindow::fileOpen() {
+void MainWindow::fileOpen()
+{
     // This opens the 3D tab to initialize OGL so parsing
     // the scene doesn't crash. If you can find a better solution
     // feel free to change this.
     activateCanvas3D();
     QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
-    if (!file.isNull()) {
-        if (file.endsWith(".xml")) {
+    if (!file.isNull())
+    {
+        if (file.endsWith(".xml"))
+        {
             CS123XmlSceneParser parser(file.toLatin1().data());
-            if (parser.parse()) {
+            if (parser.parse())
+            {
                 m_canvas3D->loadSceneviewSceneFromParser(parser);
                 ui->showSceneviewInstead->setChecked(true);
 
                 // Set the camera for the new scene
                 CS123SceneCameraData camera;
-                if (parser.getCameraData(camera)) {
+                if (parser.getCameraData(camera))
+                {
                     camera.pos[3] = 1;
                     camera.look[3] = 0;
                     camera.up[3] = 0;
@@ -264,42 +280,54 @@ void MainWindow::fileOpen() {
                     cam->setHeightAngle(camera.heightAngle);
                 }
 
-                if (settings.useOrbitCamera) {
+                if (settings.useOrbitCamera)
+                {
                     ui->cameraOrbitCheckbox->setChecked(false);
                 }
 
                 activateCanvas3D();
-            } else {
+            }
+            else
+            {
                 QMessageBox::critical(this, "Error", "Could not load scene \"" + file + "\"");
             }
         }
-        else {
-            if (!ui->canvas2D->loadImage(file)) {
+        else
+        {
+            if (!ui->canvas2D->loadImage(file))
+            {
                 QMessageBox::critical(this, "Error", "Could not load image \"" + file + "\"");
-            } else {
+            }
+            else
+            {
                 activateCanvas2D();
             }
         }
     }
 }
 
-void MainWindow::fileOpenPool() {
+void MainWindow::fileOpenPool()
+{
     // This opens the 3D tab to initialize OGL so parsing
     // the scene doesn't crash. If you can find a better solution
     // feel free to change this.
     activateCanvas3D();
     //QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
     QString file = "/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/pool.xml";
-    if (!file.isNull()) {
-        if (file.endsWith(".xml")) {
+    if (!file.isNull())
+    {
+        if (file.endsWith(".xml"))
+        {
             CS123XmlSceneParser parser(file.toLatin1().data());
-            if (parser.parse()) {
+            if (parser.parse())
+            {
                 m_canvas3D->loadSceneviewSceneFromParser(parser);
                 ui->showSceneviewInstead->setChecked(true);
 
                 // Set the camera for the new scene
                 CS123SceneCameraData camera;
-                if (parser.getCameraData(camera)) {
+                if (parser.getCameraData(camera))
+                {
                     camera.pos[3] = 1;
                     camera.look[3] = 0;
                     camera.up[3] = 0;
@@ -309,39 +337,50 @@ void MainWindow::fileOpenPool() {
                     cam->setHeightAngle(camera.heightAngle);
                 }
 
-                if (settings.useOrbitCamera) {
+                if (settings.useOrbitCamera)
+                {
                     ui->cameraOrbitCheckbox->setChecked(false);
                 }
 
                 activateCanvas3D();
-            } else {
+            }
+            else
+            {
                 QMessageBox::critical(this, "Error", "Could not load scene \"" + file + "\"");
             }
         }
-        else {
-            if (!ui->canvas2D->loadImage(file)) {
+        else
+        {
+            if (!ui->canvas2D->loadImage(file))
+            {
                 QMessageBox::critical(this, "Error", "Could not load image \"" + file + "\"");
-            } else {
+            }
+            else
+            {
                 activateCanvas2D();
             }
         }
     }
 }
 
-void MainWindow::fileSave() {
+void MainWindow::fileSave()
+{
     if (settings.currentTab == TAB_2D)
         ui->canvas2D->saveImage();
 }
 
-void MainWindow::checkAllRayFeatures() {
+void MainWindow::checkAllRayFeatures()
+{
     setAllRayFeatures(true);
 }
 
-void MainWindow::uncheckAllRayFeatures() {
+void MainWindow::uncheckAllRayFeatures()
+{
     setAllRayFeatures(false);
 }
 
-void MainWindow::renderImage() {
+void MainWindow::renderImage()
+{
     // Make sure OpenGL gets a chance to update the OrbitCamera, which can only be done when
     // that tab is active (because it needs the OpenGL context for its matrix transforms)
     ui->tabWidget->setCurrentIndex(TAB_3D);
@@ -351,7 +390,8 @@ void MainWindow::renderImage() {
     ui->tabWidget->setCurrentIndex(TAB_2D);
 
     OpenGLScene *glScene = m_canvas3D->getScene();
-    if (glScene) {
+    if (glScene)
+    {
         // TODO: Set up RayScene from glScene and call ui->canvas2D->setScene
         RayScene *rayscene = new RayScene(*glScene);
         ui->canvas2D->setScene(rayscene);
@@ -376,7 +416,8 @@ void MainWindow::renderImage() {
     }
 }
 
-void MainWindow::setAllEnabled(bool enabled) {
+void MainWindow::setAllEnabled(bool enabled)
+{
     QList<QWidget *> widgets;
     widgets += ui->shapesDock;
     widgets += ui->camtransDock;
@@ -384,6 +425,9 @@ void MainWindow::setAllEnabled(bool enabled) {
     widgets += ui->rayFeatures;
     widgets += ui->rayLighting;
     widgets += ui->rayRenderButton;
+    widgets += ui->setShootMode;
+    widgets += ui->exitShootMode;
+    widgets += ui->shootButton;
 
     QList<QAction *> actions;
     actions += ui->actionNew;
@@ -400,11 +444,13 @@ void MainWindow::setAllEnabled(bool enabled) {
         action->setEnabled(enabled);
 }
 
-void MainWindow::activateCanvas2D() {
+void MainWindow::activateCanvas2D()
+{
     ui->tabWidget->setCurrentWidget(ui->tab2D);
 }
 
-void MainWindow::activateCanvas3D() {
+void MainWindow::activateCanvas3D()
+{
     ui->tabWidget->setCurrentWidget(ui->tab3D);
 }
 
@@ -418,53 +464,103 @@ void MainWindow::revertImage()
     ui->canvas2D->revertImage();
 }
 
-void MainWindow::setCameraAxisX() {
+void MainWindow::setCameraAxisX()
+{
     m_canvas3D->setCameraAxisX();
 }
 
-void MainWindow::setCameraAxisY() {
+void MainWindow::setCameraAxisY()
+{
     m_canvas3D->setCameraAxisY();
 }
 
-void MainWindow::setCameraAxisZ() {
+void MainWindow::setCameraAxisZ()
+{
     m_canvas3D->setCameraAxisZ();
 }
 
-void MainWindow::updateCameraTranslation() {
+void MainWindow::updateCameraTranslation()
+{
     m_canvas3D->updateCameraTranslation();
 }
 
-void MainWindow::updateCameraRotationN() {
+void MainWindow::updateCameraRotationN()
+{
     m_canvas3D->updateCameraRotationN();
 }
 
-void MainWindow::updateCameraRotationV() {
+void MainWindow::updateCameraRotationV()
+{
     m_canvas3D->updateCameraRotationV();
 }
 
-void MainWindow::updateCameraRotationU() {
+void MainWindow::updateCameraRotationU()
+{
     m_canvas3D->updateCameraRotationU();
 }
 
-void MainWindow::resetUpVector() {
+void MainWindow::resetUpVector()
+{
     m_canvas3D->resetUpVector();
 }
 
-void MainWindow::resetSliders() {
+void MainWindow::resetSliders()
+{
     ui->cameraFovTextbox->setText(QString::number(55, 'f', 1));
     ui->cameraNearTextbox->setText(QString::number(.1, 'f', 1));
     ui->cameraFarTextbox->setText(QString::number(50, 'f', 1));
     update();
 }
 
-void MainWindow::updateCameraClip() {
+void MainWindow::updateCameraClip()
+{
     m_canvas3D->updateCameraClip();
 }
 
-void MainWindow::updateCameraHeightAngle() {
+void MainWindow::updateCameraHeightAngle()
+{
     m_canvas3D->updateCameraHeightAngle();
 }
 
-void MainWindow::setCameraAxonometric() {
+void MainWindow::setCameraAxonometric()
+{
     m_canvas3D->setCameraAxonometric();
+}
+
+void MainWindow::setShootMode()
+{
+    // Make sure OpenGL gets a chance to update the OrbitCamera, which can only be done when
+    // that tab is active (because it needs the OpenGL context for its matrix transforms)
+    ui->tabWidget->setCurrentIndex(TAB_3D);
+    m_canvas3D->update();
+    QApplication::processEvents();
+
+    // Swap buttons
+    ui->setShootMode->setHidden(true);
+    ui->shootButton->setHidden(false);
+    ui->exitShootMode->setHidden(false);
+
+    // change camera settings
+    m_canvas3D->orientCue();
+
+    // change settings
+    settings.useCue = true;
+}
+void MainWindow::shoot()
+{
+    m_canvas3D->shoot(.3f);
+    ui->shootButton->setHidden(true);
+}
+void MainWindow::exitShootMode()
+{
+    // Swap buttons
+    ui->setShootMode->setHidden(false);
+    ui->shootButton->setHidden(true);
+    ui->exitShootMode->setHidden(true);
+
+    // change camera settings
+    m_canvas3D->resetCamera();
+
+    // change settings
+    settings.useCue = false;
 }

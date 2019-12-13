@@ -110,8 +110,7 @@
          <number>0</number>
         </property>
         <item row="0" column="0">
-         <widget class="QWidget" name="canvas3D" native="true" />
-           
+         <widget class="QWidget" name="canvas3D" native="true"/>
         </item>
        </layout>
       </widget>
@@ -224,17 +223,19 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="shapeParameterLabel2">
-          <property name="text">
-           <string>2</string>
+        <item row="2" column="2">
+         <widget class="QLineEdit" name="shapeParameterTextbox2">
+          <property name="minimumSize">
+           <size>
+            <width>40</width>
+            <height>0</height>
+           </size>
           </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="shapeParameterLabel3">
-          <property name="text">
-           <string>3</string>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>16777215</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -251,29 +252,26 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QSlider" name="shapeParameterSlider2">
+        <item row="4" column="2">
+         <widget class="QLineEdit" name="shapeParameterTextbox3">
           <property name="minimumSize">
            <size>
-            <width>100</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>16777215</height>
+           </size>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <widget class="QSlider" name="shapeParameterSlider3">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+        <item row="4" column="0">
+         <widget class="QLabel" name="shapeParameterLabel3">
+          <property name="text">
+           <string>3</string>
           </property>
          </widget>
         </item>
@@ -293,35 +291,36 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="shapeParameterTextbox2">
+        <item row="4" column="1">
+         <widget class="QSlider" name="shapeParameterSlider3">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>100</width>
             <height>0</height>
            </size>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="4" column="2">
-         <widget class="QLineEdit" name="shapeParameterTextbox3">
+        <item row="2" column="0">
+         <widget class="QLabel" name="shapeParameterLabel2">
+          <property name="text">
+           <string>2</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSlider" name="shapeParameterSlider2">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>100</width>
             <height>0</height>
            </size>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
@@ -357,6 +356,45 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <widget class="QPushButton" name="shootButton">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>30</y>
+          <width>113</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Shoot!</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="setShootMode">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>161</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Enter shooting mode</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="exitShootMode">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>161</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Exit shooting mode</string>
+        </property>
+       </widget>
       </widget>
      </item>
     </layout>
@@ -1862,6 +1900,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>setShootMode</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setShootMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>92</x>
+     <y>469</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>1555</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exitShootMode</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exitShootMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>92</x>
+     <y>499</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>1555</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shootButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>shoot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>439</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>1555</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>checkAllRayFeatures()</slot>
@@ -1887,5 +1973,8 @@
   <slot>clearImage()</slot>
   <slot>revertImage()</slot>
   <slot>resetSliders()</slot>
+  <slot>setShootMode()</slot>
+  <slot>shoot()</slot>
+  <slot>exitShootMode()</slot>
  </slots>
 </ui>

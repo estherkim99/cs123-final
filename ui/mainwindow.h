@@ -57,6 +57,11 @@ private:
     Ui::MainWindow *ui;
 
 public slots:
+    // FINAL PROEJCT CODE
+    void setShootMode();
+    void shoot();
+    void exitShootMode();
+
     // Used internally to keep the aspect ratio up to date.
     void updateAspectRatio();
 

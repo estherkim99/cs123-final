@@ -306,9 +306,54 @@ void SupportCanvas3D::tick() {
 
     // TODO: add some qualifiers here
     if(m_pool){
-        m_poolScene->updateTranslation(seconds);
+        m_poolScene->tick(seconds);
     }
 
     // Flag this view for repainting (Qt will call paintGL() soon after)
+    update();
+}
+
+
+void SupportCanvas3D::shoot(float vel){
+    if(m_pool) {
+        glm::vec4 dir;
+//        if (settings.useOrbitCamera) {
+//            dir = m_defaultOrbitingCamera->getLook();
+//        } else {
+            dir = m_defaultPerspectiveCamera->getLook();
+//        }
+        dir.y = 0;
+        dir = glm::normalize(dir);
+
+        m_poolScene->addVelocity(0, glm::vec3(dir.x * vel, 0, dir.z * vel));
+        update();
+    }
+}
+
+void SupportCanvas3D::orientCue(){
+    if (m_pool) {
+        glm::vec3 cuePos = m_poolScene->getBallPosition(0);
+
+//        if (settings.useOrbitCamera) {
+//            m_oldEye = m_defaultOrbitingCamera->getPosition();
+//            m_oldLook = m_defaultPerspectiveCamera->getLook();
+//            m_oldUp = m_defaultPerspectiveCamera->getUp();
+//        } else {
+            m_oldEye = m_defaultPerspectiveCamera->getPosition();
+            m_oldLook = m_defaultPerspectiveCamera->getLook();
+            m_oldUp = m_defaultPerspectiveCamera->getUp();
+//        }
+
+        // eye, look, up
+        m_defaultPerspectiveCamera->orientLook(
+                    glm::vec4(cuePos.x, cuePos.y + .1f, cuePos.z, 1.f),
+                    glm::vec4(0, -0.2f, 1.f, 0.f),
+                    glm::vec4(0.f, 1.f, 0.f, 0.f));
+        update();
+    }
+}
+
+void SupportCanvas3D::resetCamera(){
+    m_defaultPerspectiveCamera->orientLook(m_oldEye, m_oldLook, m_oldUp);
     update();
 }

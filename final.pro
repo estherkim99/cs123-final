@@ -72,6 +72,7 @@ SOURCES += \
     shape/Shape.cpp \
     shape/Sphere.cpp \
     lib/openglshape.cpp
+    camera/CueCamera.cpp
 
 
 HEADERS += \
@@ -132,6 +133,7 @@ HEADERS += \
     shape/Shape.h \
     shape/Sphere.h \
     lib/openglshape.h
+    camera/CueCamera.h
 
 
 FORMS += ui/mainwindow.ui
