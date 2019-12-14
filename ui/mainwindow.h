@@ -61,6 +61,7 @@ public slots:
     void setShootMode();
     void shoot();
     void exitShootMode();
+    void resetPoolScene();
 
     // Used internally to keep the aspect ratio up to date.
     void updateAspectRatio();

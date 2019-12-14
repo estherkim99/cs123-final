@@ -569,3 +569,7 @@ void MainWindow::exitShootMode()
     // change settings
     settings.useCue = false;
 }
+
+void MainWindow::resetPoolScene(){
+    m_canvas3D->resetPoolScene();
+}
