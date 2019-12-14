@@ -1,45 +1,17 @@
-
-//layout(location = 3) in vec3 tangent;
-//layout(location = 4) in vec3 binormal;
-
-//out mat3 TBN;
-//out vec3 light_ts; // tangent space light vector
-//out vec3 eye_ts; // tangent space eye vector
-
-
-
-////    vec3 T = normalize(vec3(m * vec4(tangent, 0.0)));
-////    vec3 B = normalize(vec3(m * vec4(binormal, 0.0)));
-////    vec3 N = normalize(vec3(m * vec4(normal, 0.0)));
-////    TBN = mat3(T, B, N);
-
-//    vec4 position_cameraSpace = v * m * vec4(position, 1.0);
-//    vec4 normal_cameraSpace = vec4(normalize(mat3(transpose(inverse(v * m))) * normal), 0);
-
-//    vec4 position_worldSpace = m * vec4(position, 1.0);
-//    vec4 normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m))) * normal), 0);
-
-//    mat3 mv3 = mat3(transpose(inverse(v * m)));
-//    vec3 vt_cameraSpace = mv3 * normalize(tangent);
-//    vec3 vb_cameraspace = mv3 * normalize(bitangent);
-//    vec3 vn_cameraSpace = mv3 * normalize(normal);
-
-//    mat3 TBN = transpose(mat3(vt_cameraSpace, vb_cameraspace, vn_cameraSpace));
-
-//    // change light and eye tot tangent space
-//    vec4 light_cameraSpace = normalize(v * vec4(lightDirections[0], 0.0));
-//    light_ts = normalize(TBN * vec3(light_cameraSpace));
-//    eye_ts = normalize(TBN * vec3(position_cameraSpace));
-
 #version 330 core
 
 layout(location = 0) in vec3 position; // Position of the vertex
 layout(location = 1) in vec3 normal;   // Normal of the vertex
+layout(location = 3) in vec3 tangent;
+layout(location = 4) in vec3 binormal;
 layout(location = 5) in vec2 texCoord; // UV texture coordinates
 layout(location = 10) in float arrowOffset; // Sideways offset for billboarded normal arrows
 
 out vec3 color; // Computed color for this vertex
 out vec2 texc;
+
+out vec3 light_ts; // tangent space light vector
+out vec3 eye_ts; // tangent space eye vector
 
 // Transformation matrices
 uniform mat4 p;
@@ -72,6 +44,18 @@ void main() {
 
     vec4 position_worldSpace = m * vec4(position, 1.0);
     vec4 normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m))) * normal), 0);
+
+    mat3 mv3 = mat3(transpose(inverse(v * m)));
+    vec3 vt_cameraSpace = mv3 * normalize(tangent);
+    vec3 vb_cameraspace = mv3 * normalize(binormal);
+    vec3 vn_cameraSpace = mv3 * normalize(normal);
+    mat3 TBN = transpose(mat3(vt_cameraSpace, vb_cameraspace, vn_cameraSpace));
+
+    // change light and eye to tangent space
+    vec4 light_cameraSpace = normalize(v * vec4(lightDirections[0], 0.0));
+
+    light_ts = TBN * vec3(light_cameraSpace);
+    eye_ts = TBN * vec3(position_cameraSpace);
 
     if (useArrowOffsets) {
         // Figure out the axis to use in order for the triangle to be billboarded correctly

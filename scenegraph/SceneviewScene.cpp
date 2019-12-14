@@ -18,7 +18,8 @@ using namespace CS123::GL;
 
 
 SceneviewScene::SceneviewScene() :
-    m_mustLoadTextures(true)
+    m_mustLoadTextures(true),
+    m_mustLoadBumpMaps(true)
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
     loadPhongShader();
@@ -33,8 +34,8 @@ SceneviewScene::~SceneviewScene()
 }
 
 void SceneviewScene::loadPhongShader() {
-    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/default.vert");
-    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/default.frag");
+    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/pool.vert");
+    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/pool.frag");
     m_phongShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
 }
 
@@ -63,6 +64,7 @@ void SceneviewScene::render(SupportCanvas3D *context) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_mustLoadTextures) loadTextures();
+    if (m_mustLoadBumpMaps) loadBumpMap();
 
 
     m_phongShader->bind();
@@ -134,6 +136,7 @@ void SceneviewScene::renderGeometry() {
             m_wireframeShader->setUniform("m", o.composite);
         }
         applyTextureIfUsed(o);
+        applyBumpMappingIfUsed(o);
 
         // draw shapes
         switch (o.primitive) {
@@ -174,33 +177,65 @@ void SceneviewScene::settingsChanged() {
 
 
 void SceneviewScene::loadTextures() {
-     for (SceneObject obj : m_sceneObjects){
-             CS123SceneFileMap textureMap = obj.material.textureMap;
-             if (textureMap.isUsed){
-                 QImage image =  QImage(QString::fromStdString(textureMap.filename));
-                 QImage formattedImage = QGLWidget::convertToGLFormat(image);
-                 Texture2D texture(formattedImage.bits(), formattedImage.width(), formattedImage.height());
-                 // format texture with correct params
-                 TextureParametersBuilder builder;
-                 builder.setFilter(TextureParameters::FILTER_METHOD::LINEAR);
-                 builder.setWrap(TextureParameters::WRAP_METHOD::REPEAT);
-                 TextureParameters params = builder.build();
-                 params.applyTo(texture);
-                 // add (filename, texture) pair to hashmap
-                 m_textures.insert(std::make_pair(textureMap.filename, std::move(texture)));
-             }
-         }
+    for (SceneObject obj : m_sceneObjects){
+        CS123SceneFileMap textureMap = obj.material.textureMap;
+        if (textureMap.isUsed){
+            QImage image =  QImage(QString::fromStdString(textureMap.filename));
+            QImage formattedImage = QGLWidget::convertToGLFormat(image);
+            Texture2D texture(formattedImage.bits(), formattedImage.width(), formattedImage.height());
+            // format texture with correct params
+            TextureParametersBuilder builder;
+            builder.setFilter(TextureParameters::FILTER_METHOD::LINEAR);
+            builder.setWrap(TextureParameters::WRAP_METHOD::REPEAT);
+            TextureParameters params = builder.build();
+            params.applyTo(texture);
+            // add (filename, texture) pair to hashmap
+            m_textures.insert(std::make_pair(textureMap.filename, std::move(texture)));
+        }
+    }
 
-          m_mustLoadTextures = false;
- }
+    m_mustLoadTextures = false;
+}
 
- void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
-     CS123SceneFileMap map = obj.material.textureMap;
-     if (!map.isUsed) {
-         m_phongShader->setUniform("useTexture", 0);
-         return;
-     }
-     m_phongShader->setUniform("useTexture", 1);
-     m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
-     m_phongShader->setTexture("tex", m_textures.at(map.filename));
- }
+void SceneviewScene::loadBumpMap() {
+    for (SceneObject obj : m_sceneObjects) {
+        CS123SceneFileMap bumpMap = obj.material.bumpMap;
+        if (bumpMap.isUsed) {
+            QImage image =  QImage(QString::fromStdString(bumpMap.filename));
+            QImage formattedImage = QGLWidget::convertToGLFormat(image);
+            Texture2D texture(formattedImage.bits(), formattedImage.width(), formattedImage.height());
+            // format texture with correct params
+            TextureParametersBuilder builder;
+            builder.setFilter(TextureParameters::FILTER_METHOD::LINEAR);
+            builder.setWrap(TextureParameters::WRAP_METHOD::REPEAT);
+            TextureParameters params = builder.build();
+            params.applyTo(texture);
+            // add (filename, texture) pair to hashmap
+            m_bumpMaps.insert(std::make_pair(bumpMap.filename, std::move(texture)));
+
+        }
+    }
+    m_mustLoadBumpMaps = false;
+}
+
+void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
+    CS123SceneFileMap map = obj.material.textureMap;
+    if (!map.isUsed) {
+        m_phongShader->setUniform("useTexture", 0);
+        return;
+    }
+    m_phongShader->setUniform("useTexture", 1);
+    m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
+    m_phongShader->setTexture("tex", m_textures.at(map.filename));
+}
+
+void SceneviewScene::applyBumpMappingIfUsed(SceneObject obj) {
+    CS123SceneFileMap map = obj.material.bumpMap;
+    if (!map.isUsed) {
+        m_phongShader->setUniform("useBumpMapping", 0);
+        return;
+    }
+    m_phongShader->setUniform("useBumpMapping", 1);
+    m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
+    m_phongShader->setTexture("bumpMap", m_bumpMaps.at(map.filename));
+}

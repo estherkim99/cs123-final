@@ -64,6 +64,7 @@ void PoolScene::render(SupportCanvas3D *context) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_mustLoadTextures) loadTextures();
+    if (m_mustLoadBumpMaps) loadBumpMap();
 
     m_phongShader->bind();
     setSceneUniforms(context);
@@ -143,6 +144,7 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
         m_wireframeShader->setUniform("m", transform);
     }
     applyTextureIfUsed(o);
+    applyBumpMappingIfUsed(o);
 
     // draw shapes
     switch (o.primitive) {

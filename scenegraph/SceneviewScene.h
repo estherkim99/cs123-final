@@ -62,7 +62,9 @@ protected:
     void setLights();
     void renderGeometry();
     void loadTextures();
+    void loadBumpMap();
     void applyTextureIfUsed(SceneObject obj);
+    void applyBumpMappingIfUsed(SceneObject obj);
 
     std::unique_ptr<CS123::GL::CS123Shader> m_phongShader;
     std::unique_ptr<CS123::GL::Shader> m_wireframeShader;
@@ -76,7 +78,9 @@ protected:
     std::unique_ptr<SphereShape> m_sphere;
 
     std::map<std::string, CS123::GL::Texture2D> m_textures;
+    std::map<std::string, CS123::GL::Texture2D> m_bumpMaps;
     bool m_mustLoadTextures;
+    bool m_mustLoadBumpMaps;
 
 
 };
