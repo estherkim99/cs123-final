@@ -9,6 +9,7 @@ SphereShape::SphereShape()
 SphereShape::~SphereShape() {
 }
 
+//#define DATAPERVERTEX 8
 
 void SphereShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
     if (p1 == 1) {
@@ -18,9 +19,8 @@ void SphereShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
         p2 = 3;
     }
 
-    int dataPerVertex = 6;
     int vertexNum = 4 * p1 + 2 * p1;
-    int dataNum = dataPerVertex*vertexNum;
+    int dataNum = DATAPERVERTEX*vertexNum;
     float pi = glm::pi<float>();
 
     float length = pi / p2;
@@ -45,9 +45,13 @@ void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float leng
             side->at(index++) = norm.x;
             side->at(index++) = norm.y;
             side->at(index++) = norm.z;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+                side->at(index++) = 0;
+            }
             if (j == 0) {
-                for (int k = 0; k < 6; k++) {
-                    side->at(index) = side->at(index - 6);
+                for (int k = 0; k < DATAPERVERTEX; k++) {
+                    side->at(index) = side->at(index - DATAPERVERTEX);
                     index++;
                 }
             }
@@ -59,10 +63,28 @@ void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float leng
             side->at(index++) = norm.x;
             side->at(index++) = norm.y;
             side->at(index++) = norm.z;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+                side->at(index++) = 0;
+            }
         }
-        for (int k = 0; k < 6; k++) {
-            side->at(index) = side->at(index - 6);
+        for (int k = 0; k < DATAPERVERTEX; k++) {
+            side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
     }
+}
+
+glm::vec2 SphereShape::getUVfromPosition(glm::vec4 point) {
+    float u;
+    float theta = atan2(point.z, point.x);
+
+    if (theta < 0) {
+        u = -theta / (2*M_PI);
+    } else {
+        u = 1.f - (theta / (2*M_PI));
+    }
+
+    float v = asin(point.y/0.5f) / M_PI + 0.5f;
+    return glm::vec2(u, v);
 }

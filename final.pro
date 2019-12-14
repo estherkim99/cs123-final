@@ -69,7 +69,8 @@ SOURCES += \
     rayshape/RayCube.cpp \
     rayshape/RaySphere.cpp \
     rayshape/RayCylinder.cpp \
-    scenegraph/PoolScene.cpp
+    scenegraph/PoolScene.cpp \
+    camera/CueCamera.cpp
 
 
 HEADERS += \
@@ -120,7 +121,8 @@ HEADERS += \
     rayshape/RayCube.h \
     rayshape/RaySphere.h \
     rayshape/RayCylinder.h \
-    scenegraph/PoolScene.h
+    scenegraph/PoolScene.h \
+    camera/CueCamera.h
 
 
 FORMS += ui/mainwindow.ui
@@ -139,6 +141,8 @@ OTHER_FILES += shaders/shader.frag \
     shaders/normals/normalsArrow.vert \
     shaders/normals/normalsArrow.gsh \
     shaders/normals/normalsArrow.frag \
+    shaders/pool/pool.frag \
+    shader/pool/pool.vert \
     shaders/deferredlighting/gbuffer/gbuffer.frag \
     shaders/deferredlighting/gbuffer/gbuffer.vert \
     shaders/deferredlighting/lighting/lighting.frag \
@@ -173,4 +177,6 @@ DISTFILES += \
     shaders/normals/normals.gsh \
     shaders/normals/normalsArrow.gsh \
     shaders/normals/normalsArrow.frag \
-    shaders/normals/normalsArrow.vert
+    shaders/normals/normalsArrow.vert \
+    shaders/pool/pool.frag \
+    shaders/pool/pool.vert

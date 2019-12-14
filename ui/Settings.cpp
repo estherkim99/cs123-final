@@ -58,6 +58,10 @@ void Settings::loadSettingsOrDefaults() {
 
     currentTab = s.value("currentTab", TAB_2D).toBool();
 
+    // Pool
+    angle = s.value("angle",0.f).toFloat();
+    vel = s.value("vel",1.0f).toFloat();
+
     // These are for computing deltas and the values don't matter, so start all dials in the up
     // position
     cameraPosX = 0;
@@ -66,6 +70,9 @@ void Settings::loadSettingsOrDefaults() {
     cameraRotU = 0;
     cameraRotV = 0;
     cameraRotN = 0;
+
+    // FINAL
+    useCue = false;
 }
 
 void Settings::saveSettings() {

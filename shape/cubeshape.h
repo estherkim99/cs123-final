@@ -14,6 +14,7 @@ public:
 private:
     virtual void makeSides(std::vector<float>* vertices, int p1, int p2);
     void firstSide(std::vector<float>* side, int p1, float length, int dataNum);
+    virtual glm::vec2 getUVfromPosition(glm::vec4 point);
 
 };
 

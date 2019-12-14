@@ -115,6 +115,7 @@ void SupportCanvas3D::initializeScenes() {
     m_sceneviewScene = std::make_unique<SceneviewScene>();
     m_poolScene = std::make_unique<PoolScene>();
     m_shapesScene = std::make_unique<ShapesScene>(width(), height());
+    update();
 }
 
 void SupportCanvas3D::paintGL() {
@@ -126,8 +127,6 @@ void SupportCanvas3D::paintGL() {
     glViewport(0, 0, width() * ratio, height() * ratio);
     getCamera()->setAspectRatio(static_cast<float>(width()) / static_cast<float>(height()));
     m_currentScene->render(this);
-    //m_poolScene->render(this);
-
 }
 
 void SupportCanvas3D::settingsChanged() {
@@ -153,19 +152,13 @@ void SupportCanvas3D::setSceneFromSettings() {
 }
 
 void SupportCanvas3D::loadSceneviewSceneFromParser(CS123XmlSceneParser &parser) {
-//    m_sceneviewScene = std::make_unique<SceneviewScene>();
-//    Scene::parse(m_sceneviewScene.get(), &parser);
-
     m_poolScene = std::make_unique<PoolScene>();
     Scene::parse(m_poolScene.get(), &parser);
-    //PoolScene *res = m_poolScene.get();
     m_settingsDirty = true;
 
 }
 
 void SupportCanvas3D::setSceneToSceneview() {
-    //assert(m_sceneviewScene.get());
-    //m_currentScene = m_sceneviewScene.get();
     assert(m_poolScene.get());
     m_currentScene = m_poolScene.get();
     m_pool = true;
@@ -308,8 +301,58 @@ void SupportCanvas3D::tick() {
     float seconds = m_time.restart() * 0.001f;
 
     // TODO: add some qualifiers here
-    m_poolScene->updateTranslation();
+    if(m_pool){
+        m_poolScene->tick(seconds);
+    }
 
     // Flag this view for repainting (Qt will call paintGL() soon after)
+    update();
+}
+
+
+void SupportCanvas3D::shoot(float vel, float angle){
+    if(m_pool) {
+//        glm::vec4 dir;
+//        if (settings.useOrbitCamera) {
+//            dir = m_defaultOrbitingCamera->getLook();
+//        } else {
+            //dir = m_defaultPerspectiveCamera->getLook();
+//            dir = glm::vec4(0.f,0.f,1.f,0.f);
+//        }
+//        dir.y = 0;
+//        dir = glm::normalize(dir);
+        glm::vec3 dir = vel*glm::vec3(sin(angle), 0.f, cos(angle));
+
+        //m_poolScene->addVelocity(0, glm::vec3(dir.x * vel, 0, dir.z * vel));
+        m_poolScene->addVelocity(0, dir);
+        update();
+    }
+}
+
+void SupportCanvas3D::orientCue(){
+    if (m_pool) {
+        glm::vec3 cuePos = m_poolScene->getBallPosition(0);
+
+//        if (settings.useOrbitCamera) {
+//            m_oldEye = m_defaultOrbitingCamera->getPosition();
+//            m_oldLook = m_defaultPerspectiveCamera->getLook();
+//            m_oldUp = m_defaultPerspectiveCamera->getUp();
+//        } else {
+            m_oldEye = m_defaultPerspectiveCamera->getPosition();
+            m_oldLook = m_defaultPerspectiveCamera->getLook();
+            m_oldUp = m_defaultPerspectiveCamera->getUp();
+//        }
+
+        // eye, look, up
+        m_defaultPerspectiveCamera->orientLook(
+                    glm::vec4(cuePos.x, cuePos.y + .1f, cuePos.z, 1.f),
+                    glm::vec4(0, -0.2f, 1.f, 0.f),
+                    glm::vec4(0.f, 1.f, 0.f, 0.f));
+        update();
+    }
+}
+
+void SupportCanvas3D::resetCamera(){
+    m_defaultPerspectiveCamera->orientLook(m_oldEye, m_oldLook, m_oldUp);
     update();
 }

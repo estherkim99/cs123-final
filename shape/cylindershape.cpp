@@ -13,9 +13,8 @@ CylinderShape::~CylinderShape(){
 }
 
 void CylinderShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
-    int dataPerVertex = 6;
     int vertexNum = 10 * p1 + 8;
-    int dataNum = dataPerVertex*vertexNum;
+    int dataNum = DATAPERVERTEX*vertexNum;
     float pi = glm::pi<float>();
 
     if (p2 < 4) {
@@ -40,20 +39,28 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
         side->at(index++) = 0;
         side->at(index++) = 1;
         side->at(index++) = 0;
+        // texcoord, tangent
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+            side->at(index++) = 0;
+        }
         if (i == 0) {
-            for (int k = 0; k < 6; k++) {
-                side->at(index) = side->at(index - 6);
+            for (int k = 0; k < DATAPERVERTEX; k++) {
+                side->at(index) = side->at(index - DATAPERVERTEX);
                 index++;
             }
         }
         side->at(index++) = length/2/p1 * i;
         for (int k = 0; k < 5; k++) {
-            side->at(index) = side->at(index - 6);
+            side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
+        // texcoord, tangent
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+            side->at(index++) = 0;
+        }
     }
-    for (int k = 0; k < 6; k++) {
-        side->at(index) = side->at(index - 6);
+    for (int k = 0; k < DATAPERVERTEX; k++) {
+        side->at(index) = side->at(index - DATAPERVERTEX);
         index++;
     }
 
@@ -67,29 +74,56 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             side->at(index++) = norm.x;
             side->at(index++) = 0;
             side->at(index++) = norm.z;
+            // texcoord, tangent
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+                side->at(index++) = 0;
+            }
             if (j == 0) {
-                for (int k = 0; k < 6; k++) {
-                    side->at(index) = side->at(index - 6);
+                for (int k = 0; k < DATAPERVERTEX; k++) {
+                    side->at(index) = side->at(index - DATAPERVERTEX);
                     index++;
                 }
             }
             side->at(index++) = length * (0.5f - j);
             side->at(index++) = 0.5 - 1.f * (i + 1)/p1;
             for (int k = 0; k < 4; k++) {
-                side->at(index) = side->at(index - 6);
+                side->at(index) = side->at(index - DATAPERVERTEX);
                 index++;
             }
+            // texcoord, tangent
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+                side->at(index++) = 0;
+            }
         }
-        for (int k = 0; k < 6; k++) {
-            side->at(index) = side->at(index - 6);
+        for (int k = 0; k < DATAPERVERTEX; k++) {
+            side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
     }
 
     // bottom
-    for (int k = 0; k < 6 * (2 * p1 + 4); k++) {
+    for (int k = 0; k < DATAPERVERTEX * (2 * p1 + 4); k = k + 5) {
         side->at(index++) = -side->at(k++);
         side->at(index++) = -side->at(k++);
-        side->at(index++) = side->at(k);
+        side->at(index++) = side->at(k++);
+        side->at(index++) = -side->at(k++);
+        side->at(index++) = -side->at(k++);
+        side->at(index++) = side->at(k++);
+        // texcoord, tangent, binormal
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+            side->at(index++) = 0;
+        }
     }
+}
+
+glm::vec2 CylinderShape::getUVfromPosition(glm::vec4 point) {
+    float u;
+    float theta = atan2(point.z, point.x);
+
+    if (theta < 0) {
+        u = -theta / (2*M_PI);
+    } else {
+        u = 1.f - (theta / (2*M_PI));
+    }
+    return glm::vec2(u, 0.5-point.y);
 }

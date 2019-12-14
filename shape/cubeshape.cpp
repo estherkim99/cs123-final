@@ -16,16 +16,15 @@ CubeShape::~CubeShape() {
 }
 
 void CubeShape::makeSides(std::vector<float>* vertices, int p1, int p2) {
-    int dataPerVertex = 6;
     int vertexNum = 2 * p1 * (p1 + 2);
-    int dataNum = dataPerVertex*vertexNum;
+    int dataNum = DATAPERVERTEX*vertexNum;
 
     firstSide(vertices, p1, 1.f, dataNum); // front
 
-    for (int i = 1; i < 4; i++) {
+    for (int i = 1; i < 4; i = i + 2) {
         rotateSurface(vertices, glm::vec3{0, 1.f, 0}, i * glm::pi<float>()/2, dataNum); // sides
     }
-    for (int i = 1; i < 4; i = i + 1) {
+    for (int i = 1; i < 4; i++) {
         rotateSurface(vertices, glm::vec3{1, 0, 0}, i * glm::pi<float>()/2, dataNum); // sides
     }
 }
@@ -41,9 +40,13 @@ void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int da
             side->at(index++) = 0;
             side->at(index++) = 0;
             side->at(index++) = 1;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+                side->at(index++) = 0;
+            }
             if (j == 0) {
-                for (int k = 0; k < 6; k++) {
-                    side->at(index) = side->at(index - 6);
+                for (int k = 0; k < DATAPERVERTEX; k++) {
+                    side->at(index) = side->at(index - DATAPERVERTEX);
                     index++;
                 }
             }
@@ -53,10 +56,54 @@ void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int da
             side->at(index++) = 0;
             side->at(index++) = 0;
             side->at(index++) = 1;
+            // texcoord, tangent, binormal
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
+                side->at(index++) = 0;
+            }
         }
-        for (int k = 0; k < 6; k++) {
-            side->at(index) = side->at(index - 6);
+        for (int k = 0; k < DATAPERVERTEX; k++) {
+            side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
     }
+}
+
+glm::vec2 CubeShape::getUVfromPosition(glm::vec4 point) {
+    glm::vec2 uv;
+
+    // XY plane, Z = 0.5
+    if (std::abs(point.z - 0.5) <= 0.001) {
+        uv = glm::vec2(point.x+0.5, 0.5-point.y);
+    }
+
+    // XY plane, Z = -0.5
+    else if (std::abs(point.z + 0.5) <= 0.001) {
+         uv = glm::vec2(0.5-point.x, 0.5-point.y);
+    }
+
+    // XZ plane, Y = 0.5
+    else if (std::abs(point.y - 0.5) <= 0.001) {
+        uv = glm::vec2(point.x+0.5, point.z+0.5);
+    }
+
+    // XZ plane, Y = -0.5
+    else if (std::abs(point.y + 0.5) <= 0.001) {
+        uv = glm::vec2(point.x+0.5, 0.5-point.z);
+    }
+
+    // YZ plane, X = 0.5
+    else if (std::abs(point.x - 0.5) <= 0.001) {
+        uv = glm::vec2(0.5-point.z, 0.5-point.y);
+    }
+
+    // YZ plane, X = -0.5
+    else if (std::abs(point.x + 0.5) <= 0.001) {
+        uv = glm::vec2(point.z+0.5, 0.5-point.y);
+    }
+
+    else {
+        throw "Invalid point on cube";
+    }
+
+    return uv;
 }

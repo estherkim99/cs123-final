@@ -63,8 +63,7 @@
 			<translate x="0" y="-0.0125" z="0"/>
 			<scale x="1.12" y="0.025" z="2.24"/>
 				<object type="primitive" name="cube" >
-					<bumpmap file="/Users/estherkim/workspace/cs123-final/data/textures/bump.jpg" u="1" v="1"/>
-                    <diffuse r="0.173" g="0.42" b="0.247"/>
+					<diffuse r="0.173" g="0.42" b="0.247"/>
 					<blend v="0.2"/>
 				</object>
 		</transblock>
@@ -260,7 +259,7 @@
 			<translate x="0" y="0.028575" z="0"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball9.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball9.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -274,7 +273,7 @@
 			<translate x="0.028575" y="0.028575" z="0.0495"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball12.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball12.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -287,7 +286,7 @@
 			<translate x="-0.028575" y="0.028575" z="0.0495"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball7.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball7.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -300,7 +299,7 @@
 			<translate x="0.05715" y="0.028575" z="0.099"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball1.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball1.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -313,7 +312,7 @@
 			<translate x="0" y="0.028575" z="0.099"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball8.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball8.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -326,7 +325,7 @@
 			<translate x="-0.05715" y="0.028575" z="0.099"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball15.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball15.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -339,7 +338,7 @@
 			<translate x="0.085725" y="0.028575" z="0.1485"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball14.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball14.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -352,7 +351,7 @@
 			<translate x="0.028575" y="0.028575" z="0.1485"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball3.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball3.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -365,7 +364,7 @@
 			<translate x="-0.028575" y="0.028575" z="0.1485"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball10.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball10.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -378,7 +377,7 @@
 			<translate x="-0.085725" y="0.028575" z="0.1485"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball6.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball6.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -391,7 +390,7 @@
 			<translate x="0.1143" y="0.028575" z="0.198"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball5.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball5.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -404,7 +403,7 @@
 			<translate x="0.05715" y="0.028575" z="0.198"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball4.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball4.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -417,7 +416,7 @@
 			<translate x="0" y="0.028575" z="0.198"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball13.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball13.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -430,7 +429,7 @@
 			<translate x="-0.05715" y="0.028575" z="0.198"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball2.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball2.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
@@ -443,7 +442,7 @@
 			<translate x="-0.1143" y="0.028575" z="0.198"/>
 			<scale x="0.05715" y="0.05715" z="0.05715"/>
 			<object type="primitive" name="sphere" >
-				<texture file="/Users/estherkim/workspace/cs123-final/data/textures/ball11.png" u="1" v="1"/>
+				<texture file="/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/textures/ball11.png" u="1" v="1"/>
 				<diffuse r="0.957" g="0.941" b="0.859"/>
 				<blend v="0.8"/>
 				<shininess v="25"/>
