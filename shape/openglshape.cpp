@@ -124,9 +124,9 @@ void OpenGLShape::computeTangentsAndBinormals(std::vector<float> *vertices){
         glm::vec2 deltaUV1 = uv1-uv0;
         glm::vec2 deltaUV2 = uv2-uv0;
 
-        float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-        glm::vec3 tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
-        glm::vec3 bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x)*r;
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+        glm::vec3 tangent = glm::normalize(f * (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y));
+        glm::vec3 bitangent = glm::normalize(f * (-deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x));
         for (int j = 0; j < 3; j++) {
             vertices->at(i+8 + j * DATAPERVERTEX) = tangent.x;
             vertices->at(i+9 + j * DATAPERVERTEX) = tangent.y;
