@@ -63,6 +63,7 @@
 			<translate x="0" y="-0.0125" z="0"/>
 			<scale x="1.12" y="0.025" z="2.24"/>
 				<object type="primitive" name="cube" >
+                    <texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.173" g="0.42" b="0.247"/>
 					<blend v="0.2"/>
 				</object>
