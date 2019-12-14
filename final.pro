@@ -179,4 +179,7 @@ DISTFILES += \
     shaders/normals/normalsArrow.frag \
     shaders/normals/normalsArrow.vert \
     shaders/pool/pool.frag \
-    shaders/pool/pool.vert
+    shaders/pool/pool.vert \
+    shaders/shadows/depth.frag \
+    shaders/shadows/depth.gsh \
+    shaders/shadows/depth.vert

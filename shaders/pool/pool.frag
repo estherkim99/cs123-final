@@ -7,11 +7,13 @@ uniform int useTexture = 0;
 uniform sampler2D bumpMap;
 uniform int useBumpMapping = 0;
 uniform vec2 repeatUV;
+uniform sampler2D depthMap;
 
 in vec4 position_cameraSpace;
 in vec4 normal_cameraSpace;
 in vec3 anormal;
 in vec3 atangent;
+in vec4 FragPosLightSpace;
 uniform float blend;
 
 // Transformation matrices
@@ -32,7 +34,6 @@ uniform vec3 ambient_color;
 uniform vec3 diffuse_color;
 uniform vec3 specular_color;
 uniform float shininess;
-
 uniform bool useLighting;     // Whether to calculate lighting using lighting equation
 
 mat3 TBN;
@@ -48,6 +49,22 @@ vec3 calculateBumpNormal() {
     return normalize(bump_ts);
 }
 
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(depthMap, projCoords.xy).r;
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // check whether current frag pos is in shadow
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
+    return shadow;
+}
+
 void main(){
     vec3 normal = vec3(0);
 //     bump mapping
@@ -61,9 +78,9 @@ void main(){
 
     vec3 color;
     if (useLighting) {
-        color = ambient_color.xyz;
-
+        color = vec3(0);
         for (int i = 0; i < MAX_LIGHTS; i++) {
+            vec3 curr_color = vec3(0);
             vec4 vertexToLight = vec4(0);
             // Point Light
             if (lightTypes[i] == 0) {
@@ -74,17 +91,20 @@ void main(){
             }
 
             // diffuse component
-//            float diffuseIntensity = max(0.0, dot(normal,  vec3(vertexToLight)));
-
             float diffuseIntensity = max(0.0, max(dot(vertexToLight, normal_cameraSpace), dot(normal, vec3(vertexToLight))));
-            color += max(vec3(0), lightColors[i] * diffuse_color * diffuseIntensity);
+            curr_color += max(vec3(0), lightColors[i] * diffuse_color * diffuseIntensity);
 
             // specular component
             vec4 lightReflection = normalize(-reflect(vertexToLight, normal_cameraSpace));
             vec4 eyeDirection = normalize(vec4(0,0,0,1) - position_cameraSpace);
             float specIntensity = pow(max(0.0, dot(eyeDirection, lightReflection)), shininess);
-            color += max (vec3(0), lightColors[i] * specular_color * specIntensity);
+
+            // shadow
+            float shadow = ShadowCalculation(FragPosLightSpace);
+            curr_color += max (vec3(0), lightColors[i] * specular_color * specIntensity);
+            color += (1 - shadow) * curr_color;
         }
+        color += ambient_color.xyz;
     } else {
         color = ambient_color + diffuse_color;
     }
@@ -93,7 +113,6 @@ void main(){
     if (useTexture == 1) {
         fragColor = vec4(color.xyz * (1 - blend) + texColor.xyz * blend, 1.f);
     } else {
-
         fragColor = vec4(color, 1.f);
     }
 }

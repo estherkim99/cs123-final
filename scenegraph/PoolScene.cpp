@@ -68,14 +68,69 @@ void PoolScene::render(SupportCanvas3D *context) {
     if (m_mustLoadTextures) loadTextures();
     if (m_mustLoadBumpMaps) loadBumpMap();
 
-    m_phongShader->bind();
-    setSceneUniforms(context);
-    setLights();
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    renderGeometry();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    m_phongShader->unbind();
+//    m_phongShader->bind();
+//    setSceneUniforms(context);
+//    setLights();
+//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//    renderGeometry();
+//    glBindTexture(GL_TEXTURE_2D, 0);
+//    m_phongShader->unbind();
 
+    const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
+        // FBO
+        unsigned int depthMapFBO;
+        glGenFramebuffers(1, &depthMapFBO);
+        unsigned int depthMap;
+        glGenTextures(1, &depthMap);
+        glBindTexture(GL_TEXTURE_2D, depthMap);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+                     SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // RENDER TO DEPTH MAP
+
+//        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
+            //ConfigureShaderAndMatrices();
+            m_simpleDepthShader->bind();
+            float near_plane = 1.0f, far_plane = 7.5f;
+            glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+            glm::mat4 lightView = glm::lookAt(glm::vec3(-2.0f, 4.0f, -1.0f),
+                                              glm::vec3( 0.0f, 0.0f,  0.0f),
+                                              glm::vec3( 0.0f, 1.0f,  0.0f));
+            glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+            m_simpleDepthShader->setUniform("lightSpaceMatrix", lightSpaceMatrix);
+
+            renderGeometry();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        m_simpleDepthShader->unbind();
+
+        // RENDER NORMAL
+
+//        glViewport(0, 0, 1300, 1300);
+//                glViewport(0, 0, context->width(), context->height());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //ConfigureShaderAndMatrices();
+        m_phongShader->bind();
+        setSceneUniforms(context);
+        setLights();
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glBindTexture(GL_TEXTURE_2D, depthMap);
+        //RenderScene();
+        renderGeometry();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        m_phongShader->unbind();
 
     if (settings.drawWireframe) {
         m_wireframeShader->bind();
@@ -143,6 +198,7 @@ void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
     o.material.cDiffuse *= m_kd;
     m_phongShader->applyMaterial(o.material);
     m_phongShader->setUniform("m", transform);
+    m_simpleDepthShader->setUniform("m", transform);
     if (settings.drawNormals) {
         m_normalsShader->setUniform("m", transform);
         m_normalsArrowShader->setUniform("m", transform);
