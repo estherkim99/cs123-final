@@ -64,7 +64,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui->rayStopRenderingButton->setHidden(true);
 
     // Hide shoot/exit shoot mode button until we need it
-    ui->shootButton->setHidden(true);
+//    ui->shootButton->setHidden(true);
+    ui->setShootMode->setHidden(true);
     ui->exitShootMode->setHidden(true);
 
     // Reset the contents of both canvas widgets (make a new 500x500 image for the 2D one)
@@ -76,12 +77,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
         connect(rb, SIGNAL(clicked()), this, SLOT(activateCanvas2D()));
 
     a.clear();
-    a += ui->shapeTypeCone;
-    a += ui->shapeTypeCube;
-    a += ui->shapeTypeCylinder;
-    a += ui->shapeTypeTorus;
-    a += ui->shapeTypeSpecial1;
-    a += ui->shapeTypeSpecial2;
+//    a += ui->shapeTypeCone;
+//    a += ui->shapeTypeCube;
+//    a += ui->shapeTypeCylinder;
+//    a += ui->shapeTypeTorus;
+//    a += ui->shapeTypeSpecial1;
+//    a += ui->shapeTypeSpecial2;
     foreach (QRadioButton *rb, a)
         connect(rb, SIGNAL(clicked()), this, SLOT(activateCanvas3D()));
 
@@ -114,23 +115,23 @@ void MainWindow::dataBind()
 
     // Shapes dock
     BIND(BoolBinding::bindCheckbox(ui->showSceneviewInstead, settings.useSceneviewScene))
-    BIND(ChoiceBinding::bindRadioButtons(
-        shapesButtonGroup,
-        NUM_SHAPE_TYPES,
-        settings.shapeType,
-        ui->shapeTypeCube,
-        ui->shapeTypeCone,
-        ui->shapeTypeSphere,
-        ui->shapeTypeCylinder,
-        ui->shapeTypeTorus,
-        ui->shapeTypeSpecial1,
-        ui->shapeTypeSpecial2))
-    BIND(IntBinding::bindSliderAndTextbox(
-        ui->shapeParameterSlider1, ui->shapeParameterTextbox1, settings.shapeParameter1, 1.f, 100.f))
-    BIND(IntBinding::bindSliderAndTextbox(
-        ui->shapeParameterSlider2, ui->shapeParameterTextbox2, settings.shapeParameter2, 1.f, 100.f))
-    BIND(FloatBinding::bindSliderAndTextbox(
-        ui->shapeParameterSlider3, ui->shapeParameterTextbox3, settings.shapeParameter3, 1.f, 100.f))
+//    BIND(ChoiceBinding::bindRadioButtons(
+//        shapesButtonGroup,
+//        NUM_SHAPE_TYPES,
+//        settings.shapeType,
+//        ui->shapeTypeCube,
+//        ui->shapeTypeCone,
+//        ui->shapeTypeSphere,
+//        ui->shapeTypeCylinder,
+//        ui->shapeTypeTorus,
+//        ui->shapeTypeSpecial1,
+//        ui->shapeTypeSpecial2))
+//    BIND(IntBinding::bindSliderAndTextbox(
+//        ui->shapeParameterSlider1, ui->shapeParameterTextbox1, settings.shapeParameter1, 1.f, 100.f))
+//    BIND(IntBinding::bindSliderAndTextbox(
+//        ui->shapeParameterSlider2, ui->shapeParameterTextbox2, settings.shapeParameter2, 1.f, 100.f))
+//    BIND(FloatBinding::bindSliderAndTextbox(
+//        ui->shapeParameterSlider3, ui->shapeParameterTextbox3, settings.shapeParameter3, 1.f, 100.f))
     BIND(BoolBinding::bindCheckbox(ui->useLightingCheckbox, settings.useLighting))
     BIND(BoolBinding::bindCheckbox(ui->drawWireframeCheckbox, settings.drawWireframe))
     BIND(BoolBinding::bindCheckbox(ui->drawNormalsCheckbox, settings.drawNormals))
@@ -166,6 +167,10 @@ void MainWindow::dataBind()
 
     BIND(ChoiceBinding::bindTabs(ui->tabWidget, settings.currentTab))
 
+    // Pool dock
+            BIND(FloatBinding::bindDial(ui->dir_dial, settings.angle, 0.f, 2*M_PI, true))
+            BIND(FloatBinding::bindSliderAndTextbox(
+                ui->vel_slide, ui->vel_box, settings.vel, 0.f, 5.f))
 #undef BIND
 
     // make sure the aspect ratio updates when m_canvas3D changes size
@@ -548,8 +553,8 @@ void MainWindow::setShootMode()
 }
 void MainWindow::shoot()
 {
-    m_canvas3D->shoot(.7f);
-    ui->shootButton->setHidden(true);
+    m_canvas3D->shoot(settings.vel,settings.angle);
+    //ui->shootButton->setHidden(true);
 }
 void MainWindow::exitShootMode()
 {
