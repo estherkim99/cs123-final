@@ -36,7 +36,7 @@ DISTNAME      = CS1231.0.0
 DISTDIR = /Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/.tmp/CS1231.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/usr/bin/g++
 LFLAGS        = -headerpad_max_install_names -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.8 -no-pie -stdlib=libc++ -Wl,-rpath,/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib
-LIBS          = $(SUBLIBS) -F/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib -framework QtOpenGL -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework QtXml -framework OpenGL -framework AGL
+LIBS          = $(SUBLIBS) -F/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib -framework QtOpenGL -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework QtXml -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -159,138 +159,138 @@ DIST          = shaders/normals/normals.vert \
 		shaders/normals/normalsArrow.vert \
 		shaders/pool/pool.frag \
 		shaders/pool/pool.vert \
-		/Applications/Qt/5.7/clang_64/mkspecs/features/spec_pre.prf \
-		/Applications/Qt/5.7/clang_64/mkspecs/qdevice.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/features/device_config.prf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/unix.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/mac.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/macx.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/sanitize.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/gcc-base.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/gcc-base-mac.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/clang.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/common/clang-mac.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/qconfig.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dcore.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dcore_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dextras.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dextras_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dinput.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dinput_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dlogic.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dlogic_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquick.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquick_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquickextras.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquickextras_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquickinput.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquickinput_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquickrender.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3dquickrender_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3drender.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_3drender_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_bluetooth.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_bluetooth_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_bootstrap_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_clucene_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_concurrent.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_concurrent_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_core.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_core_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_dbus.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_dbus_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_designer.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_designer_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_designercomponents_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_gamepad.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_gamepad_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_gui.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_gui_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_help.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_help_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_location.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_location_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_macextras.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_macextras_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_multimedia.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_multimedia_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_multimediawidgets.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_network.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_network_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_nfc.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_nfc_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_opengl.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_opengl_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_openglextensions.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_openglextensions_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_packetprotocol_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_platformsupport_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_positioning.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_positioning_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_printsupport.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_printsupport_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_purchasing.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_purchasing_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qml.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qml_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qmldebug_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qmldevtools_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qmltest.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qmltest_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quick.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quick_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quickcontrols2.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quickparticles_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quicktemplates2_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quickwidgets.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_quickwidgets_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_script.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_script_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_scripttools.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_scripttools_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_scxml.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_scxml_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_sensors.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_sensors_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_serialbus.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_serialbus_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_serialport.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_serialport_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_sql.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_sql_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_svg.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_svg_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_testlib.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_testlib_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_uiplugin.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_uitools.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_uitools_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webchannel.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webchannel_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webengine.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webengine_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webenginecore.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webenginecore_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webenginecoreheaders_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webenginewidgets.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webenginewidgets_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_websockets.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_websockets_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webview.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_webview_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_widgets.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_widgets_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_xml.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_xml_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_xmlpatterns.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/modules/qt_lib_xmlpatterns_private.pri \
-		/Applications/Qt/5.7/clang_64/mkspecs/features/qt_functions.prf \
-		/Applications/Qt/5.7/clang_64/mkspecs/features/qt_config.prf \
-		/Applications/Qt/5.7/clang_64/mkspecs/macx-clang/qmake.conf \
-		/Applications/Qt/5.7/clang_64/mkspecs/features/spec_post.prf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/spec_pre.prf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/qdevice.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/device_config.prf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/unix.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/mac.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/macx.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/sanitize.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/gcc-base.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/gcc-base-mac.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/g++-base.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/common/g++-macx.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/qconfig.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dcore.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dcore_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dextras.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dextras_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dinput.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dinput_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dlogic.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dlogic_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquick.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquick_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquickextras.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquickextras_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquickinput.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquickinput_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquickrender.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3dquickrender_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3drender.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_3drender_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_bluetooth.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_bluetooth_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_bootstrap_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_clucene_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_concurrent.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_concurrent_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_core.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_core_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_dbus.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_dbus_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_designer.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_designer_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_designercomponents_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_gamepad.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_gamepad_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_gui.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_gui_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_help.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_help_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_location.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_location_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_macextras.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_macextras_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_multimedia.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_multimedia_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_multimediawidgets.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_network.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_network_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_nfc.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_nfc_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_opengl.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_opengl_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_openglextensions.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_openglextensions_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_packetprotocol_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_platformsupport_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_positioning.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_positioning_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_printsupport.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_printsupport_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_purchasing.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_purchasing_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qml.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qml_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qmldebug_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qmldevtools_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qmltest.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qmltest_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_qtmultimediaquicktools_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quick.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quick_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quickcontrols2.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quickparticles_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quicktemplates2_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quickwidgets.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_quickwidgets_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_script.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_script_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_scripttools.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_scripttools_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_scxml.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_scxml_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_sensors.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_sensors_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_serialbus.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_serialbus_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_serialport.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_serialport_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_sql.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_sql_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_svg.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_svg_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_testlib.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_testlib_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_uiplugin.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_uitools.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_uitools_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webchannel.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webchannel_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webengine.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webengine_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webenginecore.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webenginecore_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webenginecoreheaders_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webenginewidgets.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webenginewidgets_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_websockets.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_websockets_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webview.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_webview_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_widgets.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_widgets_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_xml.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_xml_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_xmlpatterns.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/modules/qt_lib_xmlpatterns_private.pri \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/qt_functions.prf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/qt_config.prf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/macx-g++/qmake.conf \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/spec_post.prf \
 		.qmake.stash \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/features/mac/sdk.prf \
@@ -412,14 +412,14 @@ DIST          = shaders/normals/normals.vert \
 		scenegraph/PoolScene.cpp \
 		camera/CueCamera.cpp
 QMAKE_TARGET  = CS123
-DESTDIR       =
+DESTDIR       = 
 TARGET        = CS123.app/Contents/MacOS/CS123
 
 
 first: all
 ####### Build rules
 
-$(TARGET): ui_mainwindow.h $(OBJECTS)
+$(TARGET): ui_mainwindow.h $(OBJECTS)  
 	@test -d CS123.app/Contents/MacOS/ || mkdir -p CS123.app/Contents/MacOS/
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
@@ -759,15 +759,15 @@ qmake: FORCE
 
 qmake_all: FORCE
 
-CS123.app/Contents/PkgInfo:
+CS123.app/Contents/PkgInfo: 
 	@test -d CS123.app/Contents || mkdir -p CS123.app/Contents
 	@$(DEL_FILE) CS123.app/Contents/PkgInfo
 	@echo "APPL????" > CS123.app/Contents/PkgInfo
-CS123.app/Contents/Resources/empty.lproj:
+CS123.app/Contents/Resources/empty.lproj: 
 	@test -d CS123.app/Contents/Resources || mkdir -p CS123.app/Contents/Resources
 	@touch CS123.app/Contents/Resources/empty.lproj
-
-CS123.app/Contents/Info.plist:
+	
+CS123.app/Contents/Info.plist: 
 	@test -d CS123.app/Contents || mkdir -p CS123.app/Contents
 	@$(DEL_FILE) CS123.app/Contents/Info.plist
 	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,@BUNDLEIDENTIFIER@,com.yourcompany.CS123,g" -e "s,@ICON@,,g" -e "s,@EXECUTABLE@,CS123,g" -e "s,@LIBRARY@,CS123,g" -e "s,@TYPEINFO@,????,g" /Users/justinzhang/Qt5.7.1/5.7/clang_64/mkspecs/macx-g++/Info.plist.app >CS123.app/Contents/Info.plist
@@ -789,12 +789,12 @@ distdir: FORCE
 	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
 
 
-clean: compiler_clean
+clean: compiler_clean 
 	-$(DEL_FILE) $(OBJECTS)
 	-$(DEL_FILE) *~ core *.core
 
 
-distclean: clean
+distclean: clean 
 	-$(DEL_FILE) -r CS123.app
 	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
@@ -987,7 +987,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_rcc_clean compiler_moc_header_clean compiler_uic_clean
+compiler_clean: compiler_rcc_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -2083,10 +2083,6 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		ui_mainwindow.h \
-		ui/Canvas2D.h \
-		ui/SupportCanvas2D.h \
-		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		/Applications/Qt/5.7/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		ui/Databinding.h \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtCore.framework/Headers/QObject \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtCore.framework/Headers/qobject.h \
@@ -2200,6 +2196,10 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtXml.framework/Headers/qtxmlversion.h \
 		scenegraph/RayScene.h \
 		scenegraph/Scene.h \
+		ui/Canvas2D.h \
+		ui/SupportCanvas2D.h \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		/Users/justinzhang/Qt5.7.1/5.7/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		gl/textures/Texture2D.h \
 		gl/textures/Texture.h \
 		rayshape/RayCube.h \
@@ -3616,22 +3616,22 @@ PoolScene.o: scenegraph/PoolScene.cpp scenegraph/PoolScene.h \
 CueCamera.o: camera/CueCamera.cpp camera/CueCamera.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CueCamera.o camera/CueCamera.cpp
 
-qrc_resources.o: qrc_resources.cpp
+qrc_resources.o: qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_resources.o qrc_resources.cpp
 
-moc_Canvas2D.o: moc_Canvas2D.cpp
+moc_Canvas2D.o: moc_Canvas2D.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Canvas2D.o moc_Canvas2D.cpp
 
-moc_SupportCanvas2D.o: moc_SupportCanvas2D.cpp
+moc_SupportCanvas2D.o: moc_SupportCanvas2D.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SupportCanvas2D.o moc_SupportCanvas2D.cpp
 
-moc_SupportCanvas3D.o: moc_SupportCanvas3D.cpp
+moc_SupportCanvas3D.o: moc_SupportCanvas3D.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SupportCanvas3D.o moc_SupportCanvas3D.cpp
 
-moc_mainwindow.o: moc_mainwindow.cpp
+moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
-moc_Databinding.o: moc_Databinding.cpp
+moc_Databinding.o: moc_Databinding.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Databinding.o moc_Databinding.cpp
 
 ####### Install

@@ -210,6 +210,7 @@ void PoolScene::collisionDetection(){
 
         // check intersection with other balls
         for(int j = 0; j < m_ball_velocities.size(); j++){
+            if(m_ball_done.at(i) || m_ball_done.at(j)) continue;
             int x = i < j? i : j;
             int y = i < j? j: i;
             if(i==j || seen.find(16*x+y) != seen.end()) continue;
