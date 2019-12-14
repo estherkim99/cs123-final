@@ -5,7 +5,6 @@ QT += opengl xml
 TARGET = CS123
 TEMPLATE = app
 
-QMAKE_LFLAGS += -no-pie
 QMAKE_CXXFLAGS += -std=c++14
 CONFIG += c++14
 
@@ -175,4 +174,8 @@ DISTFILES += \
     shaders/normals/normals.gsh \
     shaders/normals/normalsArrow.gsh \
     shaders/normals/normalsArrow.frag \
-    shaders/normals/normalsArrow.vert
+    shaders/normals/normalsArrow.vert \
+    shaders/depth.frag \
+    shaders/depth.vert \
+    shaders/depth/depth.frag \
+    shaders/depth/depth.vert

@@ -15,6 +15,7 @@
 #include <gl/textures/Texture2D.h>
 #include "gl/textures/TextureParameters.h"
 #include "gl/textures/TextureParametersBuilder.h"
+#include "gl/datatype/FBO.h"
 
 namespace CS123 { namespace GL {
 
@@ -56,10 +57,11 @@ protected:
     void loadWireframeShader();
     void loadNormalsShader();
     void loadNormalsArrowShader();
+    void loadDepthShader();
 
     void setSceneUniforms(SupportCanvas3D *context);\
     void setMatrixUniforms(CS123::GL::Shader *shader, SupportCanvas3D *context);
-    void setLights();
+    void setLights(CS123Shader *shader);
     void renderGeometry();
     void loadTextures();
     void applyTextureIfUsed(SceneObject obj);
@@ -78,6 +80,16 @@ protected:
     std::map<std::string, CS123::GL::Texture2D> m_textures;
     bool m_mustLoadTextures;
 
+    void loadDepthTextures();
+    bool m_mustLoadDepths;
+    unsigned int SHADOW_WIDTH = 1024;
+    unsigned int SHADOW_HEIGHT = 1024;
+    std::unique_ptr<CS123::GL::CS123Shader> m_depthShader;
+    std::vector<unsigned> depthMapFBO;
+    std::vector<unsigned> depthMap;
+
+    std::map<std::string, CS123::GL::Texture2D> m_depths;
+    std::unique_ptr<FBO> m_depthFBO;
 
 };
 

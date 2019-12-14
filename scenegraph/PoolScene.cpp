@@ -14,6 +14,7 @@
 #include <gl/textures/Texture2D.h>
 #include "gl/textures/TextureParameters.h"
 #include "gl/textures/TextureParametersBuilder.h"
+#include <iostream>
 
 
 using namespace CS123::GL;
@@ -64,21 +65,39 @@ void PoolScene::render(SupportCanvas3D *context) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_mustLoadTextures) loadTextures();
+    if (m_mustLoadDepths) loadDepthTextures();
 
+    // first, use depth textures to create a depth map
+    // use depth shaders to get the DEPTH BUFFER VALUE of each fragment (not quite sure how this is happening)
+    // for each light, the light index in the depth shader is set
+    // in render geometry, all coords are converted into that light space
+    // NO color is rendered, but depth values are stored
+
+    // then, render scene as normal, but doing shadow mapping (i.e., USING the depth values created)
+
+    makeDepthTextures(); // create depth textures in depth shaders
+
+    // bind depth textures as a sampler to regular shaders
+    for (int i = 0; i < m_lightData.size(); ++i) {
+        glActiveTexture(GL_TEXTURE6+i);
+        glBindTexture(GL_TEXTURE_2D, depthMap[i]);
+        m_phongShader->setUniformArrayByIndex("depthMap", i+6, i);
+    }
+
+    // how is below working??
     m_phongShader->bind();
-    setSceneUniforms(context);
-    setLights();
+    setSceneUniforms(context); // why
+    setLights(m_phongShader.get()); // why
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    renderGeometry();
+    renderGeometry(m_phongShader.get());
     glBindTexture(GL_TEXTURE_2D, 0);
     m_phongShader->unbind();
-
 
     if (settings.drawWireframe) {
         m_wireframeShader->bind();
         setMatrixUniforms(m_wireframeShader.get(), context);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderGeometry();
+        renderGeometry(m_phongShader.get());
         m_wireframeShader->unbind();
     }
 
@@ -87,19 +106,40 @@ void PoolScene::render(SupportCanvas3D *context) {
         m_normalsShader->bind();
         setMatrixUniforms(m_normalsShader.get(), context);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderGeometry();
+        renderGeometry(m_phongShader.get());
         m_normalsShader->unbind();
 
         // Render the arrows.
         m_normalsArrowShader->bind();
         setMatrixUniforms(m_normalsArrowShader.get(), context);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        renderGeometry();
+        renderGeometry(m_phongShader.get());
         m_normalsArrowShader->unbind();
     }
 }
 
-void PoolScene::renderGeometry() {
+void PoolScene::makeDepthTextures() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_depthShader->bind();
+    setLights(m_depthShader.get());
+
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    for (int i = 0 ; i < m_lightData.size(); ++i) {
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[i]); // holds
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        m_depthShader->setUniform("lightIndex", i); // sets the current light
+        glCullFace(GL_FRONT);
+
+        renderGeometry(m_depthShader.get()); // use depth shader to get depth values
+
+        glCullFace(GL_BACK);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    m_depthShader->unbind();
+}
+
+void PoolScene::renderGeometry(CS123Shader* shader) {
     if(m_balls.size() == 0){
         init();
     }
@@ -108,12 +148,12 @@ void PoolScene::renderGeometry() {
         for(int i = 0; i <= 15; i++){
             SceneObject o = m_walls.at(i);
             glm::mat4 transform =  o.composite;
-            drawObject(o,transform, -1);
+            drawObject(o,transform, -1, shader);
         }
         for(int i = 16; i <= 21; i++){
             SceneObject o = m_holes.at(i-16);
             glm::mat4 transform =  o.composite;
-            drawObject(o,transform, -1);
+            drawObject(o,transform, -1, shader);
         }
         for(int i = 22; i <= 37; i++){
             if(m_ball_done.at(i-22)){
@@ -121,20 +161,22 @@ void PoolScene::renderGeometry() {
             }
             SceneObject o = m_balls.at(i-22);
             glm::mat4 transform = glm::translate(m_ball_translations.at(i-22)) * o.composite;
-            drawObject(o,transform, i-22);
+            drawObject(o,transform, i-22, shader);
         }
     }
 
 }
 
-void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i){
+void PoolScene::drawObject(SceneObject o, glm::mat4 transform, int i, CS123Shader *shader){
     o.material.cAmbient *= m_ka;
 //    if(m_ball_velocities.size() == 16 && i != -1 ){
 //        o.material.cDiffuse = glm::vec4(glm::abs(m_ball_velocities.at(i)),0.f);
 //    }
     o.material.cDiffuse *= m_kd;
-    m_phongShader->applyMaterial(o.material);
-    m_phongShader->setUniform("m", transform);
+
+    // when texture mapping, below shader is depthShader, so shapes are actually calculated in light space (without color)
+    shader->applyMaterial(o.material);
+    shader->setUniform("m", transform);
     if (settings.drawNormals) {
         m_normalsShader->setUniform("m", transform);
         m_normalsArrowShader->setUniform("m", transform);

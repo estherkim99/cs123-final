@@ -12,19 +12,35 @@
 #include <gl/textures/Texture2D.h>
 #include "gl/textures/TextureParameters.h"
 #include "gl/textures/TextureParametersBuilder.h"
+#include "gl/textures/RenderBuffer.h"
+#include "gl/textures/DepthBuffer.h"
+#include "gl/datatype/FBO.h"
 
+#include "GL/glew.h"
+
+#include "gl/GLDebug.h"
+#include "gl/textures/RenderBuffer.h"
+#include "gl/textures/DepthBuffer.h"
+#include "gl/textures/Texture2D.h"
+#include "gl/textures/TextureParametersBuilder.h"
+#include <iostream>
+#include "lib/ResourceLoader.h"
+#include <QFileInfo>
+#include <QDebug>
 
 using namespace CS123::GL;
 
-
 SceneviewScene::SceneviewScene() :
-    m_mustLoadTextures(true)
+    m_mustLoadTextures(true),
+    m_mustLoadDepths(true),
+    m_depthFBO(nullptr)
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
     loadPhongShader();
     loadWireframeShader();
     loadNormalsShader();
     loadNormalsArrowShader();
+    loadDepthShader();
     tesselateShapes();
 }
 
@@ -58,21 +74,23 @@ void SceneviewScene::loadNormalsArrowShader() {
     m_normalsArrowShader = std::make_unique<Shader>(vertexSource, geometrySource, fragmentSource);
 }
 
+void SceneviewScene::loadDepthShader() {
+    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/shaders/depth/depth.vert");
+    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/shaders/depth/depth.frag");
+    m_depthShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
+}
+
 void SceneviewScene::render(SupportCanvas3D *context) {
     setClearColor();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (m_mustLoadTextures) loadTextures();
-
-
     m_phongShader->bind();
     setSceneUniforms(context);
-    setLights();
+    setLights(m_phongShader.get());
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     renderGeometry();
     glBindTexture(GL_TEXTURE_2D, 0);
     m_phongShader->unbind();
-
 
     if (settings.drawWireframe) {
         m_wireframeShader->bind();
@@ -112,10 +130,10 @@ void SceneviewScene::setMatrixUniforms(Shader *shader, SupportCanvas3D *context)
     shader->setUniform("v", context->getCamera()->getViewMatrix());
 }
 
-void SceneviewScene::setLights()
+void SceneviewScene::setLights(CS123Shader *shader)
 {
     for (CS123SceneLightData light : m_lightData) {
-        m_phongShader->setLight(light);
+        shader->setLight(light);
     }
 }
 
@@ -172,26 +190,50 @@ void SceneviewScene::tesselateShapes(){
 void SceneviewScene::settingsChanged() {
 }
 
+void SceneviewScene::loadDepthTextures() {
+    for (int i = 0; i < m_lightData.size(); i++) {
+        unsigned tmpFBO;
+        unsigned tmpMap;
+        glGenFramebuffers(1, &tmpFBO);
+        glGenTextures(1, &tmpMap);
+        glBindTexture(GL_TEXTURE_2D, tmpMap);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, tmpFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tmpMap, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        depthMapFBO.push_back(tmpFBO); // FBO
+        depthMap.push_back(tmpMap); // texture aka shadow map
+    }
+
+    m_mustLoadDepths = false;
+}
 
 void SceneviewScene::loadTextures() {
-     for (SceneObject obj : m_sceneObjects){
-             CS123SceneFileMap textureMap = obj.material.textureMap;
-             if (textureMap.isUsed){
-                 QImage image =  QImage(QString::fromStdString(textureMap.filename));
-                 QImage formattedImage = QGLWidget::convertToGLFormat(image);
-                 Texture2D texture(formattedImage.bits(), formattedImage.width(), formattedImage.height());
-                 // format texture with correct params
-                 TextureParametersBuilder builder;
-                 builder.setFilter(TextureParameters::FILTER_METHOD::LINEAR);
-                 builder.setWrap(TextureParameters::WRAP_METHOD::REPEAT);
-                 TextureParameters params = builder.build();
-                 params.applyTo(texture);
-                 // add (filename, texture) pair to hashmap
-                 m_textures.insert(std::make_pair(textureMap.filename, std::move(texture)));
-             }
+     for (SceneObject obj : m_sceneObjects) {
+         CS123SceneFileMap textureMap = obj.material.textureMap;
+         if (textureMap.isUsed) {
+             QImage image =  QImage(QString::fromStdString(textureMap.filename));
+             QImage formattedImage = QGLWidget::convertToGLFormat(image);
+             Texture2D texture(formattedImage.bits(), formattedImage.width(), formattedImage.height());
+             // format texture with correct params
+             TextureParametersBuilder builder;
+             builder.setFilter(TextureParameters::FILTER_METHOD::LINEAR);
+             builder.setWrap(TextureParameters::WRAP_METHOD::REPEAT);
+             TextureParameters params = builder.build();
+             params.applyTo(texture);
+             // add (filename, texture) pair to hashmap
+             m_textures.insert(std::make_pair(textureMap.filename, std::move(texture)));
          }
-
-          m_mustLoadTextures = false;
+     }
+     m_mustLoadTextures = false;
  }
 
  void SceneviewScene::applyTextureIfUsed(SceneObject obj) {

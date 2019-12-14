@@ -31,6 +31,40 @@ uniform vec2 repeatUV;
 uniform bool useLighting;     // Whether to calculate lighting using lighting equation
 uniform bool useArrowOffsets; // True if rendering the arrowhead of a normal for Shapes
 
+uniform sampler2D depthMap[MAX_LIGHTS];
+uniform mat4 lightSpaceMatrix[MAX_LIGHTS];
+
+float ShadowCalculation(int i, vec4 fragPosLightSpace, vec4 normal_worldSpace, vec4 position_worldSpace) {
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    float closestDepth = texture(depthMap[i], projCoords.xy).r;
+    float currentDepth = projCoords.z;
+    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+//    // calculate bias (based on depth map resolution and slope)
+//    vec3 normal = normalize(normal_worldSpace.xyz);
+//    vec3 lightDir = normalize(lightPositions[0] - position_worldSpace.xyz);
+//    float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
+//    // check whether current frag pos is in shadow
+
+//    // PCF
+//    float shadow = 0.0;
+//    vec2 texelSize = 1.0 / textureSize(depthMap[i], 0);
+//    for(int x = -1; x <= 1; ++x) {
+//	for(int y = -1; y <= 1; ++y) {
+//	    float pcfDepth = texture(depthMap[i], projCoords.xy + vec2(x, y) * texelSize).r;
+//	    shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+//	}
+//    }
+//    shadow /= 9.0;
+
+//    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+//    if(projCoords.z > 1.0)
+//	shadow = 0.0;
+
+    return shadow;
+}
+
 void main() {
     texc = texCoord * repeatUV;
 
@@ -46,12 +80,16 @@ void main() {
         position_cameraSpace += arrowOffset * vec4(offsetAxis, 0);
     }
 
-    gl_Position = p * position_cameraSpace;
+    gl_Position = p * position_cameraSpace; // needed to translate uv coords into camera space
 
     if (useLighting) {
         color = ambient_color.xyz; // Add ambient component
 
         for (int i = 0; i < MAX_LIGHTS; i++) {
+
+	    vec4 lightSpacePosition = lightSpaceMatrix[i] * position_worldSpace;
+	    float shadow = ShadowCalculation(i, lightSpacePosition, normal_worldSpace, position_worldSpace);
+
             vec4 vertexToLight = vec4(0);
             // Point Light
             if (lightTypes[i] == 0) {
@@ -63,13 +101,13 @@ void main() {
 
             // Add diffuse component
             float diffuseIntensity = max(0.0, dot(vertexToLight, normal_cameraSpace));
-            color += max(vec3(0), lightColors[i] * diffuse_color * diffuseIntensity);
+	    color += max(vec3(0), lightColors[i] * diffuse_color * diffuseIntensity) * (1.0f-shadow);
 
             // Add specular component
             vec4 lightReflection = normalize(-reflect(vertexToLight, normal_cameraSpace));
             vec4 eyeDirection = normalize(vec4(0,0,0,1) - position_cameraSpace);
             float specIntensity = pow(max(0.0, dot(eyeDirection, lightReflection)), shininess);
-            color += max (vec3(0), lightColors[i] * specular_color * specIntensity);
+	    color += max (vec3(0), lightColors[i] * specular_color * specIntensity) * (1.0f-shadow);
         }
     } else {
         color = ambient_color + diffuse_color;
