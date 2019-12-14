@@ -16,14 +16,11 @@
 #include "gl/textures/TextureParametersBuilder.h"
 #include <iostream>
 
-
 using namespace CS123::GL;
-
 
 PoolScene::PoolScene() :
     SceneviewScene()
 {
-
     init();
 }
 
@@ -65,33 +62,27 @@ void PoolScene::render(SupportCanvas3D *context) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_mustLoadTextures) loadTextures();
-    if (m_mustLoadDepths) loadDepthTextures();
+    if (m_mustLoadDepths) loadDepthTextures(); // sets up depth fbo, depth map
+    makeDepthTextures(); // use fbo + map to make a depth map for each light
 
-    // first, use depth textures to create a depth map
-    // use depth shaders to get the DEPTH BUFFER VALUE of each fragment (not quite sure how this is happening)
-    // for each light, the light index in the depth shader is set
-    // in render geometry, all coords are converted into that light space
-    // NO color is rendered, but depth values are stored
+    // bind depth map as a sampler to regular shaders
+    glViewport(0, 0, 1200, 1200); // TODO: resize to height and width of screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_phongShader->bind();
+    setSceneUniforms(context);
+    setLights(m_phongShader.get());
 
-    // then, render scene as normal, but doing shadow mapping (i.e., USING the depth values created)
-
-    makeDepthTextures(); // create depth textures in depth shaders
-
-    // bind depth textures as a sampler to regular shaders
     for (int i = 0; i < m_lightData.size(); ++i) {
-        glActiveTexture(GL_TEXTURE6+i);
+//        glActiveTexture(GL_TEXTURE+(11+i));
         glBindTexture(GL_TEXTURE_2D, depthMap[i]);
-        m_phongShader->setUniformArrayByIndex("depthMap", i+6, i);
+//        m_phongShader->setUniformArrayByIndex("depthMap", i+11, i); // makes tuple ("depthMap", i+texNum) located at index i
     }
 
-    // how is below working??
-    m_phongShader->bind();
-    setSceneUniforms(context); // why
-    setLights(m_phongShader.get()); // why
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     renderGeometry(m_phongShader.get());
     glBindTexture(GL_TEXTURE_2D, 0);
     m_phongShader->unbind();
+
 
     if (settings.drawWireframe) {
         m_wireframeShader->bind();
@@ -125,14 +116,12 @@ void PoolScene::makeDepthTextures() {
 
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     for (int i = 0 ; i < m_lightData.size(); ++i) {
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[i]); // holds
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO[i]); // holds depth values for light i
         glClear(GL_DEPTH_BUFFER_BIT);
 
         m_depthShader->setUniform("lightIndex", i); // sets the current light
         glCullFace(GL_FRONT);
-
         renderGeometry(m_depthShader.get()); // use depth shader to get depth values
-
         glCullFace(GL_BACK);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

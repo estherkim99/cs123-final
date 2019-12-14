@@ -58,13 +58,13 @@ void CS123Shader::setLight(const CS123SceneLightData &light) {
     CS123SceneColor color = light.color;
     if (ignoreLight) color.r = color.g = color.b = 0;
 
-    setUniformArrayByIndex("lightTypes", lightType, light.id);
+    setUniformArrayByIndex("lightTypes", lightType, light.id); // index is last
     setUniformArrayByIndex("lightColors", glm::vec3(color.r, color.g, color.b), light.id);
 //    setUniformArrayByIndex("lightAttenuations", light.function, light.id);
 
     // set up a light space transformation matrix for each light id
-    GLfloat near_plane = 0.1f, far_plane = 50.0f;
-    glm::mat4 lightProjection = glm::ortho(-far_plane, far_plane, -far_plane, far_plane, near_plane, far_plane);
+    GLfloat near_plane = 1.0f, far_plane = 7.5f;;
+    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
     glm::mat4 lightView = glm::lookAt(light.pos.xyz(), glm::vec3(0.0f),  glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 lightSpaceMatrix = lightProjection * lightView;
     setUniformArrayByIndex("lightSpaceMatrix", lightSpaceMatrix, light.id);

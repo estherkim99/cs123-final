@@ -40,28 +40,6 @@ float ShadowCalculation(int i, vec4 fragPosLightSpace, vec4 normal_worldSpace, v
     float closestDepth = texture(depthMap[i], projCoords.xy).r;
     float currentDepth = projCoords.z;
     float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
-
-//    // calculate bias (based on depth map resolution and slope)
-//    vec3 normal = normalize(normal_worldSpace.xyz);
-//    vec3 lightDir = normalize(lightPositions[0] - position_worldSpace.xyz);
-//    float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
-//    // check whether current frag pos is in shadow
-
-//    // PCF
-//    float shadow = 0.0;
-//    vec2 texelSize = 1.0 / textureSize(depthMap[i], 0);
-//    for(int x = -1; x <= 1; ++x) {
-//	for(int y = -1; y <= 1; ++y) {
-//	    float pcfDepth = texture(depthMap[i], projCoords.xy + vec2(x, y) * texelSize).r;
-//	    shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
-//	}
-//    }
-//    shadow /= 9.0;
-
-//    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-//    if(projCoords.z > 1.0)
-//	shadow = 0.0;
-
     return shadow;
 }
 
@@ -80,7 +58,7 @@ void main() {
         position_cameraSpace += arrowOffset * vec4(offsetAxis, 0);
     }
 
-    gl_Position = p * position_cameraSpace; // needed to translate uv coords into camera space
+    gl_Position = p * position_cameraSpace;
 
     if (useLighting) {
         color = ambient_color.xyz; // Add ambient component

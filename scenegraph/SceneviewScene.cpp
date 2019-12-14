@@ -192,25 +192,25 @@ void SceneviewScene::settingsChanged() {
 
 void SceneviewScene::loadDepthTextures() {
     for (int i = 0; i < m_lightData.size(); i++) {
-        unsigned tmpFBO;
-        unsigned tmpMap;
-        glGenFramebuffers(1, &tmpFBO);
-        glGenTextures(1, &tmpMap);
-        glBindTexture(GL_TEXTURE_2D, tmpMap);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        unsigned FBO;
+        unsigned Map;
 
-        glBindFramebuffer(GL_FRAMEBUFFER, tmpFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tmpMap, 0);
+        glGenFramebuffers(1, &FBO);
+        glGenTextures(1, &Map);
+        glBindTexture(GL_TEXTURE_2D, Map);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, Map, 0);
         glDrawBuffer(GL_NONE);
         glReadBuffer(GL_NONE);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        depthMapFBO.push_back(tmpFBO); // FBO
-        depthMap.push_back(tmpMap); // texture aka shadow map
+        depthMapFBO.push_back(FBO);
+        depthMap.push_back(Map); // shadow map
     }
 
     m_mustLoadDepths = false;

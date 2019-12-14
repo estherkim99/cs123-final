@@ -11,6 +11,5 @@ uniform vec2 repeatUV;
 void main(){
     vec3 texColor = texture(tex, texc*repeatUV).rgb;
     texColor = clamp(texColor + vec3(1-useTexture), vec3(0), vec3(1));
-    fragColor = vec4(color * texColor, 1);
-    fragColor = vec4(color, 1); // no tex mapping for now
+    fragColor = vec4(color, 1); // TODO: change to color * texColor
 }
