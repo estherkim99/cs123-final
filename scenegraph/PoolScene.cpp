@@ -316,12 +316,15 @@ void PoolScene::checkWallCollision(glm::vec3 pos, int ballnum){
     // lining location - cube radius * z scale - radius of ball
     float z_border = 1.1515f - 0.5f * 0.063f - 0.028575f;
     float x_border = 0.5915f - 0.5f * 0.063f - 0.028575f;
+
     if(pos.z >= z_border || pos.z <= -z_border){
         m_ball_velocities[ballnum].z *= -1.f;
+        m_ball_translations[ballnum].z += pos.z >= z_border? z_border - pos.z: -z_border - pos.z;
         m_ball_dir[ballnum] = glm::normalize(m_ball_velocities[ballnum]);
     }
     else if(pos.x >= x_border || pos.x <= -x_border){
         m_ball_velocities[ballnum].x *= -1.f;
+        m_ball_translations[ballnum].x += pos.x >= x_border? x_border - pos.x: -x_border - pos.x;
         m_ball_dir[ballnum] = glm::normalize(m_ball_velocities[ballnum]);
     }
 }
