@@ -1,6 +1,5 @@
 #include "PoolScene.h"
 #include "GL/glew.h"
-#include <QGLWidget>
 #include "Camera.h"
 
 #include "Settings.h"
@@ -15,6 +14,7 @@
 #include "gl/textures/TextureParameters.h"
 #include "gl/textures/TextureParametersBuilder.h"
 #include <iostream>
+#include <QGLWidget>
 
 using namespace CS123::GL;
 
@@ -65,24 +65,24 @@ void PoolScene::render(SupportCanvas3D *context) {
     if (m_mustLoadDepths) loadDepthTextures(); // sets up depth fbo, depth map
     makeDepthTextures(); // use fbo + map to make a depth map for each light
 
-    // bind depth map as a sampler to regular shaders
-    glViewport(0, 0, 1200, 1200); // TODO: resize to height and width of screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_phongShader->bind();
     setSceneUniforms(context);
     setLights(m_phongShader.get());
+    glViewport(0, 0, 1300, 1300);
 
-    for (int i = 0; i < m_lightData.size(); ++i) {
-//        glActiveTexture(GL_TEXTURE+(11+i));
+    // bind depth map as a sampler to regular shaders
+    for (int i = 0; i < m_lightData.size(); i++) {
+        glActiveTexture(GL_TEXTURE6+i);
         glBindTexture(GL_TEXTURE_2D, depthMap[i]);
-//        m_phongShader->setUniformArrayByIndex("depthMap", i+11, i); // makes tuple ("depthMap", i+texNum) located at index i
+        m_phongShader->setUniformArrayByIndex("depthMap", i+6, i); // makes tuple ("depthMap", i+texNum) located at index i
     }
+    m_phongShader->setUniform("doShadowMapping", true);
 
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     renderGeometry(m_phongShader.get());
     glBindTexture(GL_TEXTURE_2D, 0);
     m_phongShader->unbind();
-
 
     if (settings.drawWireframe) {
         m_wireframeShader->bind();

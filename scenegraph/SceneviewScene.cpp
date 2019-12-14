@@ -32,8 +32,7 @@ using namespace CS123::GL;
 
 SceneviewScene::SceneviewScene() :
     m_mustLoadTextures(true),
-    m_mustLoadDepths(true),
-    m_depthFBO(nullptr)
+    m_mustLoadDepths(true)
 {
     // TODO: [SCENEVIEW] Set up anything you need for your Sceneview scene here...
     loadPhongShader();
@@ -173,7 +172,6 @@ void SceneviewScene::renderGeometry() {
             break;
         }
     }
-
 }
 
 void SceneviewScene::tesselateShapes(){
@@ -181,7 +179,7 @@ void SceneviewScene::tesselateShapes(){
     m_cone = std::make_unique<ConeShape>();
     m_cylinder = std::make_unique<CylinderShape>();
     m_sphere = std::make_unique<SphereShape>();
-    m_cube->initializeShape(3, 3);
+    m_cube->initializeShape(30, 30);
     m_cone->initializeShape(30, 30);
     m_cylinder->initializeShape(30, 30);
     m_sphere->initializeShape(30, 30);
@@ -192,8 +190,8 @@ void SceneviewScene::settingsChanged() {
 
 void SceneviewScene::loadDepthTextures() {
     for (int i = 0; i < m_lightData.size(); i++) {
-        unsigned FBO;
-        unsigned Map;
+        unsigned int FBO;
+        unsigned int Map;
 
         glGenFramebuffers(1, &FBO);
         glGenTextures(1, &Map);
@@ -212,6 +210,10 @@ void SceneviewScene::loadDepthTextures() {
         depthMapFBO.push_back(FBO);
         depthMap.push_back(Map); // shadow map
     }
+
+    // instead, create vector of FBO's
+    // don't need second map
+    // in renderObject? set the current FBO's
 
     m_mustLoadDepths = false;
 }

@@ -85,11 +85,8 @@ protected:
     unsigned int SHADOW_WIDTH = 1024;
     unsigned int SHADOW_HEIGHT = 1024;
     std::unique_ptr<CS123::GL::CS123Shader> m_depthShader;
-    std::vector<unsigned> depthMapFBO;
-    std::vector<unsigned> depthMap;
-
-    std::map<std::string, CS123::GL::Texture2D> m_depths;
-    std::unique_ptr<FBO> m_depthFBO;
+    std::vector<unsigned int> depthMapFBO;
+    std::vector<unsigned int> depthMap;
 
 };
 

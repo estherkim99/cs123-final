@@ -290,7 +290,7 @@ void Shader::discoverUniforms() {
         if (isUniformArray(name, nameLength)) {
             addUniformArray(strname, arraySize);
         } else if (isTexture(type)) {
-            addTexture(strname);
+            (strname);
         } else {
             addUniform(strname);
         }

@@ -31,6 +31,7 @@ uniform vec2 repeatUV;
 uniform bool useLighting;     // Whether to calculate lighting using lighting equation
 uniform bool useArrowOffsets; // True if rendering the arrowhead of a normal for Shapes
 
+uniform bool doShadowMapping;
 uniform sampler2D depthMap[MAX_LIGHTS];
 uniform mat4 lightSpaceMatrix[MAX_LIGHTS];
 
@@ -40,6 +41,23 @@ float ShadowCalculation(int i, vec4 fragPosLightSpace, vec4 normal_worldSpace, v
     float closestDepth = texture(depthMap[i], projCoords.xy).r;
     float currentDepth = projCoords.z;
     float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+//    vec3 normal = normalize(normal_worldSpace.xyz);
+//    vec3 lightDir = normalize(lightPositions[0] - position_worldSpace.xyz);
+//    float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.001);
+//    float shadow = 0.0;
+//    vec2 texelSize = 1.0 / textureSize(depthMap[i], 0);
+//    for(int x = -1; x <= 1; ++x) {
+//	for(int y = -1; y <= 1; ++y) {
+//	    float pcfDepth = texture(depthMap[i], projCoords.xy + vec2(x, y) * texelSize).r;
+//	    shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+//	}
+//    }
+//    shadow /= 9.0;
+//    if(projCoords.z > 1.0) {
+//	shadow = 0.0;
+//    }
+
     return shadow;
 }
 
@@ -63,10 +81,13 @@ void main() {
     if (useLighting) {
         color = ambient_color.xyz; // Add ambient component
 
-        for (int i = 0; i < MAX_LIGHTS; i++) {
+	for (int i = 0; i < MAX_LIGHTS; i++) {
 
-	    vec4 lightSpacePosition = lightSpaceMatrix[i] * position_worldSpace;
-	    float shadow = ShadowCalculation(i, lightSpacePosition, normal_worldSpace, position_worldSpace);
+	    float shadow = 0.0;
+	    if (doShadowMapping) {
+		vec4 lightSpacePosition = lightSpaceMatrix[i] * position_worldSpace;
+		shadow = ShadowCalculation(i, lightSpacePosition, normal_worldSpace, position_worldSpace);
+	    }
 
             vec4 vertexToLight = vec4(0);
             // Point Light
