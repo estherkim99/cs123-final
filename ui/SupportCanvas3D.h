@@ -58,7 +58,7 @@ public:
     // This function will be called by the UI when the settings have changed.
     virtual void settingsChanged();
 
-    void shoot(float vel);
+    void shoot(float vel, float angle);
     void orientCue();
     void resetCamera();
 
