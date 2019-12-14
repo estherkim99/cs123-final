@@ -39,8 +39,8 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
         side->at(index++) = 0;
         side->at(index++) = 1;
         side->at(index++) = 0;
-        // texcoord, tangent, binormal
-        for (int j = 0; j < 8; j++) {
+        // texcoord, tangent
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
             side->at(index++) = 0;
         }
         if (i == 0) {
@@ -50,12 +50,12 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             }
         }
         side->at(index++) = length/2/p1 * i;
-        for (int k = 0; k < DATAPERVERTEX - 9; k++) {
+        for (int k = 0; k < 5; k++) {
             side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
-        // texcoord, tangent, binormal
-        for (int j = 0; j < 8; j++) {
+        // texcoord, tangent
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
             side->at(index++) = 0;
         }
     }
@@ -74,8 +74,8 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             side->at(index++) = norm.x;
             side->at(index++) = 0;
             side->at(index++) = norm.z;
-            // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            // texcoord, tangent
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
             if (j == 0) {
@@ -86,12 +86,12 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
             }
             side->at(index++) = length * (0.5f - j);
             side->at(index++) = 0.5 - 1.f * (i + 1)/p1;
-            for (int k = 0; k < DATAPERVERTEX - 10; k++) {
+            for (int k = 0; k < 4; k++) {
                 side->at(index) = side->at(index - DATAPERVERTEX);
                 index++;
             }
-            // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            // texcoord, tangent
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
         }
@@ -102,7 +102,7 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
     }
 
     // bottom
-    for (int k = 0; k < DATAPERVERTEX * (2 * p1 + 4); k = k + 8) {
+    for (int k = 0; k < DATAPERVERTEX * (2 * p1 + 4); k = k + 5) {
         side->at(index++) = -side->at(k++);
         side->at(index++) = -side->at(k++);
         side->at(index++) = side->at(k++);
@@ -110,7 +110,7 @@ void CylinderShape::firstSide(std::vector<float>* side, int p1, int p2, float le
         side->at(index++) = -side->at(k++);
         side->at(index++) = side->at(k++);
         // texcoord, tangent, binormal
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
             side->at(index++) = 0;
         }
     }

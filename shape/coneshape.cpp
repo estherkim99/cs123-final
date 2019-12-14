@@ -38,7 +38,7 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
         side->at(index++) = -1;
         side->at(index++) = 0;
         // texcoord, tangent, binormal
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
             side->at(index++) = 0;
         }
 
@@ -49,12 +49,12 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
             }
         }
         side->at(index++) = -length/2/p1 * i;
-        for (int k = 0; k < DATAPERVERTEX - 9; k++) {
+        for (int k = 0; k < 5; k++) {
             side->at(index) = side->at(index - DATAPERVERTEX);
             index++;
         }
         // texcoord, tangent, binormal
-        for (int j = 0; j < 8; j++) {
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
             side->at(index++) = 0;
         }
     }
@@ -70,7 +70,7 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
     side->at(index++) = 1/sqrtf(5);
     side->at(index++) = 2/sqrtf(5);
     // texcoord, tangent, binormal
-    for (int j = 0; j < 8; j++) {
+    for (int j = 0; j < DATAPERVERTEX - 6; j++) {
         side->at(index++) = 0;
     }
     for (int k = 0; k < DATAPERVERTEX; k++) {
@@ -88,7 +88,7 @@ void ConeShape::firstSide(std::vector<float>* side, int p1, int p2, float length
             side->at(index++) = 1/sqrtf(5);
             side->at(index++) = norm.z * sqrtf(2/sqrtf(5));;
             // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
         }

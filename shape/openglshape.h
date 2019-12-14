@@ -17,7 +17,7 @@ class VAO;
 
 using namespace CS123::GL;
 
-#define DATAPERVERTEX 14
+#define DATAPERVERTEX 11
 
 class OpenGLShape
 {

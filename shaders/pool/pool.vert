@@ -3,14 +3,13 @@
 layout(location = 0) in vec3 position; // Position of the vertex
 layout(location = 1) in vec3 normal;   // Normal of the vertex
 layout(location = 3) in vec3 tangent;
-layout(location = 4) in vec3 binormal;
 layout(location = 5) in vec2 texCoord; // UV texture coordinates
 layout(location = 10) in float arrowOffset; // Sideways offset for billboarded normal arrows
 
 out vec2 texc;
 
-out vec3 normal_ws;
-out vec3 tangent_ws;
+out vec3 anormal;
+out vec3 atangent;
 out vec3 pos_ws;
 out vec4 position_cameraSpace;
 out vec4 normal_cameraSpace;
@@ -24,6 +23,8 @@ uniform vec2 repeatUV;
 uniform bool useArrowOffsets; // True if rendering the arrowhead of a normal for Shapes
 
 void main() {
+    anormal = normal;
+    atangent = tangent;
     texc = texCoord * repeatUV;
     position_cameraSpace = v * m * vec4(position, 1.0);
     normal_cameraSpace = vec4(normalize(mat3(transpose(inverse(v * m))) * normal), 0);
@@ -38,8 +39,5 @@ void main() {
 
     gl_Position = p * position_cameraSpace;
 
-    // bump mapping
-    normal_ws = vec3(normal_worldSpace);
-    tangent_ws = vec3(normalize(mat3(transpose(inverse(m))) * tangent));
-    pos_ws = vec3(position_worldSpace);
+
 }

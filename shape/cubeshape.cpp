@@ -41,7 +41,7 @@ void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int da
             side->at(index++) = 0;
             side->at(index++) = 1;
             // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
             if (j == 0) {
@@ -57,7 +57,7 @@ void CubeShape::firstSide(std::vector<float>* side, int p1, float length, int da
             side->at(index++) = 0;
             side->at(index++) = 1;
             // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
         }

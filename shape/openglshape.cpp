@@ -74,7 +74,6 @@ void OpenGLShape::setData(std::vector<float>* vertices){
     this->setAttribute(ShaderAttrib::NORMAL, 3, 12, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->setAttribute(ShaderAttrib::TEXCOORD0, 2, 24, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->setAttribute(ShaderAttrib::TANGENT, 3, 32, VBOAttribMarker::DATA_TYPE::FLOAT, false);
-    this->setAttribute(ShaderAttrib::BINORMAL, 3, 44, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     this->buildVAO();
 }
 
@@ -90,8 +89,8 @@ void OpenGLShape::rotateSurface(std::vector<float>* target, glm::vec3 dir, float
         side.at(i++) = norm.x;
         side.at(i++) = norm.y;
         side.at(i++) = norm.z;
-        // texcoords, tangent, binormal
-        for (int j = 0; j < 8; j++) {
+        // texcoords, tangent
+        for (int j = 0; j < DATAPERVERTEX - 6; j++) {
             side.at(i++) = 0;
         }
     }
@@ -99,7 +98,7 @@ void OpenGLShape::rotateSurface(std::vector<float>* target, glm::vec3 dir, float
 }
 
 void OpenGLShape::computeUV(std::vector<float> *vertices){
-    for (int i = 0; i < vertices->size() - DATAPERVERTEX; i += DATAPERVERTEX) {
+    for (int i = 0; i < vertices->size(); i += DATAPERVERTEX) {
         glm::vec4 pos = glm::vec4(vertices->at(i), vertices->at(i+1), vertices->at(i+2), 1.f);
         glm::vec2 uv = getUVfromPosition(pos);
         vertices->at(i+6) = uv.x;
@@ -109,14 +108,14 @@ void OpenGLShape::computeUV(std::vector<float> *vertices){
 
 
 void OpenGLShape::computeTangentsAndBinormals(std::vector<float> *vertices){
-    for (int i = 0; i < vertices->size() - 3 * DATAPERVERTEX; i+=3 * DATAPERVERTEX) {
+    for (int i = 0; i <= vertices->size() - 3 * DATAPERVERTEX; i+= DATAPERVERTEX) {
         glm::vec3 v0 = glm::vec3(vertices->at(i), vertices->at(i+1), vertices->at(i+2));
-        glm::vec3 v1 = glm::vec3(vertices->at(i+14), vertices->at(i+15), vertices->at(i+16));
-        glm::vec3 v2 = glm::vec3(vertices->at(i+28), vertices->at(i+29), vertices->at(i+30));
+        glm::vec3 v1 = glm::vec3(vertices->at(i+DATAPERVERTEX), vertices->at(i+1 + DATAPERVERTEX), vertices->at(i+2 + DATAPERVERTEX));
+        glm::vec3 v2 = glm::vec3(vertices->at(i+2 * DATAPERVERTEX), vertices->at(i+1 + 2*DATAPERVERTEX), vertices->at(i+2 +2*DATAPERVERTEX));
 
         glm::vec2 uv0 = glm::vec2(vertices->at(i+6), vertices->at(i+7));
-        glm::vec2 uv1 = glm::vec2(vertices->at(i+20), vertices->at(i+21));
-        glm::vec2 uv2 = glm::vec2(vertices->at(i+34), vertices->at(i+35));
+        glm::vec2 uv1 = glm::vec2(vertices->at(i+6 + DATAPERVERTEX), vertices->at(i+ 7 + DATAPERVERTEX));
+        glm::vec2 uv2 = glm::vec2(vertices->at(i+6 + 2 * DATAPERVERTEX), vertices->at(i+7 + 2 * DATAPERVERTEX));
 
         glm::vec3 deltaPos1 = v1-v0;
         glm::vec3 deltaPos2 = v2-v0;
@@ -124,16 +123,16 @@ void OpenGLShape::computeTangentsAndBinormals(std::vector<float> *vertices){
         glm::vec2 deltaUV1 = uv1-uv0;
         glm::vec2 deltaUV2 = uv2-uv0;
 
-        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-        glm::vec3 tangent = glm::normalize(f * (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y));
-        glm::vec3 bitangent = glm::normalize(f * (-deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x));
-        for (int j = 0; j < 3; j++) {
+        float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+        glm::vec3 tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
+        int limit = 1;
+//        if (i == vertices->size() - 3 * DATAPERVERTEX) {
+//            limit = 3;
+//        }
+        for (int j = 0; j < limit; j++) {
             vertices->at(i+8 + j * DATAPERVERTEX) = tangent.x;
             vertices->at(i+9 + j * DATAPERVERTEX) = tangent.y;
             vertices->at(i+10 + j * DATAPERVERTEX) = tangent.z;
-            vertices->at(i+11 + j * DATAPERVERTEX) = bitangent.x;
-            vertices->at(i+12 + j * DATAPERVERTEX) = bitangent.y;
-            vertices->at(i+13 + j * DATAPERVERTEX) = bitangent.z;
         }
     }
 

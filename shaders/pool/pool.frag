@@ -10,9 +10,8 @@ uniform vec2 repeatUV;
 
 in vec4 position_cameraSpace;
 in vec4 normal_cameraSpace;
-in vec3 normal_ws;
-in vec3 tangent_ws;
-in vec3 pos_ws;
+in vec3 anormal;
+in vec3 atangent;
 
 // Transformation matrices
 uniform mat4 p;
@@ -35,21 +34,21 @@ uniform float shininess;
 
 uniform bool useLighting;     // Whether to calculate lighting using lighting equation
 
+mat3 TBN;
+
 vec3 calculateBumpNormal() {
-    vec3 normal = normalize(normal_ws);
-    vec3 tangent = normalize(tangent_ws);
+    vec3 normal = mat3(v * m) * normalize(anormal);
+    vec3 tangent = mat3(v * m) * normalize(atangent);
     tangent = normalize(tangent - dot(tangent, normal) * normal);
-    vec3 bitangent = cross(tangent, normal);
-    mat3 TBN = mat3(tangent, bitangent, normal);
+    vec3 bitangent = cross(normal, tangent);
+    TBN = transpose(mat3(tangent, bitangent, normal));
     vec3 bump_ts = texture(bumpMap, texc).xyz;
     bump_ts = 2.0 * bump_ts - vec3(1.0, 1.0, 1.0);
-    vec3 bump_ws = TBN * bump_ts;
-    bump_ws = normalize(bump_ws);
-    return bump_ws;
+    return normalize(bump_ts);
 }
 
 void main(){
-    vec3 normal = normal_ws;
+    vec3 normal = vec3(0);
 //     bump mapping
     if (useBumpMapping == 1) {
         normal = calculateBumpNormal();
@@ -74,7 +73,9 @@ void main(){
             }
 
             // diffuse component
-            float diffuseIntensity = max(0.0, dot(vertexToLight, v * vec4(normal, 0)));
+//            float diffuseIntensity = max(0.0, dot(normal,  vec3(vertexToLight)));
+
+            float diffuseIntensity = max(0.0, max(dot(vertexToLight, normal_cameraSpace), dot(normal, vec3(vertexToLight))));
             color += max(vec3(0), lightColors[i] * diffuse_color * diffuseIntensity);
 
             // specular component

@@ -46,7 +46,7 @@ void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float leng
             side->at(index++) = norm.y;
             side->at(index++) = norm.z;
             // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
             if (j == 0) {
@@ -64,7 +64,7 @@ void SphereShape::firstSide(std::vector<float>* side, int p1, int p2, float leng
             side->at(index++) = norm.y;
             side->at(index++) = norm.z;
             // texcoord, tangent, binormal
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < DATAPERVERTEX - 6; j++) {
                 side->at(index++) = 0;
             }
         }
