@@ -356,3 +356,9 @@ void SupportCanvas3D::resetCamera(){
     m_defaultPerspectiveCamera->orientLook(m_oldEye, m_oldLook, m_oldUp);
     update();
 }
+
+void SupportCanvas3D::resetPoolScene() {
+    if (m_pool) {
+        m_poolScene->init();
+    }
+}

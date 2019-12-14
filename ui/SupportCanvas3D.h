@@ -61,6 +61,7 @@ public:
     void shoot(float vel, float angle);
     void orientCue();
     void resetCamera();
+    void resetPoolScene();
 
 public slots:
     // These will be called by the corresponding UI buttons on the Camtrans dock
