@@ -65,15 +65,16 @@
 				<object type="primitive" name="cube" >
 					<bumpmap file="/Users/estherkim/workspace/cs123-final/data/textures/bump.jpg" u="1" v="1"/>
                     <diffuse r="0.173" g="0.42" b="0.247"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<transblock>
 			<translate x="0" y="-0.1125" z="0"/>
 			<scale x="1.5" y="0.175" z="2.62"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 
@@ -83,8 +84,9 @@
 			<translate x="0" y="0.025" z="-1.2465"/>
 			<scale x="1.5" y="0.1" z="0.127"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<!-- lining -->
@@ -101,8 +103,9 @@
 			<translate x="0" y="0.025" z="1.2465"/>
 			<scale x="1.5" y="0.1" z="0.127"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<!-- lining -->
@@ -119,8 +122,9 @@
 			<translate x="0.6865" y="0.025" z="0"/>
 			<scale x="0.127" y="0.1" z="2.62"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<!-- lining -->
@@ -145,8 +149,9 @@
 			<translate x="-0.6865" y="0.025" z="0"/>
 			<scale x="0.127" y="0.1" z="2.62"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<!-- lining -->
@@ -172,39 +177,43 @@
 			<translate x="-0.655" y="-0.39" z="-1.215"/>
 			<scale x="0.19" y="0.58" z="0.19"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<transblock>
 			<translate x="0.655" y="-0.39" z="-1.215"/>
 			<scale x="0.19" y="0.58" z="0.19"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<transblock>
 			<translate x="-0.655" y="-0.39" z="1.215"/>
 			<scale x="0.19" y="0.58" z="0.19"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 		<transblock>
 			<translate x="0.655" y="-0.39" z="1.215"/>
 			<scale x="0.19" y="0.58" z="0.19"/>
 				<object type="primitive" name="cube" >
+					<texture file="/Users/estherkim/workspace/cs123-final/data/textures/wood.png" u="1" v="1"/>
 					<diffuse r="0.220" g="0.118" b="0.020"/>
-					<blend v="0.2"/>
+					<blend v="0.8"/>
 				</object>
 		</transblock>
 
 	<!-- pockets -->
 		<transblock>
 			<translate x="0.560315" y="0" z="1.120315"/>
-			<scale x="0.117" y="0.02" z="0.117"/>
+			<scale x="0.117" y="0.01" z="0.117"/>
 			<object type="primitive" name="cylinder">
 				<diffuse r="0" g="0" b="0"/>
 				<blend v="1.0"/>
@@ -212,7 +221,7 @@
 		</transblock>
 		<transblock>
 			<translate x="-0.560315" y="0" z="1.120315"/>
-			<scale x="0.117" y="0.02" z="0.117"/>
+			<scale x="0.117" y="0.01" z="0.117"/>
 			<object type="primitive" name="cylinder">
 				<diffuse r="0" g="0" b="0"/>
 				<blend v="1.0"/>
@@ -221,7 +230,7 @@
 
 		<transblock>
 			<translate x="-0.560315" y="0" z="0"/>
-			<scale x="0.13" y="0.02" z="0.13"/>
+			<scale x="0.13" y="0.01" z="0.13"/>
 			<object type="primitive" name="cylinder">
 				<diffuse r="0" g="0" b="0"/>
 				<blend v="1.0"/>
@@ -229,7 +238,7 @@
 		</transblock>
 		<transblock>
 			<translate x="0.560315" y="0" z="0"/>
-			<scale x="0.13" y="0.02" z="0.13"/>
+			<scale x="0.13" y="0.01" z="0.13"/>
 			<object type="primitive" name="cylinder">
 				<diffuse r="0" g="0" b="0"/>
 				<blend v="1.0"/>
@@ -238,7 +247,7 @@
 
 		<transblock>
 			<translate x="0.560315" y="0" z="-1.120315"/>
-			<scale x="0.117" y="0.02" z="0.117"/>
+			<scale x="0.117" y="0.01" z="0.117"/>
 			<object type="primitive" name="cylinder">
 				<diffuse r="0" g="0" b="0"/>
 				<blend v="1.0"/>
@@ -246,7 +255,7 @@
 		</transblock>
 		<transblock>
 			<translate x="-0.560315" y="0" z="-1.120315"/>
-			<scale x="0.117" y="0.02" z="0.117"/>
+			<scale x="0.117" y="0.01" z="0.117"/>
 			<object type="primitive" name="cylinder">
 				<diffuse r="0" g="0" b="0"/>
 				<blend v="1.0"/>
