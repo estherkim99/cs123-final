@@ -98,6 +98,10 @@ struct Settings {
     bool useSpotLights;         // Enable or disable spot lights (extra credit).
     bool useKDTree;
 
+    // Pool
+    float angle;
+    float vel;
+
     int getSceneMode();
     int getCameraMode();
 

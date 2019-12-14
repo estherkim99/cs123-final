@@ -310,18 +310,21 @@ void SupportCanvas3D::tick() {
 }
 
 
-void SupportCanvas3D::shoot(float vel){
+void SupportCanvas3D::shoot(float vel, float angle){
     if(m_pool) {
-        glm::vec4 dir;
+//        glm::vec4 dir;
 //        if (settings.useOrbitCamera) {
 //            dir = m_defaultOrbitingCamera->getLook();
 //        } else {
-            dir = m_defaultPerspectiveCamera->getLook();
+            //dir = m_defaultPerspectiveCamera->getLook();
+//            dir = glm::vec4(0.f,0.f,1.f,0.f);
 //        }
-        dir.y = 0;
-        dir = glm::normalize(dir);
+//        dir.y = 0;
+//        dir = glm::normalize(dir);
+        glm::vec3 dir = vel*glm::vec3(sin(angle), 0.f, cos(angle));
 
-        m_poolScene->addVelocity(0, glm::vec3(dir.x * vel, 0, dir.z * vel));
+        //m_poolScene->addVelocity(0, glm::vec3(dir.x * vel, 0, dir.z * vel));
+        m_poolScene->addVelocity(0, dir);
         update();
     }
 }

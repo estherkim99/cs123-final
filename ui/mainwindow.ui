@@ -135,199 +135,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="shapeType">
-       <property name="title">
-        <string>Shape Type</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <property name="topMargin">
-         <number>5</number>
-        </property>
-        <property name="bottomMargin">
-         <number>5</number>
-        </property>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeCube">
-          <property name="text">
-           <string>Cube</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeCone">
-          <property name="text">
-           <string>Cone</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeSphere">
-          <property name="text">
-           <string>Sphere</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeCylinder">
-          <property name="text">
-           <string>Cylinder</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeTorus">
-          <property name="text">
-           <string>Torus</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeSpecial1">
-          <property name="text">
-           <string>Special 1</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="shapeTypeSpecial2">
-          <property name="text">
-           <string>Special 2</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="shapeParameters">
-       <property name="title">
-        <string>Shape Parameters</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <property name="topMargin">
-         <number>5</number>
-        </property>
-        <property name="bottomMargin">
-         <number>5</number>
-        </property>
-        <property name="verticalSpacing">
-         <number>5</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="shapeParameterLabel1">
-          <property name="text">
-           <string>1</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLineEdit" name="shapeParameterTextbox2">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSlider" name="shapeParameterSlider1">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QLineEdit" name="shapeParameterTextbox3">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="shapeParameterLabel3">
-          <property name="text">
-           <string>3</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLineEdit" name="shapeParameterTextbox1">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QSlider" name="shapeParameterSlider3">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="shapeParameterLabel2">
-          <property name="text">
-           <string>2</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSlider" name="shapeParameterSlider2">
-          <property name="minimumSize">
-           <size>
-            <width>100</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
       <widget class="QCheckBox" name="useLightingCheckbox">
        <property name="text">
         <string>Use lighting</string>
@@ -349,6 +156,29 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>                  Choose direction:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDial" name="dir_dial">
+       <property name="invertedAppearance">
+        <bool>false</bool>
+       </property>
+       <property name="invertedControls">
+        <bool>true</bool>
+       </property>
+       <property name="wrapping">
+        <bool>true</bool>
+       </property>
+       <property name="notchesVisible">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QWidget" name="shapesDockEmptySpace" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -360,7 +190,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>30</y>
+          <y>120</y>
           <width>113</width>
           <height>32</height>
          </rect>
@@ -373,7 +203,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>60</y>
           <width>161</width>
           <height>32</height>
          </rect>
@@ -386,13 +216,70 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>90</y>
           <width>161</width>
           <height>32</height>
          </rect>
         </property>
         <property name="text">
          <string>Exit shooting mode</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>131</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Enter velocity (m/s):</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="vel_box">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>30</y>
+          <width>40</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>1.0</string>
+        </property>
+       </widget>
+       <widget class="QSlider" name="vel_slide">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>136</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </widget>
@@ -1753,22 +1640,6 @@
     <hint type="destinationlabel">
      <x>126</x>
      <y>2735</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>showSceneviewInstead</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>shapeType</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>130</x>
-     <y>560</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>126</x>
-     <y>739</y>
     </hint>
    </hints>
   </connection>
