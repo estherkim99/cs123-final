@@ -13,12 +13,16 @@ out vec3 atangent;
 out vec3 pos_ws;
 out vec4 position_cameraSpace;
 out vec4 normal_cameraSpace;
+out vec4 position_worldSpace;
+out vec4 normal_worldSpace;
+out vec4 FragPosLightSpace;
 
 // Transformation matrices
 uniform mat4 p;
 uniform mat4 v;
 uniform mat4 m;
 uniform vec2 repeatUV;
+uniform mat4 lightSpaceMatrix;
 
 uniform bool useArrowOffsets; // True if rendering the arrowhead of a normal for Shapes
 
@@ -28,8 +32,9 @@ void main() {
     texc = texCoord * repeatUV;
     position_cameraSpace = v * m * vec4(position, 1.0);
     normal_cameraSpace = vec4(normalize(mat3(transpose(inverse(v * m))) * normal), 0);
-    vec4 position_worldSpace = m * vec4(position, 1.0);
-    vec4 normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m))) * normal), 0);
+    position_worldSpace = m * vec4(position, 1.0);
+    normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m))) * normal), 0);
+    FragPosLightSpace = lightSpaceMatrix * position_worldSpace;
 
     if (useArrowOffsets) {
         // Figure out the axis to use in order for the triangle to be billboarded correctly
@@ -38,6 +43,4 @@ void main() {
     }
 
     gl_Position = p * position_cameraSpace;
-
-
 }

@@ -14,5 +14,8 @@
         <file alias="normalsArrow.vert">shaders/normals/normalsArrow.vert</file>
         <file alias="pool.frag">shaders/pool/pool.frag</file>
         <file alias="pool.vert">shaders/pool/pool.vert</file>
+        <file alias="depth.frag">shaders/shadows/depth.frag</file>
+        <file alias="depth.gsh">shaders/shadows/depth.gsh</file>
+        <file alias="depth.vert">shaders/shadows/depth.vert</file>
     </qresource>
 </RCC>

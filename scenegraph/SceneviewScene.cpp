@@ -26,6 +26,7 @@ SceneviewScene::SceneviewScene() :
     loadWireframeShader();
     loadNormalsShader();
     loadNormalsArrowShader();
+    loadSimpleShadeShader();
     tesselateShapes();
 }
 
@@ -57,6 +58,12 @@ void SceneviewScene::loadNormalsArrowShader() {
     std::string geometrySource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.gsh");
     std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/normalsArrow.frag");
     m_normalsArrowShader = std::make_unique<Shader>(vertexSource, geometrySource, fragmentSource);
+}
+
+void SceneviewScene::loadSimpleShadeShader() {
+    std::string vertexSource = ResourceLoader::loadResourceFileToString(":/shaders/depth.vert");
+    std::string fragmentSource = ResourceLoader::loadResourceFileToString(":/shaders/depth.frag");
+    m_simpleDepthShader = std::make_unique<CS123Shader>(vertexSource, fragmentSource);
 }
 
 void SceneviewScene::render(SupportCanvas3D *context) {

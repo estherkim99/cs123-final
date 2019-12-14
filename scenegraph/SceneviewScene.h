@@ -56,6 +56,7 @@ protected:
     void loadWireframeShader();
     void loadNormalsShader();
     void loadNormalsArrowShader();
+    void loadSimpleShadeShader();
 
     void setSceneUniforms(SupportCanvas3D *context);\
     void setMatrixUniforms(CS123::GL::Shader *shader, SupportCanvas3D *context);
@@ -70,6 +71,7 @@ protected:
     std::unique_ptr<CS123::GL::Shader> m_wireframeShader;
     std::unique_ptr<CS123::GL::Shader> m_normalsShader;
     std::unique_ptr<CS123::GL::Shader> m_normalsArrowShader;
+    std::unique_ptr<CS123::GL::CS123Shader> m_simpleDepthShader;
 
     void tesselateShapes();
     std::unique_ptr<CubeShape> m_cube;
