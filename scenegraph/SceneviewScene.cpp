@@ -226,6 +226,7 @@ void SceneviewScene::applyTextureIfUsed(SceneObject obj) {
     }
     m_phongShader->setUniform("useTexture", 1);
     m_phongShader->setUniform("repeatUV", glm::vec2(map.repeatU, map.repeatV));
+    m_phongShader->setUniform("blend", obj.material.blend);
     m_phongShader->setTexture("tex", m_textures.at(map.filename));
 }
 

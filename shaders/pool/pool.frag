@@ -12,6 +12,7 @@ in vec4 position_cameraSpace;
 in vec4 normal_cameraSpace;
 in vec3 anormal;
 in vec3 atangent;
+uniform float blend;
 
 // Transformation matrices
 uniform mat4 p;
@@ -89,7 +90,12 @@ void main(){
     }
     color = clamp(color, 0.0, 1.0);
 
-    fragColor = vec4(color * texColor, 1.f);
+    if (useTexture == 1) {
+        fragColor = vec4(color.xyz * (1 - blend) + texColor.xyz * blend, 1.f);
+    } else {
+
+        fragColor = vec4(color, 1.f);
+    }
 }
 
 
