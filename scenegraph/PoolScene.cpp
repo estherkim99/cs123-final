@@ -79,11 +79,13 @@ void PoolScene::render(SupportCanvas3D *context) {
     // shadows
     if(m_ball_translations.size()==16){
         for(int i = 0; i <= 15; i++){
+            //m_phongShader->setUniformArrayByIndex("ball_positions",getBallPosition(i),i);
             if(m_ball_done.at(i)){
-                m_phongShader->setUniformArrayByIndex("ball_positions",glm::vec3(0.f,15.f,0.f),i);
+                m_phongShader->setUniformArrayByIndex("ball_positions",glm::vec2(0.f,15.f),i);
             }
             else{
-                m_phongShader->setUniformArrayByIndex("ball_positions",getBallPosition(i),i);
+                glm::vec3 yep = getBallPosition(i);
+                m_phongShader->setUniformArrayByIndex("ball_positions",glm::vec2(yep.x,yep.z),i);
             }
         }
     }
