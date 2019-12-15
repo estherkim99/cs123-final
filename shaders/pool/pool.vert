@@ -13,6 +13,7 @@ out vec3 atangent;
 out vec3 pos_ws;
 out vec4 position_cameraSpace;
 out vec4 normal_cameraSpace;
+out vec3 position_world;
 
 // Transformation matrices
 uniform mat4 p;
@@ -26,9 +27,11 @@ void main() {
     anormal = normal;
     atangent = tangent;
     texc = texCoord * repeatUV;
+
     position_cameraSpace = v * m * vec4(position, 1.0);
     normal_cameraSpace = vec4(normalize(mat3(transpose(inverse(v * m))) * normal), 0);
     vec4 position_worldSpace = m * vec4(position, 1.0);
+    position_world = vec3(position_worldSpace.x,position_worldSpace.y,position_worldSpace.z);
     vec4 normal_worldSpace = vec4(normalize(mat3(transpose(inverse(m))) * normal), 0);
 
     if (useArrowOffsets) {
