@@ -34,6 +34,7 @@ void PoolScene::init(){
     m_object_rotations.clear();
     m_object_translations.clear();
 
+    m_ball_start.clear();
     m_ball_translations.clear();
     m_ball_velocities.clear();
     m_ball_done.clear();
@@ -50,6 +51,10 @@ void PoolScene::init(){
             m_holes.push_back(m_sceneObjects.at(i));
         }
         for(int i = 22; i <= 37; i++){
+            SceneObject cue = m_sceneObjects.at(i);
+            // TODO: we can just precompute these
+            glm::vec3 initial_position = glm::vec3(cue.composite[3][0], cue.composite[3][1], cue.composite[3][2]);
+            m_ball_start.push_back(initial_position);
             m_balls.push_back(m_sceneObjects.at(i));
             m_ball_translations.push_back(glm::vec3(0.0f));
             m_ball_velocities.push_back(glm::vec3(0.0f));
@@ -70,6 +75,19 @@ void PoolScene::render(SupportCanvas3D *context) {
 
     m_phongShader->bind();
     setSceneUniforms(context);
+
+    // shadows
+    if(m_ball_translations.size()==16){
+        for(int i = 0; i <= 15; i++){
+            if(m_ball_done.at(i)){
+                m_phongShader->setUniformArrayByIndex("ball_positions",glm::vec3(0.f,15.f,0.f),i);
+            }
+            else{
+                m_phongShader->setUniformArrayByIndex("ball_positions",getBallPosition(i),i);
+            }
+        }
+    }
+
     setLights();
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     renderGeometry();
@@ -266,10 +284,10 @@ void PoolScene::updateRotation(float secondsPassed){
 }
 
 glm::vec3 PoolScene::getBallPosition(int ballnum){
-    SceneObject *cue = &m_balls.at(ballnum);
+    //SceneObject *cue = &m_balls.at(ballnum);
     // TODO: we can just precompute these
-    glm::vec3 initial_position = glm::vec3(cue->composite[3][0], cue->composite[3][1], cue->composite[3][2]);
-    return m_ball_translations.at(ballnum) + initial_position;
+    //glm::vec3 initial_position = glm::vec3(cue->composite[3][0], cue->composite[3][1], cue->composite[3][2]);
+    return m_ball_translations.at(ballnum) + m_ball_start.at(ballnum);
 }
 
 void PoolScene::updateVelocities(int b1, int b2){

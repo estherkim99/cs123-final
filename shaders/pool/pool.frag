@@ -8,6 +8,7 @@ uniform sampler2D bumpMap;
 uniform int useBumpMapping = 0;
 uniform vec2 repeatUV;
 
+in vec3 position_world;
 in vec4 position_cameraSpace;
 in vec4 normal_cameraSpace;
 in vec3 anormal;
@@ -18,6 +19,7 @@ uniform float blend;
 uniform mat4 p;
 uniform mat4 v;
 uniform mat4 m;
+uniform vec3 ball_positions[16];
 
 // Light data
 const int MAX_LIGHTS = 10;
@@ -84,6 +86,19 @@ void main(){
             vec4 eyeDirection = normalize(vec4(0,0,0,1) - position_cameraSpace);
             float specIntensity = pow(max(0.0, dot(eyeDirection, lightReflection)), shininess);
             color += max (vec3(0), lightColors[i] * specular_color * specIntensity);
+
+            // shadow
+            if(abs(position_world.y) < 0.001f){
+                vec2 pt = vec2(position_world.x, position_world.z);
+                for(int i = 0; i <= 15; i++){
+                    vec2 ball = vec2(ball_positions[i].x,ball_positions[i].z);
+                    float x = distance(ball, pt);
+                    if(x < 0.028575f){
+                        color = color * (x*35);
+                        break;
+                    }
+                }
+            }
         }
     } else {
         color = ambient_color + diffuse_color;

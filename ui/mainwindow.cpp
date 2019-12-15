@@ -318,7 +318,7 @@ void MainWindow::fileOpenPool()
     // feel free to change this.
     activateCanvas3D();
     //QString file = QFileDialog::getOpenFileName(this, QString(), "/course/cs123/data/");
-    QString file = "/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/pool.xml";
+    QString file = "/Users/justinzhang/Documents/Brown/Senior/CS1230/cs123-final/data/justin_pool.xml";
     if (!file.isNull())
     {
         if (file.endsWith(".xml"))

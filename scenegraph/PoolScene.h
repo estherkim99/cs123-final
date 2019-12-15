@@ -58,6 +58,7 @@ protected:
     std::vector<SceneObject> m_walls;
     std::vector<SceneObject> m_holes;
 
+    std::vector<glm::vec3> m_ball_start;
     std::vector<glm::vec3> m_ball_translations;
     std::vector<glm::vec3> m_ball_velocities;
     std::vector<glm::vec3> m_ball_dir;
